@@ -46,7 +46,7 @@ export function Hero() {
             className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition"
             href="#learn-more"
           >
-            Learn More
+            Book a 15 Minute Introduction
           </a>
         </div>
       </div>

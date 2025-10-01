@@ -1,6 +1,7 @@
 import React from 'react'
 import sladeIntro from '../assets/slade_pic_intro_1.jpeg'
 import shevanprofile from '../assets/ProfilePic_Shevan.png'
+import seniprofile from '../assets/Seni_picintro.jpeg'
 
 // Types
 type TeamMember = {
@@ -22,8 +23,7 @@ const teamMembers: TeamMember[] = [
   {
     name: 'Seni',
     role: 'IT and Strategy',
-    imageUrl:
-      'https://i.pinimg.com/736x/8c/6d/db/8c6ddb5fe6600fcc4b183cb2ee228eb7.jpg',
+    imageUrl: seniprofile,
     imgClass: 'object-center',
   },
   {
