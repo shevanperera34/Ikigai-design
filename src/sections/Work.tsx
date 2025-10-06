@@ -6,9 +6,10 @@ import blindthumb from '../assets/Blinds_thumbnail_2.png'
 import Autodetail from '../assets/AutoDetailing_thumbnail.png'
 import clubpromo from '../assets/ClubPromo_Thumbnail.png'
 import Barber from '../assets/Barbershop_thumbnail.png'
-import Kindrage from '../assets/Kindrage_Thumbnail.png'
 import Livemu from '../assets/LiveMusic_thumbnail.png'
 import Tailor from '../assets/Tailorshop_Thumbnail.png'
+import mobil from '../assets/MobileWeb_Thumbnail.png'
+import kind from '../assets/Kindrage_Thumbnail.png'
 
 type Project = {
   id: number
@@ -79,7 +80,7 @@ const projects: Project[] = [
     id: 3,
     title: 'Mobile responsive build',
     category: 'Digital Systems',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&h=600&fit=crop',
+    thumbnailUrl: mobil,
     videoUrl: 'https://drive.google.com/file/d/1sz0pV2tw4Tv65ClzH6dXwlKQd-AXIr__/view?usp=sharing',
     description: 'An intimate documentary exploring real stories and authentic human experiences.',
     client: 'National Geographic',
@@ -95,7 +96,7 @@ const projects: Project[] = [
     id: 4,
     title: 'Barbershop themed build',
     category: 'Digital Systems',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=600&fit=crop',
+    thumbnailUrl: Barber,
     videoUrl: 'https://drive.google.com/file/d/1Z8HWZHxHLMmYcDsb_R3DgR_nZMjeQMjq/view?usp=sharing',
     description: 'A vibrant music video that blends visual artistry with rhythmic storytelling.',
     client: 'Universal Music',
@@ -111,7 +112,7 @@ const projects: Project[] = [
     id: 5,
     title: 'Auto Detailing themed build',
     category: 'Digital Systems',
-    thumbnailUrl: 'https://i.ytimg.com/vi/fjFB3B16cAo/hq720.jpg',
+    thumbnailUrl: Autodetail,
     videoUrl: 'https://drive.google.com/file/d/172JGsgvwiGP7gL2Q0Ka9ZJ8YPXQdEJHB/view?usp=sharing',
     description:
       'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
@@ -128,7 +129,7 @@ const projects: Project[] = [
     id: 6,
     title: 'Live Music - Event Recap Video',
     category: 'Creative Strategy',
-    thumbnailUrl: 'https://i.ytimg.com/vi/fjFB3B16cAo/hq720.jpg',
+    thumbnailUrl: Livemu,
     videoUrl: 'https://drive.google.com/file/d/1qPdb_gv5zOT1T7JzaQ6rZ6Wa7mks4wen/view?usp=sharing',
     description:
       'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
@@ -145,8 +146,25 @@ const projects: Project[] = [
     id: 7,
     title: 'Club promo video',
     category: 'Creative Strategy',
-    thumbnailUrl: 'https://i.ytimg.com/vi/fjFB3B16cAo/hq720.jpg',
+    thumbnailUrl: clubpromo,
     videoUrl: 'https://drive.google.com/file/d/1RtaLQ_gOHZUqGhCNe-SXljzNCWaPk26I/view?usp=sharing',
+    description:
+      'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
+    client: 'Emma & James',
+    director: 'Willow Tree Films',
+    year: '2022',
+    location: 'Tuscany, Italy',
+    camera: 'Sony FX3 + DJI Ronin',
+    lenses: 'Sigma 35mm, Sony 85mm',
+    format: '4K',
+    aspectRatio: '2.35:1',
+  },
+  {
+    id: 8,
+    title: 'Kindrage clothing brand',
+    category: 'Creative Strategy',
+    thumbnailUrl: kind,
+    videoUrl: 'https://drive.google.com/file/d/1fhT0xfcqfJFDMH8inl57E4QXW7JZu_-u/view?usp=sharing',
     description:
       'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
     client: 'Emma & James',
@@ -176,12 +194,13 @@ const useScrollAnimation = () => {
 export default function Work() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [category, setCategory] = useState('all')
+  const [category, setCategory] = useState('All')
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({})
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [isSearchActive, setIsSearchActive] = useState(false)
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -189,11 +208,26 @@ export default function Work() {
   const isInView = useInView(ref, { once: true, amount: 0.1 })
   const { containerAnimation, itemAnimation } = useScrollAnimation()
 
-  const categoryOptions = categories.map((c) => c.name.toLowerCase())
+  // Track if we're on a small screen (Tailwind 'sm' breakpoint)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)')
+    const update = () => setIsSmallScreen(mq.matches)
+    update()
+    mq.addEventListener?.('change', update)
+    // @ts-ignore - Safari fallback
+    mq.addListener?.(update)
+    return () => {
+      mq.removeEventListener?.('change', update)
+      // @ts-ignore
+      mq.removeListener?.(update)
+    }
+  }, [])
+
+  const categoryOptions = categories.map((c) => c.name)
 
   const filteredProjects = useMemo(() => {
     return projects.filter((p) => {
-      const matchesCategory = category === 'all' || p.category === category
+      const matchesCategory = category === 'All' || p.category === category
       const q = searchTerm.toLowerCase()
       const matchesSearch = p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)
       return matchesCategory && matchesSearch
@@ -205,8 +239,7 @@ export default function Work() {
       const idx = filteredProjects.findIndex((x) => x.id === p.id)
       setCurrentProjectIndex(idx)
       setSelectedProject(p)
-      setIsPlaying(true)
-      setSelectedProject(p)
+      setIsPlaying(true) // start immediately
       document.body.style.overflow = 'hidden'
     },
     [filteredProjects]
@@ -227,7 +260,7 @@ export default function Work() {
           : (currentProjectIndex - 1 + filteredProjects.length) % filteredProjects.length
       setCurrentProjectIndex(newIndex)
       setSelectedProject(filteredProjects[newIndex])
-      setIsPlaying(true)
+      setIsPlaying(true) // keep playing when navigating
     },
     [currentProjectIndex, filteredProjects]
   )
@@ -249,35 +282,29 @@ export default function Work() {
   }, [selectedProject])
 
   const getEmbedUrl = (url: string) => {
-  if (!url) return '';
+    if (!url) return ''
 
-  // YouTube
-  if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    const joiner = url.includes('?') ? '&' : '?';
-    return `${url}${joiner}autoplay=1&rel=0`;
+    // YouTube
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      const joiner = url.includes('?') ? '&' : '?'
+      return `${url}${joiner}autoplay=1&rel=0`
+    }
+
+    // Vimeo
+    if (url.includes('vimeo.com')) {
+      const joiner = url.includes('?') ? '&' : '?'
+      return `${url}${joiner}autoplay=1`
+    }
+
+    // Google Drive — convert to /preview (works in iframes)
+    if (url.includes('drive.google.com')) {
+      const m = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/)
+      const id = m?.[1]
+      if (id) return `https://drive.google.com/file/d/${id}/preview`
+    }
+
+    return url
   }
-
-  // Vimeo
-  if (url.includes('vimeo.com')) {
-    const joiner = url.includes('?') ? '&' : '?';
-    return `${url}${joiner}autoplay=1`;
-  }
-
-  // Google Drive — convert to /preview (works in iframes)
-  if (url.includes('drive.google.com')) {
-    // handles: /file/d/<id>/view..., /file/d/<id>/*, open?id=<id>, uc?id=<id>
-    const m =
-      url.match(/\/file\/d\/([^/]+)/) ||
-      url.match(/[?&]id=([^&]+)/);
-    const id = m?.[1];
-    if (id) return `https://drive.google.com/file/d/${id}/preview`;
-  }
-
-  return url;
-};
-
-
-
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -289,15 +316,21 @@ export default function Work() {
         }
         return
       }
+
+      // Disable keyboard nav on small screens
+      const allowArrows = !isSmallScreen
+
       switch (e.key) {
         case 'Escape':
           closeProject()
           break
         case 'ArrowLeft':
+          if (!allowArrows) break
           e.preventDefault()
           navigateProject('prev')
           break
         case 'ArrowRight':
+          if (!allowArrows) break
           e.preventDefault()
           navigateProject('next')
           break
@@ -319,7 +352,7 @@ export default function Work() {
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [selectedProject, isPlaying, navigateProject, closeProject, handleShare, toggleFullscreen, isSearchActive])
+  }, [selectedProject, isPlaying, navigateProject, closeProject, handleShare, toggleFullscreen, isSearchActive, isSmallScreen])
 
   const handleImageError = (id: number) => setImageError((prev) => ({ ...prev, [id]: true }))
   const toggleSearch = () => {
@@ -352,7 +385,7 @@ export default function Work() {
           <motion.div variants={itemAnimation} className="w-24 h-1 bg-white mx-auto mb-6" />
           <motion.p variants={itemAnimation} className="text-gray-300 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
             Explore the range of work done by The Ikigai Project
-	  <span className="block text-sm text-gray-400 mt-2">Press “/” to search or use arrow keys to navigate</span>
+            <span className="block text-sm text-gray-400 mt-2">Press “/” to search or use arrow keys to navigate</span>
           </motion.p>
         </motion.div>
 
@@ -416,7 +449,7 @@ export default function Work() {
                 whileHover={buttonHoverAnimation}
                 whileTap={{ scale: 0.95 }}
               >
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                {cat}
               </motion.button>
             ))}
           </div>
@@ -458,19 +491,37 @@ export default function Work() {
                   </div>
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6">
-                  <motion.h3 className="text-lg sm:text-xl font-bold text-white mb-1" initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+                {/* Hover overlay – pure CSS transitions for reliability */}
+                <div
+                  className="absolute inset-0 z-10 pointer-events-none
+                             bg-gradient-to-t from-black/90 via-black/40 to-transparent
+                             opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                             flex flex-col justify-end p-6"
+                >
+                  <h3
+                    className="pointer-events-none text-lg sm:text-xl font-bold text-white mb-1
+                               translate-y-2 opacity-0 transition-all duration-300
+                               group-hover:opacity-100 group-hover:translate-y-0"
+                  >
                     {project.title}
-                  </motion.h3>
-                  <motion.p className="text-gray-300 text-sm uppercase tracking-wider mb-3" initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
+                  </h3>
+                  <p
+                    className="pointer-events-none text-gray-300 text-sm uppercase tracking-wider mb-3
+                               translate-y-3 opacity-0 transition-all duration-300 delay-75
+                               group-hover:opacity-100 group-hover:translate-y-0"
+                  >
                     {project.category}
-                  </motion.p>
-                  <motion.div className="flex items-center space-x-3" initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+                  </p>
+                  <div
+                    className="pointer-events-none flex items-center space-x-3
+                               translate-y-3 opacity-0 transition-all duration-300 delay-150
+                               group-hover:opacity-100 group-hover:translate-y-0"
+                  >
                     <div className="w-12 h-12 rounded bg-white flex items-center justify-center">
                       <Play className="text-black ml-1" size={16} />
                     </div>
                     <span className="text-white text-sm font-medium">View Project</span>
-                  </motion.div>
+                  </div>
                 </div>
 
                 <div className="absolute top-4 left-4 px-3 py-1 bg-black/60 rounded text-xs text-gray-300 uppercase tracking-wider font-semibold">
@@ -487,7 +538,7 @@ export default function Work() {
             <p className="text-gray-400 text-lg">No projects found matching your criteria.</p>
             <button
               onClick={() => {
-                setCategory('all')
+                setCategory('All')
                 setSearchTerm('')
               }}
               className="mt-4 px-6 py-2 bg-white text-black rounded hover:bg-gray-200 transition-colors"
@@ -524,7 +575,8 @@ export default function Work() {
                   <span className="text-white text-sm">
                     {currentProjectIndex + 1} / {filteredProjects.length}
                   </span>
-                  <span className="text-gray-400 text-sm">Use ← → to navigate</span>
+                  {/* Hide the arrow usage hint on small screens */}
+                  <span className="text-gray-400 text-sm hidden sm:inline">Use ← → to navigate</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button onClick={handleShare} className="w-10 h-10 rounded bg-gray-800/80 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Share (S)">
@@ -539,7 +591,8 @@ export default function Work() {
                 </div>
               </div>
 
-              {filteredProjects.length > 1 && (
+              {/* Hide navigation arrows entirely on phones */}
+              {filteredProjects.length > 1 && !isSmallScreen && (
                 <>
                   <button onClick={() => navigateProject('prev')} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded bg-black/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Previous (←)">
                     <ChevronLeft size={20} />
@@ -550,7 +603,8 @@ export default function Work() {
                 </>
               )}
 
-              <div className={`relative bg-black ${isFullscreen ? 'h-full' : 'aspect-video'}`}>
+              {/* Bigger video on phones: tall height by default; aspect-video from sm and up */}
+              <div className={`relative bg-black ${isFullscreen ? 'h-full' : 'h-[78vh] sm:aspect-video'}`}>
                 {isPlaying ? (
                   <iframe
                     src={getEmbedUrl(selectedProject.videoUrl)}
