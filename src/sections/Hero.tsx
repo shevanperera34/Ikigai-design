@@ -42,11 +42,13 @@ export function Hero() {
           >
             See Some Of Our Work
           </Link>
-          <a
+          <a 
             className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition"
-            href="#learn-more"
-          >
-            Book a 15 Minute Introduction
+            href="https://calendly.com/theikigaiproject-ca/30min?month=2025-10"
+          target="_blank"
+	  rel="noopener noreferrer"
+	    >
+            Book a free 30min consultation today!
           </a>
         </div>
       </div>

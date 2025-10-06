@@ -2,6 +2,13 @@ import { motion, AnimatePresence, useInView } from 'framer-motion'
 import type { Variants, Transition } from 'framer-motion'
 import { Play, X, ChevronLeft, ChevronRight, Expand, Minimize, Share2, Search, XCircle } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import blindthumb from '../assets/Blinds_thumbnail_2.png'
+import Autodetail from '../assets/AutoDetailing_thumbnail.png'
+import clubpromo from '../assets/ClubPromo_Thumbnail.png'
+import Barber from '../assets/Barbershop_thumbnail.png'
+import Kindrage from '../assets/Kindrage_Thumbnail.png'
+import Livemu from '../assets/LiveMusic_thumbnail.png'
+import Tailor from '../assets/Tailorshop_Thumbnail.png'
 
 type Project = {
   id: number
@@ -30,22 +37,17 @@ interface AnimationVariants extends Variants {
 /* ---------- data ---------- */
 const categories: Category[] = [
   { id: 1, name: 'All' },
-  { id: 2, name: 'Documentary' },
-  { id: 3, name: 'Commercial' },
-  { id: 4, name: 'Wedding' },
-  { id: 5, name: 'Travel' },
-  { id: 6, name: 'Film' },
-  { id: 7, name: 'Music' },
+  { id: 2, name: 'Digital Systems' },
+  { id: 3, name: 'Creative Strategy' },
 ]
 
 const projects: Project[] = [
   {
     id: 1,
-    title: 'Cinematic Journey',
-    category: 'film',
-    thumbnailUrl:
-      'https://img.freepik.com/premium-photo/professional-cinema-camera-recording-commercial-studio_237404-9535.jpg',
-    videoUrl: 'https://www.youtube.com/embed/EngW7tLk6R8?si=JqVwUbeK03kWJPcE',
+    title: 'Blinds 3D Website',
+    category: 'Digital Systems',
+    thumbnailUrl: blindthumb,
+    videoUrl: 'https://drive.google.com/file/d/1t5OggLfiOiLSb5eiTWtp5qId_S8QJ27M/view?usp=sharing',
     description:
       'A breathtaking visual narrative exploring the depths of human emotion through stunning cinematography and compelling storytelling.',
     client: 'Independent Film',
@@ -59,10 +61,10 @@ const projects: Project[] = [
   },
   {
     id: 2,
-    title: 'Brand Vision',
-    category: 'commercial',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=800&h=600&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/D0UnqGm_miA?si=0f0PwzfJNJ-CWQpq',
+    title: 'Tailorshop Themed build',
+    category: 'Digital Systems',
+    thumbnailUrl: Tailor,
+    videoUrl: 'https://drive.google.com/file/d/1yMMFdQ3_oN6F5DCZN2MniruPasQ3t4Mp/view?usp=sharing',
     description: 'A dynamic commercial piece that captures the essence of modern lifestyle and brand identity.',
     client: 'TechCorp Inc.',
     director: 'Sarah Chen',
@@ -75,10 +77,10 @@ const projects: Project[] = [
   },
   {
     id: 3,
-    title: 'Documentary Truth',
-    category: 'documentary',
+    title: 'Mobile responsive build',
+    category: 'Digital Systems',
     thumbnailUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&h=600&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    videoUrl: 'https://drive.google.com/file/d/1sz0pV2tw4Tv65ClzH6dXwlKQd-AXIr__/view?usp=sharing',
     description: 'An intimate documentary exploring real stories and authentic human experiences.',
     client: 'National Geographic',
     director: 'Michael Torres',
@@ -91,10 +93,10 @@ const projects: Project[] = [
   },
   {
     id: 4,
-    title: 'Musical Harmony',
-    category: 'music',
+    title: 'Barbershop themed build',
+    category: 'Digital Systems',
     thumbnailUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=600&fit=crop',
-    videoUrl: 'https://www.youtube.com/embed/u_sIfs7Yom4?si=MOYOivOMl5mAc-wk',
+    videoUrl: 'https://drive.google.com/file/d/1Z8HWZHxHLMmYcDsb_R3DgR_nZMjeQMjq/view?usp=sharing',
     description: 'A vibrant music video that blends visual artistry with rhythmic storytelling.',
     client: 'Universal Music',
     director: 'Emma Johnson',
@@ -107,10 +109,44 @@ const projects: Project[] = [
   },
   {
     id: 5,
-    title: 'Tuscany Wedding Trailer | Emma & James',
-    category: 'wedding',
+    title: 'Auto Detailing themed build',
+    category: 'Digital Systems',
     thumbnailUrl: 'https://i.ytimg.com/vi/fjFB3B16cAo/hq720.jpg',
-    videoUrl: 'https://www.youtube.com/embed/rkpzYNB6xks?si=0ukSpD6me3CYdRiY',
+    videoUrl: 'https://drive.google.com/file/d/172JGsgvwiGP7gL2Q0Ka9ZJ8YPXQdEJHB/view?usp=sharing',
+    description:
+      'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
+    client: 'Emma & James',
+    director: 'Willow Tree Films',
+    year: '2022',
+    location: 'Tuscany, Italy',
+    camera: 'Sony FX3 + DJI Ronin',
+    lenses: 'Sigma 35mm, Sony 85mm',
+    format: '4K',
+    aspectRatio: '2.35:1',
+  },
+  {
+    id: 6,
+    title: 'Live Music - Event Recap Video',
+    category: 'Creative Strategy',
+    thumbnailUrl: 'https://i.ytimg.com/vi/fjFB3B16cAo/hq720.jpg',
+    videoUrl: 'https://drive.google.com/file/d/1qPdb_gv5zOT1T7JzaQ6rZ6Wa7mks4wen/view?usp=sharing',
+    description:
+      'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
+    client: 'Emma & James',
+    director: 'Willow Tree Films',
+    year: '2022',
+    location: 'Tuscany, Italy',
+    camera: 'Sony FX3 + DJI Ronin',
+    lenses: 'Sigma 35mm, Sony 85mm',
+    format: '4K',
+    aspectRatio: '2.35:1',
+  },
+  {
+    id: 7,
+    title: 'Club promo video',
+    category: 'Creative Strategy',
+    thumbnailUrl: 'https://i.ytimg.com/vi/fjFB3B16cAo/hq720.jpg',
+    videoUrl: 'https://drive.google.com/file/d/1RtaLQ_gOHZUqGhCNe-SXljzNCWaPk26I/view?usp=sharing',
     description:
       'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
     client: 'Emma & James',
@@ -169,7 +205,8 @@ export default function Work() {
       const idx = filteredProjects.findIndex((x) => x.id === p.id)
       setCurrentProjectIndex(idx)
       setSelectedProject(p)
-      setIsPlaying(false)
+      setIsPlaying(true)
+      setSelectedProject(p)
       document.body.style.overflow = 'hidden'
     },
     [filteredProjects]
@@ -190,7 +227,7 @@ export default function Work() {
           : (currentProjectIndex - 1 + filteredProjects.length) % filteredProjects.length
       setCurrentProjectIndex(newIndex)
       setSelectedProject(filteredProjects[newIndex])
-      setIsPlaying(false)
+      setIsPlaying(true)
     },
     [currentProjectIndex, filteredProjects]
   )
@@ -212,12 +249,35 @@ export default function Work() {
   }, [selectedProject])
 
   const getEmbedUrl = (url: string) => {
-    if (!url) return ''
-    const joiner = url.includes('?') ? '&' : '?'
-    if (url.includes('youtube')) return `${url}${joiner}autoplay=1&rel=0`
-    if (url.includes('vimeo')) return `${url}${joiner}autoplay=1`
-    return url
+  if (!url) return '';
+
+  // YouTube
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    const joiner = url.includes('?') ? '&' : '?';
+    return `${url}${joiner}autoplay=1&rel=0`;
   }
+
+  // Vimeo
+  if (url.includes('vimeo.com')) {
+    const joiner = url.includes('?') ? '&' : '?';
+    return `${url}${joiner}autoplay=1`;
+  }
+
+  // Google Drive — convert to /preview (works in iframes)
+  if (url.includes('drive.google.com')) {
+    // handles: /file/d/<id>/view..., /file/d/<id>/*, open?id=<id>, uc?id=<id>
+    const m =
+      url.match(/\/file\/d\/([^/]+)/) ||
+      url.match(/[?&]id=([^&]+)/);
+    const id = m?.[1];
+    if (id) return `https://drive.google.com/file/d/${id}/preview`;
+  }
+
+  return url;
+};
+
+
+
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
