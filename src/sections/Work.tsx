@@ -10,6 +10,7 @@ import Livemu from '../assets/LiveMusic_thumbnail.png'
 import Tailor from '../assets/Tailorshop_Thumbnail.png'
 import mobil from '../assets/MobileWeb_Thumbnail.png'
 import kind from '../assets/Kindrage_Thumbnail.png'
+import flame from '../assets/flameReveal.gif'
 
 type Project = {
   id: number
@@ -164,7 +165,7 @@ const projects: Project[] = [
     title: 'Kindrage clothing brand',
     category: 'Creative Strategy',
     thumbnailUrl: kind,
-    videoUrl: 'https://drive.google.com/file/d/1fhT0xfcqfJFDMH8inl57E4QXW7JZu_-u/view?usp=sharing',
+    videoUrl: flame, // GIF
     description:
       'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
     client: 'Emma & James',
@@ -191,6 +192,10 @@ const useScrollAnimation = () => {
   return { containerAnimation, itemAnimation }
 }
 
+/* ---------- helpers ---------- */
+const isImageLike = (url: string) =>
+  /\.(gif|png|jpe?g|webp|svg)(\?.*)?$/i.test(url ?? '')
+
 export default function Work() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -208,7 +213,7 @@ export default function Work() {
   const isInView = useInView(ref, { once: true, amount: 0.1 })
   const { containerAnimation, itemAnimation } = useScrollAnimation()
 
-  // Track if we're on a small screen (Tailwind 'sm' breakpoint)
+  // Track if we're on a small screen
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)')
     const update = () => setIsSmallScreen(mq.matches)
@@ -260,7 +265,7 @@ export default function Work() {
           : (currentProjectIndex - 1 + filteredProjects.length) % filteredProjects.length
       setCurrentProjectIndex(newIndex)
       setSelectedProject(filteredProjects[newIndex])
-      setIsPlaying(true) // keep playing when navigating
+      setIsPlaying(true)
     },
     [currentProjectIndex, filteredProjects]
   )
@@ -283,26 +288,20 @@ export default function Work() {
 
   const getEmbedUrl = (url: string) => {
     if (!url) return ''
-
-    // YouTube
     if (url.includes('youtube.com') || url.includes('youtu.be')) {
       const joiner = url.includes('?') ? '&' : '?'
       return `${url}${joiner}autoplay=1&rel=0`
     }
-
-    // Vimeo
     if (url.includes('vimeo.com')) {
       const joiner = url.includes('?') ? '&' : '?'
       return `${url}${joiner}autoplay=1`
     }
-
-    // Google Drive — convert to /preview (works in iframes)
+    // Google Drive (preview)
     if (url.includes('drive.google.com')) {
       const m = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/)
       const id = m?.[1]
       if (id) return `https://drive.google.com/file/d/${id}/preview`
     }
-
     return url
   }
 
@@ -316,10 +315,7 @@ export default function Work() {
         }
         return
       }
-
-      // Disable keyboard nav on small screens
       const allowArrows = !isSmallScreen
-
       switch (e.key) {
         case 'Escape':
           closeProject()
@@ -491,7 +487,7 @@ export default function Work() {
                   </div>
                 )}
 
-                {/* Hover overlay – pure CSS transitions for reliability */}
+                {/* Hover overlay */}
                 <div
                   className="absolute inset-0 z-10 pointer-events-none
                              bg-gradient-to-t from-black/90 via-black/40 to-transparent
@@ -575,7 +571,6 @@ export default function Work() {
                   <span className="text-white text-sm">
                     {currentProjectIndex + 1} / {filteredProjects.length}
                   </span>
-                  {/* Hide the arrow usage hint on small screens */}
                   <span className="text-gray-400 text-sm hidden sm:inline">Use ← → to navigate</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -591,7 +586,7 @@ export default function Work() {
                 </div>
               </div>
 
-              {/* Hide navigation arrows entirely on phones */}
+              {/* Hide navigation arrows on phones */}
               {filteredProjects.length > 1 && !isSmallScreen && (
                 <>
                   <button onClick={() => navigateProject('prev')} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded bg-black/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Previous (←)">
@@ -603,17 +598,26 @@ export default function Work() {
                 </>
               )}
 
-              {/* Bigger video on phones: tall height by default; aspect-video from sm and up */}
-              <div className={`relative bg-black ${isFullscreen ? 'h-full' : 'h-[78vh] sm:aspect-video'}`}>
+              {/* Bigger media on phones + center the content */}
+              <div className={`relative bg-black ${isFullscreen ? 'h-full' : 'h-[78vh] sm:aspect-video'} flex items-center justify-center`}>
                 {isPlaying ? (
-                  <iframe
-                    src={getEmbedUrl(selectedProject.videoUrl)}
-                    className="w-full h-full"
-                    title={selectedProject.title}
-                    frameBorder={0}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
+                  isImageLike(selectedProject.videoUrl) ? (
+                    // GIFs/images fill nicely without cropping
+                    <img
+                      src={selectedProject.videoUrl}
+                      alt={selectedProject.title}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  ) : (
+                    <iframe
+                      src={getEmbedUrl(selectedProject.videoUrl)}
+                      className="w-full h-full"
+                      title={selectedProject.title}
+                      frameBorder={0}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  )
                 ) : (
                   <>
                     <img src={selectedProject.thumbnailUrl} alt={selectedProject.title} className="w-full h-full object-cover" />
