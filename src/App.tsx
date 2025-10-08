@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar'
 import { Hero } from './sections/Hero'
 import TeamMemberSection from './sections/Team'
 import Work from './sections/Work'   // ⬅️ add
+import Services from './sections/Services'
 
 export default function App() {
   return (
@@ -12,7 +13,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/team" element={<TeamMemberSection />} />
-        <Route path="/work" element={<Work />} />   {/* ⬅️ new */}
+        <Route path="/work" element={<Work />} />  
+	<Route path="/services" element={<Services />} />
       </Routes>
     </div>
   )

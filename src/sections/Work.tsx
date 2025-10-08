@@ -27,6 +27,16 @@ type Project = {
   lenses: string
   format: string
   aspectRatio: string
+
+  // Case-study fields
+  status?: 'Live' | 'Concept' | 'In Development'
+  statusYear?: string
+  overview?: string
+  objective?: string
+  roles?: string[]
+  tools?: string[]
+  outcomes?: string[]
+  ctaLabel?: string
 }
 
 type Category = { id: number; name: string }
@@ -60,6 +70,16 @@ const projects: Project[] = [
     lenses: 'Zeiss Supreme Primes',
     format: '6K RAW',
     aspectRatio: '2.39:1',
+    status: 'In Development',
+    statusYear: '2024',
+    overview:
+      'An interactive 3D blinds configurator that lets shoppers visualize styles, colors, and mechanics in real time.',
+    objective:
+      'Create an immersive product experience that bridges physical customization with a smooth online flow.',
+    roles: ['UI/UX Design', '3D Integration', 'Front-end Dev', 'Copywriting', 'Brand Direction'],
+    tools: ['React', 'TypeScript', 'Three.js', 'Vite'],
+    outcomes: ['65% higher demo engagement vs static gallery', 'Modular codebase for five blind models'],
+    ctaLabel: 'View Case Study',
   },
   {
     id: 2,
@@ -76,6 +96,16 @@ const projects: Project[] = [
     lenses: 'Sony G Master',
     format: '4K XAVC',
     aspectRatio: '16:9',
+    status: 'Concept',
+    statusYear: '2024',
+    overview:
+      'A boutique theme with measurement wizard and lookbook to showcase bespoke tailoring online.',
+    objective:
+      'Reduce friction from booking to fitting while keeping a premium brand feel.',
+    roles: ['UI/UX Design', 'Front-end Dev', 'Content Structuring'],
+    tools: ['React', 'TypeScript', 'Headless CMS', 'Cloud Functions'],
+    outcomes: ['30% increase in appointment requests (mock tests)', 'Reusable booking component extracted'],
+    ctaLabel: 'View Case Study',
   },
   {
     id: 3,
@@ -92,6 +122,16 @@ const projects: Project[] = [
     lenses: 'Canon CN-E Primes',
     format: '4K Cinema RAW',
     aspectRatio: '16:9',
+    status: 'Live',
+    statusYear: '2024',
+    overview:
+      'A mobile-first template system that scales cleanly from 360 to desktop with component tokens.',
+    objective:
+      'Create a foundation for fast launches across verticals without breaking responsiveness.',
+    roles: ['Design System', 'Front-end Dev', 'QA'],
+    tools: ['React', 'TypeScript', 'Tailwind', 'Storybook'],
+    outcomes: ['CLS-safe layout shifts on test pages', 'Single codebase applied to three demos'],
+    ctaLabel: 'View Case Study',
   },
   {
     id: 4,
@@ -108,6 +148,16 @@ const projects: Project[] = [
     lenses: 'ARRI Signature Primes',
     format: '4.5K ProRes',
     aspectRatio: '2.35:1',
+    status: 'Concept',
+    statusYear: '2024',
+    overview:
+      'High-contrast theme with booking flow, service tiers, and stylist profiles.',
+    objective:
+      'Drive bookings and showcase before-after galleries with fast load times.',
+    roles: ['UI/UX Design', 'Front-end Dev', 'Copywriting'],
+    tools: ['React', 'TypeScript', 'Tailwind', 'Cloud Images'],
+    outcomes: ['Prototype 90+ Lighthouse Performance', 'Booking completion flow reduced to two steps'],
+    ctaLabel: 'View Case Study',
   },
   {
     id: 5,
@@ -125,6 +175,16 @@ const projects: Project[] = [
     lenses: 'Sigma 35mm, Sony 85mm',
     format: '4K',
     aspectRatio: '2.35:1',
+    status: 'Concept',
+    statusYear: '2024',
+    overview:
+      'Bold landing with package selector, trust badges, and before-after sliders for detailers.',
+    objective:
+      'Convert ad traffic with a clear pricing ladder and easy booking.',
+    roles: ['Landing Page', 'Front-end Dev', 'CRO'],
+    tools: ['React', 'TypeScript', 'Tailwind', 'Framer Motion'],
+    outcomes: ['Reusable pricing grid component', 'Analytics events for A/B tests'],
+    ctaLabel: 'View Case Study',
   },
   {
     id: 6,
@@ -142,6 +202,16 @@ const projects: Project[] = [
     lenses: 'Sigma 35mm, Sony 85mm',
     format: '4K',
     aspectRatio: '2.35:1',
+    status: 'Live',
+    statusYear: '2023',
+    overview:
+      'High-energy recap edit capturing crowd emotion and artist highlights for social drops.',
+    objective:
+      'Deliver a sticky, shareable piece that drives post-event momentum.',
+    roles: ['Cinematography', 'Editing', 'Sound Design'],
+    tools: ['Sony Mirrorless', 'Final Cut Pro', 'Adobe Audition'],
+    outcomes: ['Cut-downs for reels and stories', 'Export presets for fast turnarounds'],
+    ctaLabel: 'View Case Study',
   },
   {
     id: 7,
@@ -159,13 +229,23 @@ const projects: Project[] = [
     lenses: 'Sigma 35mm, Sony 85mm',
     format: '4K',
     aspectRatio: '2.35:1',
+    status: 'Live',
+    statusYear: '2023',
+    overview:
+      'Punchy sizzle with typography hits and scene transitions tuned for vertical platforms.',
+    objective:
+      'Drive RSVPs for weekly nights using a repeatable promo format.',
+    roles: ['Editing', 'Motion Graphics', 'Copy'],
+    tools: ['After Effects', 'Premiere Pro', 'Adobe Fonts'],
+    outcomes: ['Template can be versioned in minutes', 'On-brand motion pack created'],
+    ctaLabel: 'View Case Study',
   },
   {
     id: 8,
     title: 'Kindrage clothing brand',
     category: 'Creative Strategy',
     thumbnailUrl: kind,
-    videoUrl: flame, // GIF
+    videoUrl: flame, // GIF preview
     description:
       'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
     client: 'Emma & James',
@@ -176,6 +256,16 @@ const projects: Project[] = [
     lenses: 'Sigma 35mm, Sony 85mm',
     format: '4K',
     aspectRatio: '2.35:1',
+    status: 'In Development',
+    statusYear: '2024',
+    overview:
+      'Brand system and launch visuals for a mental-health-aligned streetwear label.',
+    objective:
+      'Build a visual language that blends grit with empathy and scales across drops.',
+    roles: ['Brand Direction', 'Art Direction', 'Copywriting', 'Product Mockups'],
+    tools: ['Photoshop', 'Illustrator', 'Blender'],
+    outcomes: ['Consistent kit for socials and site', 'Designs prepped for print-on-demand'],
+    ctaLabel: 'View Case Study',
   },
 ]
 
@@ -193,8 +283,7 @@ const useScrollAnimation = () => {
 }
 
 /* ---------- helpers ---------- */
-const isImageLike = (url: string) =>
-  /\.(gif|png|jpe?g|webp|svg)(\?.*)?$/i.test(url ?? '')
+const isImageLike = (url: string) => /\.(gif|png|jpe?g|webp|svg)(\?.*)?$/i.test(url ?? '')
 
 export default function Work() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
@@ -219,7 +308,7 @@ export default function Work() {
     const update = () => setIsSmallScreen(mq.matches)
     update()
     mq.addEventListener?.('change', update)
-    // @ts-ignore - Safari fallback
+    // @ts-ignore Safari
     mq.addListener?.(update)
     return () => {
       mq.removeEventListener?.('change', update)
@@ -244,7 +333,7 @@ export default function Work() {
       const idx = filteredProjects.findIndex((x) => x.id === p.id)
       setCurrentProjectIndex(idx)
       setSelectedProject(p)
-      setIsPlaying(true) // start immediately
+      setIsPlaying(true)
       document.body.style.overflow = 'hidden'
     },
     [filteredProjects]
@@ -296,7 +385,6 @@ export default function Work() {
       const joiner = url.includes('?') ? '&' : '?'
       return `${url}${joiner}autoplay=1`
     }
-    // Google Drive (preview)
     if (url.includes('drive.google.com')) {
       const m = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/)
       const id = m?.[1]
@@ -566,7 +654,7 @@ export default function Work() {
               transition={{ damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="absolute top-0 left-0 right-0 z-20 flex justify-between items-center p-4 bg-gradient-to-b from-black/80 to-transparent">
+              <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-4 bg-gradient-to-b from-black/80 to-transparent">
                 <div className="flex items-center space-x-4">
                   <span className="text-white text-sm">
                     {currentProjectIndex + 1} / {filteredProjects.length}
@@ -586,32 +674,31 @@ export default function Work() {
                 </div>
               </div>
 
-              {/* Hide navigation arrows on phones */}
+              {/* navigation arrows (hidden on phones) */}
               {filteredProjects.length > 1 && !isSmallScreen && (
                 <>
-                  <button onClick={() => navigateProject('prev')} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded bg-black/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Previous (←)">
+                  <button onClick={() => navigateProject('prev')} className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded bg-black/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Previous (←)">
                     <ChevronLeft size={20} />
                   </button>
-                  <button onClick={() => navigateProject('next')} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded bg-black/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Next (→)">
+                  <button onClick={() => navigateProject('next')} className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded bg-black/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Next (→)">
                     <ChevronRight size={20} />
                   </button>
                 </>
               )}
 
-              {/* Bigger media on phones + center the content */}
-              <div className={`relative bg-black ${isFullscreen ? 'h-full' : 'h-[78vh] sm:aspect-video'} flex items-center justify-center`}>
+              {/* media */}
+              <div className={`relative z-0 bg-black ${isFullscreen ? 'h-full' : 'h-[78vh] sm:aspect-video'} flex items-center justify-center isolate`}>
                 {isPlaying ? (
                   isImageLike(selectedProject.videoUrl) ? (
-                    // GIFs/images fill nicely without cropping
                     <img
                       src={selectedProject.videoUrl}
                       alt={selectedProject.title}
-                      className="max-w-full max-h-full object-contain"
+                      className="max-w-full max-h-full object-contain relative z-0"
                     />
                   ) : (
                     <iframe
                       src={getEmbedUrl(selectedProject.videoUrl)}
-                      className="w-full h-full"
+                      className="w-full h-full relative z-0"
                       title={selectedProject.title}
                       frameBorder={0}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -620,8 +707,8 @@ export default function Work() {
                   )
                 ) : (
                   <>
-                    <img src={selectedProject.thumbnailUrl} alt={selectedProject.title} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 flex items-center justify-center">
+                    <img src={selectedProject.thumbnailUrl} alt={selectedProject.title} className="w-full h-full object-cover relative z-0" />
+                    <div className="absolute inset-0 flex items-center justify-center z-10">
                       <motion.button
                         className="w-16 h-16 sm:w-20 sm:h-20 rounded bg-white flex items-center justify-center"
                         whileHover={{ scale: 1.1 }}
@@ -636,29 +723,113 @@ export default function Work() {
                 )}
               </div>
 
-              {!isFullscreen && (
-                <motion.div className="p-6 sm:p-8 md:p-10" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 text-white">{selectedProject.title}</h2>
-                  <p className="text-gray-300 text-sm uppercase tracking-widest mb-4">{selectedProject.category}</p>
-                  <p className="text-gray-200 mb-8 text-base sm:text-lg leading-relaxed">{selectedProject.description}</p>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div>
-                      <h3 className="text-white font-semibold mb-4 text-lg">Project Details</h3>
-                      <ul className="text-gray-200 space-y-3">
-                        <li><span className="font-semibold">Client:</span> {selectedProject.client}</li>
-                        <li><span className="font-semibold">Director:</span> {selectedProject.director}</li>
-                        <li><span className="font-semibold">Year:</span> {selectedProject.year}</li>
-                        <li><span className="font-semibold">Location:</span> {selectedProject.location}</li>
-                      </ul>
+              {/* CASE STUDY PANEL */}
+              {!isFullscreen && selectedProject && (
+                <motion.div
+                  className="p-6 sm:p-8 md:p-10 will-change-transform"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                >
+                  <div
+                    className="
+                      relative z-20 isolate transform-gpu
+                      rounded-3xl ring-1 ring-white/10
+                      bg-black/85 supports-[backdrop-filter:blur(0)]:backdrop-blur-sm
+                      p-6 sm:p-8 text-white
+                    "
+                  >
+                    {/* Header */}
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold">
+                          {selectedProject.title}
+                        </h2>
+                        <p className="mt-1 text-white/80 text-xs sm:text-sm uppercase tracking-widest">
+                          {selectedProject.category}
+                        </p>
+                      </div>
+                      {(selectedProject.status || selectedProject.statusYear) && (
+                        <div className="text-right">
+                          {selectedProject.status && (
+                            <span className="inline-block rounded-full ring-1 ring-white/20 bg-white/10 px-3 py-1 text-xs font-semibold">
+                              {selectedProject.status}
+                            </span>
+                          )}
+                          {selectedProject.statusYear && (
+                            <div className="mt-1 text-xs text-white/70">{selectedProject.statusYear}</div>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <div>
-                      <h3 className="text-white font-semibold mb-4 text-lg">Technical Specs</h3>
-                      <ul className="text-gray-200 space-y-3">
-                        <li><span className="font-semibold">Camera:</span> {selectedProject.camera}</li>
-                        <li><span className="font-semibold">Lenses:</span> {selectedProject.lenses}</li>
-                        <li><span className="font-semibold">Format:</span> {selectedProject.format}</li>
-                        <li><span className="font-semibold">Aspect Ratio:</span> {selectedProject.aspectRatio}</li>
-                      </ul>
+
+                    {/* Overview / Objective */}
+                    {(selectedProject.overview || selectedProject.objective) && (
+                      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {selectedProject.overview && (
+                          <div>
+                            <h3 className="text-sm font-semibold mb-2">Overview</h3>
+                            <p className="leading-relaxed text-sm text-white/90">
+                              {selectedProject.overview}
+                            </p>
+                          </div>
+                        )}
+                        {selectedProject.objective && (
+                          <div>
+                            <h3 className="text-sm font-semibold mb-2">Objective</h3>
+                            <p className="leading-relaxed text-sm text-white/90">
+                              {selectedProject.objective}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Roles & Tools */}
+                    <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {selectedProject.roles?.length ? (
+                        <div>
+                          <h3 className="text-sm font-semibold mb-2">Our Role</h3>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedProject.roles.map((r, i) => (
+                              <span key={i} className="rounded-full ring-1 ring-white/20 bg-white/10 px-3 py-1 text-xs text-white/90">
+                                {r}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                      {selectedProject.tools?.length ? (
+                        <div>
+                          <h3 className="text-sm font-semibold mb-2">Tools Used</h3>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedProject.tools.map((t, i) => (
+                              <span key={i} className="rounded-full ring-1 ring-white/20 bg-white/10 px-3 py-1 text-xs text-white/90">
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+
+                    {/* Outcome / Impact */}
+                    {selectedProject.outcomes?.length ? (
+                      <div className="mt-6">
+                        <h3 className="text-sm font-semibold mb-2">Outcome / Impact</h3>
+                        <ul className="list-disc pl-5 space-y-1 text-sm text-white/90">
+                          {selectedProject.outcomes.map((o, i) => (
+                            <li key={i}>{o}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
+
+                    {/* Footer */}
+                    <div className="mt-8 flex items-center justify-between gap-4">
+                      <div className="text-sm text-white/85">
+                        <span className="text-white/75">Client:</span> {selectedProject.client || '—'}
+                      </div>
                     </div>
                   </div>
                 </motion.div>

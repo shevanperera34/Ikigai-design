@@ -26,6 +26,7 @@ export function Navbar() {
         <nav className="ml-2 flex items-center gap-2 text-sm">
           <NavLink to="/" end className={({isActive}) => `${base} ${isActive ? active : ""}`}>Home</NavLink>
           <NavLink to="/team" className={({isActive}) => `${base} ${isActive ? active : ""}`}>Our Team</NavLink>
+	  <NavLink to="/Services" className={({isActive}) => `${base} ${isActive ? active : ""}`}>Services</NavLink>
         </nav>
       </div>
     </div>
