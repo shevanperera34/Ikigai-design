@@ -1,322 +1,249 @@
 // src/sections/Services.tsx
-import { useMemo, useRef, useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useMemo, useState } from "react";
 
-type ServiceKey = 'brand' | 'web' | 'growth'
-type Service = {
-  key: ServiceKey
-  title: string
-  subtitle: string
-  priceFrom: string
-  bulletsLeft: string[]
-  bulletsRight: string[]
-  ring: string
-  glow: string
-  tint: string
-  label: string
+interface Bundle {
+  key: "brand" | "web" | "growth";
+  title: string;
+  tagline: string;
+  includes: string[];
+  price: string;
 }
 
-const SERVICES: Service[] = [
+const BUNDLES: Bundle[] = [
   {
-    key: 'web',
-    title: 'Intelligent Web Infrastructure',
-    subtitle: 'Bring it to life digitally.',
-    priceFrom: '$2,000',
-    bulletsLeft: ['Web design', '3D integration'],
-    bulletsRight: ['Automation setup', 'Performance tracking'],
-    ring: 'ring-cyan-300/35',
-    glow: 'shadow-[0_0_110px_24px_rgba(34,211,238,0.09)]',
-    tint: 'bg-cyan-300/10',
-    label: 'Web Infrastructure',
+    key: "brand",
+    title: "Brand Systems Build",
+    tagline: "Define who you are.",
+    includes: ["Logo & identity", "Brand messaging", "Copy systems", "Creative direction"],
+    price: "From $1,500",
   },
   {
-    key: 'growth',
-    title: 'Growth Architecture',
-    subtitle: 'Scale with purpose.',
-    priceFrom: '$1,200',
-    bulletsLeft: ['Paid media setup', 'Content funnels'],
-    bulletsRight: ['Campaign management', 'Analytics & reporting'],
-    ring: 'ring-emerald-300/35',
-    glow: 'shadow-[0_0_110px_24px_rgba(52,211,153,0.08)]',
-    tint: 'bg-emerald-300/10',
-    label: 'Growth Architecture',
+    key: "web",
+    title: "Intelligent Web Infrastructure",
+    tagline: "Bring it to life digitally.",
+    includes: ["Web design", "Automation setup", "3D integration", "Performance tracking"],
+    price: "From $2,000",
   },
   {
-    key: 'brand',
-    title: 'Brand Systems Build',
-    subtitle: 'Define who you are.',
-    priceFrom: '$1,500',
-    bulletsLeft: ['Logo & identity', 'Copy systems'],
-    bulletsRight: ['Brand messaging', 'Creative direction'],
-    ring: 'ring-amber-300/35',
-    glow: 'shadow-[0_0_110px_24px_rgba(251,191,36,0.08)]',
-    tint: 'bg-amber-300/10',
-    label: 'Brand Systems',
+    key: "growth",
+    title: "Growth Architecture",
+    tagline: "Scale with purpose.",
+    includes: ["Paid media setup", "Campaign management", "Content funnels", "Analytics & reporting"],
+    price: "From $1,200",
   },
-]
-
-const chip =
-  'px-3 py-1 rounded-full border border-white/10 text-[11px] leading-none text-white/80 hover:border-white/20 transition'
+];
 
 export default function Services() {
-  const [selected, setSelected] = useState<ServiceKey | null>(null)
-  const current = useMemo(
-    () => SERVICES.find(s => s.key === selected) ?? null,
-    [selected]
-  )
+  const [hoveredKey, setHoveredKey] = useState<Bundle["key"] | null>(null);
+  const [selectedKey, setSelectedKey] = useState<Bundle["key"] | null>(null);
 
-  // Scroll the panel into view when a circle is picked (nice on smaller laptops)
-  const panelRef = useRef<HTMLDivElement | null>(null)
-  useEffect(() => {
-    if (current && panelRef.current) {
-      panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }
-  }, [current])
+  const activeKey = selectedKey ?? hoveredKey;
+  const active = BUNDLES.find((b) => b.key === activeKey) || null;
+
+  // Venn centers (SVG viewBox is 1000 x 750)
+  const coords = useMemo(
+    () => ({
+      brand: { cx: 500, cy: 290 },
+      web: { cx: 370, cy: 460 },
+      growth: { cx: 630, cy: 460 },
+    }),
+    []
+  );
 
   return (
-    <section className="relative min-h-screen bg-[#0b0b0b] text-white overflow-hidden">
-      {/* soft vignette */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_-10%,rgba(255,255,255,0.06),rgba(0,0,0,0))]" />
+    <section className="relative min-h-screen bg-black text-white overflow-hidden">
+      {/* soft vignette background for depth */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-8 lg:px-10 py-14 md:py-18">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] text-white/70">
-            <span className="block h-1.5 w-1.5 rounded-full bg-white/60" />
-            The Ikigai Project
-          </div>
-
-          <h1 className="mt-3 text-[34px] sm:text-[40px] md:text-[44px] font-extrabold tracking-tight">
-            Find Your Alignment
-          </h1>
-          <p className="mt-2 text-white/70 text-sm sm:text-[15px] leading-6">
-            Choose a pathway or build your own. The center is where balance happens.
-          </p>
-
-          <div className="mt-6 flex items-center justify-center gap-2">
-            <button className={chip}>Authenticity</button>
-            <button className={chip}>Innovation</button>
-            <button className={chip}>Balance</button>
-          </div>
-        </div>
-
-        {/* Diagram — smaller and cleaner. Hidden on phones. */}
-        <div className="relative mt-12 md:mt-14 lg:mt-16 hidden md:block">
-          {/* Height trimmed so you don’t need page zoom */}
-          <div className="relative mx-auto max-w-5xl h-[430px] lg:h-[470px]">
-            <Circle
-              size="md"
-              position="top"
-              service={SERVICES.find(s => s.key === 'brand')!}
-              active={selected === 'brand'}
-              onChoose={() => setSelected('brand')}
-            />
-            <Circle
-              size="md"
-              position="left"
-              service={SERVICES.find(s => s.key === 'web')!}
-              active={selected === 'web'}
-              onChoose={() => setSelected('web')}
-            />
-            <Circle
-              size="md"
-              position="right"
-              service={SERVICES.find(s => s.key === 'growth')!}
-              active={selected === 'growth'}
-              onChoose={() => setSelected('growth')}
-            />
-
-            {/* Center CTA */}
-            <motion.button
-              whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setSelected(null)}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-400 text-black font-semibold px-4 py-2.5 rounded-xl shadow-[0_6px_28px_rgba(251,191,36,0.45)] ring-1 ring-white/70"
-            >
-              Custom Alignment
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Detail panel OR 3-card chooser */}
-        <div ref={panelRef} className="mt-10 lg:mt-12">
-          <AnimatePresence mode="wait">
-            {current ? (
-              <motion.div
-                key={current.key}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 18 }}
-              >
-                <DetailPanel service={current} onBack={() => setSelected(null)} />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="cards"
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 18 }}
-                className="grid gap-5 md:gap-6 md:grid-cols-3"
-              >
-                {SERVICES.map(s => (
-                  <button
-                    key={s.key}
-                    onClick={() => setSelected(s.key)}
-                    className={`group text-left rounded-2xl border border-white/10 bg-white/[0.035] hover:bg-white/[0.06] transition p-5 md:p-6 ${s.glow} min-h-[180px]`}
-                  >
-                    <div className="text-[11px] tracking-widest text-white/70">
-                      {s.title.toUpperCase()}
-                    </div>
-                    <div className="mt-1.5 text-white/90">{s.subtitle}</div>
-                    <div className="mt-5 text-sm text-white/70">
-                      From <span className="text-white/90">{s.priceFrom}</span>
-                    </div>
-                    <div className="mt-5 inline-flex items-center gap-2 text-sm text-black font-medium bg-white rounded-full px-3 py-1">
-                      View Details
-                      <span className="block h-2 w-2 rounded-full bg-black/50 group-hover:bg-black/70" />
-                    </div>
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <p className="mt-8 text-center text-[11px] text-white/45">
-          Circles overlap visually; the center button is your “Custom Alignment” entry point.
+      {/* Page header (your global nav should already be above this) */}
+      <header className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 pt-12 md:pt-22">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-center">
+          Find Your Alignment
+        </h1>
+        <p className="mt-3 text-center text-white/70">
+          Choose a pathway or build your own. The center is where balance happens.
         </p>
+      </header>
+
+      <style>{`
+        @keyframes ikigai-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes ikigai-breathe { 0% { opacity: .08; } 50% { opacity: .16; } 100% { opacity: .08; } }
+        @keyframes ikigai-pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.06); } 100% { transform: translate(-50%, -50%) scale(1); } }
+      `}</style>
+
+      {/* Main content */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-10 md:py-14">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12">
+          {/* Left: Venn + animated accents */}
+          <div className="relative w-full lg:w-[56%] max-w-[720px] mx-auto aspect-[4/3] flex items-center justify-center">
+            {/* Breathing center halo */}
+            <div
+              className="pointer-events-none absolute rounded-full blur-3xl"
+              style={{
+                width: 420,
+                height: 420,
+                left: "50%",
+                top: "52%",
+                transform: "translate(-50%, -50%)",
+                background: "rgba(255,255,255,0.08)",
+                animation: "ikigai-breathe 6s ease-in-out infinite",
+              }}
+            />
+
+            {/* Purple glow for active circle */}
+            {activeKey && (
+              <div
+                className="pointer-events-none absolute rounded-full blur-2xl opacity-70 transition-all duration-300"
+                style={{
+                  width: 500,
+                  height: 500,
+                  left: `${coords[activeKey].cx / 10}%`,
+                  top: `${coords[activeKey].cy / 7.5}%`,
+                  transform: "translate(-50%, -50%)",
+                  background: "rgba(168,85,247,0.25)",
+                  animation: "ikigai-pulse 5s ease-in-out infinite",
+                }}
+              />
+            )}
+
+            {/* Tiny orbiting dot */}
+            <div
+              className="pointer-events-none absolute"
+              style={{
+                left: "50%",
+                top: "52%",
+                width: 1,
+                height: 1,
+                transform: "translate(-50%, -50%)",
+                animation: "ikigai-rotate 18s linear infinite",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  left: 150,
+                  top: -2,
+                  width: 6,
+                  height: 6,
+                  borderRadius: 9999,
+                  background: "white",
+                  boxShadow: "0 0 12px rgba(255,255,255,0.8)",
+                }}
+              />
+            </div>
+
+            <svg
+              viewBox="0 0 1000 750"
+              className="h-full w-full"
+              onMouseLeave={() => setHoveredKey(null)}
+            >
+              {/* slow rotating dashed ring */}
+              <g
+                style={{
+                  transformOrigin: "500px 375px",
+                  animation: "ikigai-rotate 40s linear infinite",
+                }}
+              >
+                <circle
+                  cx={500}
+                  cy={375}
+                  r={240}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.2)"
+                  strokeWidth={1}
+                  strokeDasharray="6 10"
+                />
+              </g>
+
+              {/* circles (solid white with low opacity; increase on hover/active) */}
+              <circle
+                cx={coords.brand.cx}
+                cy={coords.brand.cy}
+                r={210}
+                fill="#ffffff"
+                opacity={activeKey === "brand" ? 0.22 : 0.14}
+                className="cursor-pointer transition-opacity duration-200"
+                onMouseEnter={() => setHoveredKey("brand")}
+                onClick={() => setSelectedKey("brand")}
+              />
+              <circle
+                cx={coords.web.cx}
+                cy={coords.web.cy}
+                r={210}
+                fill="#ffffff"
+                opacity={activeKey === "web" ? 0.22 : 0.14}
+                className="cursor-pointer transition-opacity duration-200"
+                onMouseEnter={() => setHoveredKey("web")}
+                onClick={() => setSelectedKey("web")}
+              />
+              <circle
+                cx={coords.growth.cx}
+                cy={coords.growth.cy}
+                r={210}
+                fill="#ffffff"
+                opacity={activeKey === "growth" ? 0.22 : 0.14}
+                className="cursor-pointer transition-opacity duration-200"
+                onMouseEnter={() => setHoveredKey("growth")}
+                onClick={() => setSelectedKey("growth")}
+              />
+
+              {/* Labels */}
+              <text x="500" y="130" textAnchor="middle" fontSize="18" fill="white">
+                Brand Systems
+              </text>
+              <text x="270" y="680" textAnchor="middle" fontSize="18" fill="white">
+                Web Infrastructure
+              </text>
+              <text x="730" y="680" textAnchor="middle" fontSize="18" fill="white">
+                Growth Architecture
+              </text>
+
+              {/* Center CTA (small, clean) */}
+              <foreignObject x="430" y="355" width="140" height="80">
+                <div className="flex h-full w-full items-center justify-center">
+                  <button
+                    className="rounded-xl bg-white text-black px-3 py-2 text-sm hover:bg-neutral-200 transition-colors"
+                    onClick={() => setSelectedKey(null)}
+                  >
+                    Custom Alignment
+                  </button>
+                </div>
+              </foreignObject>
+            </svg>
+          </div>
+
+          {/* Right: Details panel */}
+          <div className="w-full lg:flex-1">
+            <div className="border border-white/10 bg-white/5 rounded-2xl p-6 md:p-7 backdrop-blur-sm shadow-[0_20px_80px_rgba(0,0,0,0.35)] min-h-[420px]">
+              {active ? (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-1.5">{active.title}</h2>
+                  <p className="text-white/70 mb-4">{active.tagline}</p>
+                  <ul className="text-sm text-white/85 space-y-1.5 mb-5 leading-6">
+                    {active.includes.map((item, idx) => (
+                      <li key={idx}>• {item}</li>
+                    ))}
+                  </ul>
+                  <p className="font-medium text-white/90">{active.price}</p>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <button className="rounded-xl bg-white text-black px-4 py-2 hover:bg-neutral-200">
+                      View Details
+                    </button>
+                    <button className="rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40">
+                      Add to Custom Alignment
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-white/60 flex items-center justify-center h-[360px]">
+                  Hover or click a circle to view details.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
-  )
-}
-
-/* ---------- components ---------- */
-
-function DetailPanel({
-  service,
-  onBack,
-}: {
-  service: Service
-  onBack: () => void
-}) {
-  return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 md:p-7 lg:p-8 backdrop-blur-sm">
-      <div className="flex flex-wrap items-start justify-between gap-6">
-        <div className="min-w-[240px]">
-          <h3 className="text-[20px] md:text-[22px] font-semibold">{service.title}</h3>
-          <p className="mt-1 text-white/70">{service.subtitle}</p>
-        </div>
-        <div className="text-right text-white/70">
-          <div className="text-xs">From</div>
-          <div className="font-medium">{service.priceFrom}</div>
-        </div>
-      </div>
-
-      <hr className="my-6 border-white/10" />
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <ul className="space-y-2 text-white/90 leading-6">
-          {service.bulletsLeft.map((b, i) => (
-            <li key={i} className="flex gap-2">
-              <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-white/70" />
-              <span>{b}</span>
-            </li>
-          ))}
-        </ul>
-        <ul className="space-y-2 text-white/90 leading-6">
-          {service.bulletsRight.map((b, i) => (
-            <li key={i} className="flex gap-2">
-              <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-white/70" />
-              <span>{b}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-8 flex flex-wrap items-center gap-3">
-        <button className="rounded-md bg-white text-black px-4 py-2 text-sm font-medium hover:bg-white/90">
-          View Details
-        </button>
-        <button className="rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-white/90 hover:bg-white/5">
-          Add to Custom Alignment
-        </button>
-        <button
-          onClick={onBack}
-          className="ml-auto rounded-md border border-white/10 px-4 py-2 text-sm text-white/75 hover:bg-white/5"
-        >
-          Back
-        </button>
-      </div>
-    </div>
-  )
-}
-
-function Circle({
-  size,
-  position,
-  service,
-  active,
-  onChoose,
-}: {
-  size: 'md'
-  position: 'top' | 'left' | 'right'
-  service: Service
-  active: boolean
-  onChoose: () => void
-}) {
-  // Smaller, laptop-friendly sizes
-  const dims =
-    size === 'md'
-      ? 'w-[360px] h-[360px] lg:w-[420px] lg:h-[420px]'
-      : 'w-[520px] h-[520px]'
-
-  const pos =
-    position === 'top'
-      ? 'left-1/2 -translate-x-1/2 -top-4 lg:-top-2'
-      : position === 'left'
-      ? 'left-[3%] bottom-2 lg:left-[6%]'
-      : 'right-[3%] bottom-2 lg:right-[6%]'
-
-  return (
-    <div className={`absolute ${pos}`}>
-      <button
-        onClick={onChoose}
-        className={[
-          'relative rounded-full',
-          dims,
-          'transition',
-          service.glow,
-          active ? 'ring-2 ring-white/60' : `ring-[1.5px] ${service.ring}`,
-          service.tint,
-          'backdrop-blur-[2px] mix-blend-screen',
-        ].join(' ')}
-        aria-label={service.title}
-        title={service.title}
-      >
-        {/* subtle inner radial */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-full"
-          style={{
-            background:
-              'radial-gradient(closest-side, rgba(255,255,255,0.10), rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.02) 65%, transparent 76%)',
-          }}
-        />
-      </button>
-
-      {/* Circle label */}
-      <div
-        className={`absolute text-white/90 text-[13px] ${
-          position === 'top'
-            ? 'left-1/2 -translate-x-1/2 -top-7'
-            : position === 'left'
-            ? 'left-4 -bottom-7'
-            : 'right-4 -bottom-7'
-        }`}
-      >
-        {service.label}
-      </div>
-    </div>
-  )
+  );
 }
 
