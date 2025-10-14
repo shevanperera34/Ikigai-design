@@ -1,5 +1,5 @@
 // src/sections/Services.tsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
 interface Bundle {
   key: "brand" | "web" | "growth";
@@ -37,7 +37,15 @@ export default function Services() {
   const [hoveredKey, setHoveredKey] = useState<Bundle["key"] | null>(null);
   const [selectedKey, setSelectedKey] = useState<Bundle["key"] | null>(null);
 
-  const activeKey = selectedKey ?? hoveredKey;
+  // custom alignment state
+  const [customSet, setCustomSet] = useState<Set<Bundle["key"]>>(new Set());
+  const [showCustom, setShowCustom] = useState(false);
+  const [customLocked, setCustomLocked] = useState(false);
+
+  // toast state
+  const [toast, setToast] = useState<{ id: number; message: string } | null>(null);
+
+  const activeKey = showCustom ? null : (selectedKey ?? hoveredKey);
   const active = BUNDLES.find((b) => b.key === activeKey) || null;
 
   // Venn centers (SVG viewBox is 1000 x 750)
@@ -50,12 +58,68 @@ export default function Services() {
     []
   );
 
+  // helper: show toast for ~2s
+  const showToast = (message: string) => {
+    const id = Date.now();
+    setToast({ id, message });
+    window.setTimeout(() => {
+      setToast((t) => (t && t.id === id ? null : t));
+    }, 2000);
+  };
+   
+  // updated: open custom from details panel
+const handleAddOrViewCustom = (key: Bundle["key"]) => {
+  if (!customSet.has(key)) {
+    const next = new Set(customSet);
+    next.add(key);
+    setCustomSet(next);
+    showToast("Added to Custom Alignment");
+  }
+  setShowCustom(true);
+  setCustomLocked(true);        // <-- lock in custom view
+  setHoveredKey(null);
+  setSelectedKey(null);
+};
+
+
+
+  // toggle from the Custom Alignment tile checkboxes
+  const toggleCustom = (key: Bundle["key"]) => {
+    const next = new Set(customSet);
+    if (next.has(key)) next.delete(key);
+    else next.add(key);
+    setCustomSet(next);
+  };
+
+  // updated: hover and click handlers for circles
+const onEnterCircle = (key: Bundle["key"]) => {
+  if (customLocked) return;     // <-- ignore hover while locked
+  setShowCustom(false);
+  setHoveredKey(key);
+};
+
+const onClickCircle = (key: Bundle["key"]) => {
+  setCustomLocked(false);       // <-- unlock when explicitly choosing a circle
+  setShowCustom(false);
+  setSelectedKey(key);
+};
+
+
   return (
     <section className="relative min-h-screen bg-black text-white overflow-hidden">
+      {/* toast (top-left) */}
+      {toast && (
+        <div className="fixed top-6 left-6 z-[120]">
+          <div className="rounded-xl border border-white/15 bg-white/10 backdrop-blur-md px-4 py-2 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
+            <span className="text-sm text-white/95">{toast.message}</span>
+          </div>
+        </div>
+      )}
+
       {/* soft vignette background for depth */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
 
-      {/* Page header (your global nav should already be above this) */}
+      {/* Page header */}
       <header className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 pt-12 md:pt-22">
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-center">
           Find Your Alignment
@@ -91,7 +155,7 @@ export default function Services() {
             />
 
             {/* Purple glow for active circle */}
-            {activeKey && (
+            {(!showCustom && activeKey) && (
               <div
                 className="pointer-events-none absolute rounded-full blur-2xl opacity-70 transition-all duration-300"
                 style={{
@@ -155,36 +219,36 @@ export default function Services() {
                 />
               </g>
 
-              {/* circles (solid white with low opacity; increase on hover/active) */}
+              {/* circles */}
               <circle
                 cx={coords.brand.cx}
                 cy={coords.brand.cy}
                 r={210}
                 fill="#ffffff"
-                opacity={activeKey === "brand" ? 0.22 : 0.14}
+                opacity={!showCustom && activeKey === "brand" ? 0.22 : 0.14}
                 className="cursor-pointer transition-opacity duration-200"
-                onMouseEnter={() => setHoveredKey("brand")}
-                onClick={() => setSelectedKey("brand")}
+                onMouseEnter={() => onEnterCircle("brand")}
+                onClick={() => onClickCircle("brand")}
               />
               <circle
                 cx={coords.web.cx}
                 cy={coords.web.cy}
                 r={210}
                 fill="#ffffff"
-                opacity={activeKey === "web" ? 0.22 : 0.14}
+                opacity={!showCustom && activeKey === "web" ? 0.22 : 0.14}
                 className="cursor-pointer transition-opacity duration-200"
-                onMouseEnter={() => setHoveredKey("web")}
-                onClick={() => setSelectedKey("web")}
+                onMouseEnter={() => onEnterCircle("web")}
+                onClick={() => onClickCircle("web")}
               />
               <circle
                 cx={coords.growth.cx}
                 cy={coords.growth.cy}
                 r={210}
                 fill="#ffffff"
-                opacity={activeKey === "growth" ? 0.22 : 0.14}
+                opacity={!showCustom && activeKey === "growth" ? 0.22 : 0.14}
                 className="cursor-pointer transition-opacity duration-200"
-                onMouseEnter={() => setHoveredKey("growth")}
-                onClick={() => setSelectedKey("growth")}
+                onMouseEnter={() => onEnterCircle("growth")}
+                onClick={() => onClickCircle("growth")}
               />
 
               {/* Labels */}
@@ -198,12 +262,17 @@ export default function Services() {
                 Growth Architecture
               </text>
 
-              {/* Center CTA (small, clean) */}
+              {/* Center CTA */}
               <foreignObject x="430" y="355" width="140" height="80">
                 <div className="flex h-full w-full items-center justify-center">
                   <button
                     className="rounded-xl bg-white text-black px-3 py-2 text-sm hover:bg-neutral-200 transition-colors"
-                    onClick={() => setSelectedKey(null)}
+                    onClick={() => {
+                      setHoveredKey(null);
+                      setSelectedKey(null);
+                      setShowCustom(true);
+		      setCustomLocked(true);
+                    }}
                   >
                     Custom Alignment
                   </button>
@@ -212,10 +281,53 @@ export default function Services() {
             </svg>
           </div>
 
-          {/* Right: Details panel */}
+          {/* Right: Panel */}
           <div className="w-full lg:flex-1">
             <div className="border border-white/10 bg-white/5 rounded-2xl p-6 md:p-7 backdrop-blur-sm shadow-[0_20px_80px_rgba(0,0,0,0.35)] min-h-[420px]">
-              {active ? (
+              {/* CUSTOM ALIGNMENT VIEW */}
+              {showCustom ? (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-1.5">Custom Alignment</h2>
+                  <p className="text-white/70 mb-5">
+                    Mix & match the areas you want. Items you added are already checked.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {BUNDLES.map((b) => (
+                      <label
+                        key={b.key}
+                        className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4 hover:border-white/30 transition-colors cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mt-1 h-4 w-4 accent-white"
+                          checked={customSet.has(b.key)}
+                          onChange={() => toggleCustom(b.key)}
+                        />
+                        <div>
+                          <div className="font-medium">{b.title}</div>
+                          <div className="text-xs text-white/70">{b.tagline}</div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <button
+                      className="rounded-xl bg-white text-black px-4 py-2 hover:bg-neutral-200"
+                      onClick={() => {setShowCustom(false); setCustomLocked(false);}}
+                    >
+                      Done
+                    </button>
+                    <button
+                      className="rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40"
+                      onClick={() => setCustomSet(new Set())}
+                    >
+                      Get Quote
+                    </button>
+                  </div>
+                </div>
+              ) : /* BUNDLE DETAILS */ active ? (
                 <div>
                   <h2 className="text-2xl font-semibold mb-1.5">{active.title}</h2>
                   <p className="text-white/70 mb-4">{active.tagline}</p>
@@ -227,10 +339,13 @@ export default function Services() {
                   <p className="font-medium text-white/90">{active.price}</p>
                   <div className="mt-6 flex flex-wrap gap-3">
                     <button className="rounded-xl bg-white text-black px-4 py-2 hover:bg-neutral-200">
-                      View Details
+                      Get Quote
                     </button>
-                    <button className="rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40">
-                      Add to Custom Alignment
+                    <button
+                      className="rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40"
+                      onClick={() => handleAddOrViewCustom(active.key)}
+                    >
+                      {customSet.has(active.key) ? "View Custom Alignment" : "Add to Custom Alignment"}
                     </button>
                   </div>
                 </div>

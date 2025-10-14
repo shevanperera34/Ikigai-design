@@ -29,7 +29,7 @@ export default function Contact() {
           hueShift={0}
           colorFrequency={1}
           noise={0}
-          glow={0.3}
+          glow={0.6}
           suspendWhenOffscreen
         />
       </div>
