@@ -1,5 +1,6 @@
 // src/sections/Services.tsx
 import React, { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Bundle {
   key: "brand" | "web" | "growth";
@@ -34,6 +35,7 @@ const BUNDLES: Bundle[] = [
 ];
 
 export default function Services() {
+  const navigate = useNavigate();
   const [hoveredKey, setHoveredKey] = useState<Bundle["key"] | null>(null);
   const [selectedKey, setSelectedKey] = useState<Bundle["key"] | null>(null);
 
@@ -93,16 +95,21 @@ const handleAddOrViewCustom = (key: Bundle["key"]) => {
 
   // updated: hover and click handlers for circles
 const onEnterCircle = (key: Bundle["key"]) => {
-  if (customLocked) return;     // <-- ignore hover while locked
+  if (customLocked) return;     
   setShowCustom(false);
   setHoveredKey(key);
 };
 
 const onClickCircle = (key: Bundle["key"]) => {
-  setCustomLocked(false);       // <-- unlock when explicitly choosing a circle
+  setCustomLocked(false);       
   setShowCustom(false);
   setSelectedKey(key);
 };
+
+const goToQuote = (bundles: Bundle["key"][]) => {
+    if (bundles.length === 0) return;
+    navigate("/services/get-quote", { state: { bundles } });
+  };
 
 
   return (
@@ -321,7 +328,7 @@ const onClickCircle = (key: Bundle["key"]) => {
                     </button>
                     <button
                       className="rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40"
-                      onClick={() => setCustomSet(new Set())}
+                      onClick={() => goToQuote(Array.from(customSet))}
                     >
                       Get Quote
                     </button>
@@ -338,7 +345,7 @@ const onClickCircle = (key: Bundle["key"]) => {
                   </ul>
                   <p className="font-medium text-white/90">{active.price}</p>
                   <div className="mt-6 flex flex-wrap gap-3">
-                    <button className="rounded-xl bg-white text-black px-4 py-2 hover:bg-neutral-200">
+                    <button className="rounded-xl bg-white text-black px-4 py-2 hover:bg-neutral-200" onClick={() => goToQuote([active.key])}>
                       Get Quote
                     </button>
                     <button

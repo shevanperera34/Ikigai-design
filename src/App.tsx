@@ -7,6 +7,7 @@ import Work from './sections/Work'
 import Services from './sections/Services'
 import Contact from './sections/Contact'
 import About from './sections/About'
+import IkigaiQuoteFlow from "./sections/Services-GetQuote";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/team" element={<TeamMemberSection />} />
         <Route path="/work" element={<Work />} />  
 	<Route path="/services" element={<Services />} />
+	<Route path="/services/get-quote" element={<IkigaiQuoteFlow />} />
 	<Route path="/contact" element={<Contact />} />
 	<Route path="/about" element={<About />} />
       </Routes>
