@@ -27,8 +27,6 @@ type Project = {
   lenses: string
   format: string
   aspectRatio: string
-
-  // Case-study fields
   status?: 'Live' | 'Concept' | 'In Development'
   statusYear?: string
   overview?: string
@@ -453,8 +451,15 @@ export default function Work() {
   const cardHoverAnimation = { scale: 1.03, y: -8, transition: { stiffness: 300, damping: 20 } }
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-black min-h-screen relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="relative min-h-screen bg-black text-white font-[Inter] overflow-hidden">
+      {/* Brand background & vignette */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-120px,rgba(255,255,255,0.07),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(900px_500px_at_50%_120%,rgba(0,0,0,0.55),transparent_60%)]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 md:py-20 relative z-10">
         {/* header */}
         <motion.div
           ref={ref}
@@ -463,30 +468,33 @@ export default function Work() {
           animate={isInView ? 'visible' : 'hidden'}
           className="text-center mb-12 sm:mb-16"
         >
-          <motion.h2 variants={itemAnimation} className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 text-white">
+          <motion.h2
+            variants={itemAnimation}
+            className="font-[Space_Grotesk] uppercase tracking-widest text-4xl sm:text-5xl md:text-6xl mb-3"
+          >
             Our Work
           </motion.h2>
-          <motion.div variants={itemAnimation} className="w-24 h-1 bg-white mx-auto mb-6" />
-          <motion.p variants={itemAnimation} className="text-gray-300 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
+          <motion.p variants={itemAnimation} className="text-white/80 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
             Explore the range of work done by The Ikigai Project
-            <span className="block text-sm text-gray-400 mt-2">Press “/” to search or use arrow keys to navigate</span>
+            <span className="block text-xs md:text-sm text-white/60 mt-2">Press “/” to search or use arrow keys to navigate</span>
           </motion.p>
         </motion.div>
 
         {/* search + filters */}
         <motion.div variants={containerAnimation} initial="hidden" animate={isInView ? 'visible' : 'hidden'} className="mb-12 sm:mb-16">
-          <div className="mb-8 flex justify-start">
-            <motion.div className="relative w-full max-w-md">
+          <div className="mb-8 flex justify-center">
+            <motion.div className="relative w-full max-w-xl">
               <div className="relative flex items-center">
                 <motion.button
                   onClick={toggleSearch}
-                  className={`flex items-center gap-2 px-4 py-2 bg-black border border-gray-600 rounded text-gray-300 hover:bg-gray-800 transition-all duration-300 ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-white/85 border border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-300 ${
                     isSearchActive ? 'w-full' : 'w-auto'
                   }`}
                   whileHover={buttonHoverAnimation}
                   whileTap={{ scale: 0.95 }}
+                  aria-label="Toggle search"
                 >
-                  <Search size={20} />
+                  <Search size={18} />
                   {!isSearchActive && <span>Search Projects</span>}
                 </motion.button>
                 <AnimatePresence>
@@ -499,9 +507,10 @@ export default function Work() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onBlur={() => !searchTerm && setIsSearchActive(false)}
                         placeholder="Search projects..."
-                        className="w-full px-4 py-2 pl-10 bg-black border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-white"
+                        className="w-full pl-10 pr-10 py-2 rounded-full text-white placeholder-white/60 bg-white/5 border border-white/20 focus:outline-none focus:border-white/40"
+                        aria-label="Search projects"
                       />
-                      <Search size={20} className="absolute left-3 text-gray-400" />
+                      <Search size={18} className="absolute left-3 text-white/60" />
                       {searchTerm && (
                         <motion.button
                           whileHover={{ scale: 1.1 }}
@@ -510,9 +519,10 @@ export default function Work() {
                             setSearchTerm('')
                             searchInputRef.current?.focus()
                           }}
-                          className="absolute right-3 text-gray-400 hover:text-white"
+                          className="absolute right-3 text-white/60 hover:text-white"
+                          aria-label="Clear search"
                         >
-                          <XCircle size={20} />
+                          <XCircle size={18} />
                         </motion.button>
                       )}
                     </motion.div>
@@ -522,16 +532,19 @@ export default function Work() {
             </motion.div>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+          <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3.5">
             {categoryOptions.map((cat) => (
               <motion.button
                 key={cat}
-                className={`px-6 py-3 rounded uppercase tracking-widest text-sm font-semibold transition-all duration-300 ${
-                  category === cat ? 'bg-white text-black' : 'border border-gray-600 text-gray-200 hover:border-white hover:text-white'
-                } focus:outline-none focus:border-white`}
+                className={`px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  category === cat
+                    ? 'bg-white text-black'
+                    : 'border border-white/20 text-white/85 hover:border-white/40 hover:text-white'
+                } focus:outline-none`}
                 onClick={() => setCategory(cat)}
                 whileHover={buttonHoverAnimation}
                 whileTap={{ scale: 0.95 }}
+                aria-pressed={category === cat}
               >
                 {cat}
               </motion.button>
@@ -553,13 +566,14 @@ export default function Work() {
                 layout
                 key={project.id}
                 variants={itemAnimation}
-                className="relative group cursor-pointer rounded overflow-hidden h-72 sm:h-80 bg-gray-900 border border-gray-800"
+                className="relative group cursor-pointer rounded-2xl overflow-hidden h-72 sm:h-80 border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
                 onClick={() => openProject(project)}
                 whileHover={cardHoverAnimation}
                 initial={{ opacity: 0, scale: 0.85 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.85 }}
                 transition={{ duration: 0.35 }}
+                aria-label={`Open ${project.title}`}
               >
                 {!imageError[project.id] ? (
                   <img
@@ -570,8 +584,8 @@ export default function Work() {
                     loading="lazy"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-900 flex items-center justify-center">
-                    <span className="text-gray-400 text-sm font-medium">Image unavailable</span>
+                  <div className="w-full h-full bg-black/40 flex items-center justify-center">
+                    <span className="text-white/60 text-sm font-medium">Image unavailable</span>
                   </div>
                 )}
 
@@ -583,32 +597,32 @@ export default function Work() {
                              flex flex-col justify-end p-6"
                 >
                   <h3
-                    className="pointer-events-none text-lg sm:text-xl font-bold text-white mb-1
+                    className="pointer-events-none text-lg sm:text-xl font-semibold text-white mb-1
                                translate-y-2 opacity-0 transition-all duration-300
                                group-hover:opacity-100 group-hover:translate-y-0"
                   >
                     {project.title}
                   </h3>
                   <p
-                    className="pointer-events-none text-gray-300 text-sm uppercase tracking-wider mb-3
+                    className="pointer-events-none text-white/80 text-xs uppercase tracking-[0.2em] mb-3
                                translate-y-3 opacity-0 transition-all duration-300 delay-75
                                group-hover:opacity-100 group-hover:translate-y-0"
                   >
                     {project.category}
                   </p>
                   <div
-                    className="pointer-events-none flex items-center space-x-3
+                    className="pointer-events-none flex items-center gap-3
                                translate-y-3 opacity-0 transition-all duration-300 delay-150
                                group-hover:opacity-100 group-hover:translate-y-0"
                   >
-                    <div className="w-12 h-12 rounded bg-white flex items-center justify-center">
+                    <div className="w-12 h-12 rounded bg-white flex items-center justify-center shadow">
                       <Play className="text-black ml-1" size={16} />
                     </div>
                     <span className="text-white text-sm font-medium">View Project</span>
                   </div>
                 </div>
 
-                <div className="absolute top-4 left-4 px-3 py-1 bg-black/60 rounded text-xs text-gray-300 uppercase tracking-wider font-semibold">
+                <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full text-[11px] uppercase tracking-widest font-semibold text-white/80 border border-white/20 bg-white/10">
                   {project.category}
                 </div>
               </motion.div>
@@ -619,13 +633,13 @@ export default function Work() {
         {/* empty state */}
         {filteredProjects.length === 0 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-12">
-            <p className="text-gray-400 text-lg">No projects found matching your criteria.</p>
+            <p className="text-white/70 text-lg">No projects found matching your criteria.</p>
             <button
               onClick={() => {
                 setCategory('All')
                 setSearchTerm('')
               }}
-              className="mt-4 px-6 py-2 bg-white text-black rounded hover:bg-gray-200 transition-colors"
+              className="mt-4 px-5 py-2 rounded-full bg-white text-black hover:bg-neutral-200 transition-colors"
             >
               Clear Filters
             </button>
@@ -637,38 +651,38 @@ export default function Work() {
       <AnimatePresence>
         {selectedProject && (
           <motion.div
-            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 sm:p-6 ${isFullscreen ? 'p-0' : ''}`}
+            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 ${isFullscreen ? 'p-0' : ''}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeProject}
+            aria-label="Project viewer"
           >
             <motion.div
               ref={modalRef}
-              className={`relative bg-black w-full overflow-y-auto rounded shadow border border-gray-800 ${
-                isFullscreen ? 'max-w-none max-h-none h-full rounded-none' : 'max-w-6xl max-h-[90vh]'
-              }`}
-              initial={{ scale: 0.9, opacity: 0, y: 50 }}
+              className={`relative w-full overflow-y-auto ${isFullscreen ? 'max-w-none max-h-none h-full' : 'max-w-6xl max-h-[92vh]'}
+                         rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_20px_100px_rgba(0,0,0,0.6)]`}
+              initial={{ scale: 0.96, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 50 }}
+              exit={{ scale: 0.96, opacity: 0, y: 30 }}
               transition={{ damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-4 bg-gradient-to-b from-black/80 to-transparent">
-                <div className="flex items-center space-x-4">
-                  <span className="text-white text-sm">
+              <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-3 sm:p-4 bg-gradient-to-b from-black/60 to-transparent">
+                <div className="flex items-center gap-3 text-white/85">
+                  <span className="text-xs sm:text-sm">
                     {currentProjectIndex + 1} / {filteredProjects.length}
                   </span>
-                  <span className="text-gray-400 text-sm hidden sm:inline">Use ← → to navigate</span>
+                  <span className="hidden sm:inline text-xs text-white/60">Use ← → to navigate</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <button onClick={handleShare} className="w-10 h-10 rounded bg-gray-800/80 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Share (S)">
+                <div className="flex items-center gap-2">
+                  <button onClick={handleShare} className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors" title="Share (S)" aria-label="Share">
                     <Share2 size={16} />
                   </button>
-                  <button onClick={toggleFullscreen} className="w-10 h-10 rounded bg-gray-800/80 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Fullscreen (F)">
+                  <button onClick={toggleFullscreen} className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors" title="Fullscreen (F)" aria-label="Toggle fullscreen">
                     {isFullscreen ? <Minimize size={16} /> : <Expand size={16} />}
                   </button>
-                  <button onClick={closeProject} className="w-10 h-10 rounded bg-gray-800/80 flex items-center justify-center text-white hover:bg-gray-500 transition-colors" title="Close (Esc)">
+                  <button onClick={closeProject} className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/70 transition-colors" title="Close (Esc)" aria-label="Close">
                     <X size={16} />
                   </button>
                 </div>
@@ -677,17 +691,17 @@ export default function Work() {
               {/* navigation arrows (hidden on phones) */}
               {filteredProjects.length > 1 && !isSmallScreen && (
                 <>
-                  <button onClick={() => navigateProject('prev')} className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded bg-black/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Previous (←)">
+                  <button onClick={() => navigateProject('prev')} className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors" title="Previous (←)" aria-label="Previous">
                     <ChevronLeft size={20} />
                   </button>
-                  <button onClick={() => navigateProject('next')} className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded bg-black/60 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors" title="Next (→)">
+                  <button onClick={() => navigateProject('next')} className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors" title="Next (→)" aria-label="Next">
                     <ChevronRight size={20} />
                   </button>
                 </>
               )}
 
               {/* media */}
-              <div className={`relative z-0 bg-black ${isFullscreen ? 'h-full' : 'h-[78vh] sm:aspect-video'} flex items-center justify-center isolate`}>
+              <div className={`relative z-0 bg-black ${isFullscreen ? 'h-full' : 'h-[78vh] sm:aspect-video'} flex items-center justify-center isolate rounded-t-2xl`}>
                 {isPlaying ? (
                   isImageLike(selectedProject.videoUrl) ? (
                     <img
@@ -710,11 +724,12 @@ export default function Work() {
                     <img src={selectedProject.thumbnailUrl} alt={selectedProject.title} className="w-full h-full object-cover relative z-0" />
                     <div className="absolute inset-0 flex items-center justify-center z-10">
                       <motion.button
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded bg-white flex items-center justify-center"
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center shadow"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={handlePlayClick}
                         title="Play (Space)"
+                        aria-label="Play"
                       >
                         <Play className="text-black ml-1" size={24} />
                       </motion.button>
@@ -726,33 +741,32 @@ export default function Work() {
               {/* CASE STUDY PANEL */}
               {!isFullscreen && selectedProject && (
                 <motion.div
-                  className="p-6 sm:p-8 md:p-10 will-change-transform"
+                  className="p-6 sm:p-8 md:p-10"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.15 }}
                 >
                   <div
-                    className="
-                      relative z-20 isolate transform-gpu
-                      rounded-3xl ring-1 ring-white/10
-                      bg-black/85 supports-[backdrop-filter:blur(0)]:backdrop-blur-sm
-                      p-6 sm:p-8 text-white
-                    "
+                    className="relative isolate rounded-2xl border border-white/15 bg-white/8 backdrop-blur-md shadow-[0_20px_80px_rgba(0,0,0,0.35)] p-6 sm:p-8 text-white"
+                    style={{
+                      background:
+                        'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%)',
+                    }}
                   >
                     {/* Header */}
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold">
                           {selectedProject.title}
                         </h2>
-                        <p className="mt-1 text-white/80 text-xs sm:text-sm uppercase tracking-widest">
+                        <p className="mt-1 text-white/75 text-xs sm:text-sm uppercase tracking-[0.2em]">
                           {selectedProject.category}
                         </p>
                       </div>
                       {(selectedProject.status || selectedProject.statusYear) && (
                         <div className="text-right">
                           {selectedProject.status && (
-                            <span className="inline-block rounded-full ring-1 ring-white/20 bg-white/10 px-3 py-1 text-xs font-semibold">
+                            <span className="inline-block rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold">
                               {selectedProject.status}
                             </span>
                           )}
@@ -792,7 +806,7 @@ export default function Work() {
                           <h3 className="text-sm font-semibold mb-2">Our Role</h3>
                           <div className="flex flex-wrap gap-2">
                             {selectedProject.roles.map((r, i) => (
-                              <span key={i} className="rounded-full ring-1 ring-white/20 bg-white/10 px-3 py-1 text-xs text-white/90">
+                              <span key={i} className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/90">
                                 {r}
                               </span>
                             ))}
@@ -804,7 +818,7 @@ export default function Work() {
                           <h3 className="text-sm font-semibold mb-2">Tools Used</h3>
                           <div className="flex flex-wrap gap-2">
                             {selectedProject.tools.map((t, i) => (
-                              <span key={i} className="rounded-full ring-1 ring-white/20 bg-white/10 px-3 py-1 text-xs text-white/90">
+                              <span key={i} className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs text-white/90">
                                 {t}
                               </span>
                             ))}
@@ -828,7 +842,7 @@ export default function Work() {
                     {/* Footer */}
                     <div className="mt-8 flex items-center justify-between gap-4">
                       <div className="text-sm text-white/85">
-                        <span className="text-white/75">Client:</span> {selectedProject.client || '—'}
+                        <span className="text-white/70">Client:</span> {selectedProject.client || '—'}
                       </div>
                     </div>
                   </div>

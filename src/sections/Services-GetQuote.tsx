@@ -52,9 +52,7 @@ export default function IkigaiQuoteFlowMockup() {
     if (!bundlesFromState.length) return;
     const next: Record<string, boolean> = {};
     CATALOG.forEach(item => {
-      if (!item.addon && bundlesFromState.includes(item.bundle)) {
-        next[item.id] = true;
-      }
+      if (!item.addon && bundlesFromState.includes(item.bundle)) next[item.id] = true;
     });
     setSelected(next);
   }, [bundlesFromState]);
@@ -123,6 +121,7 @@ export default function IkigaiQuoteFlowMockup() {
     lines.push("");
     lines.push("Next Steps: Book a discovery call.");
 
+    // Keeping behavior: simple text in a PDF blob (mock)
     const blob = new Blob([lines.join("\n")], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -142,184 +141,218 @@ export default function IkigaiQuoteFlowMockup() {
     return `${base}?${params}`;
   }, [quoteId, breakdown.total, breakdown.tier]);
 
+  const headerCls = "font-[Space_Grotesk] uppercase tracking-widest";
+
   return (
-    <div className="min-h-screen bg-neutral-950 text-white px-6 py-10 pt-28 md:pt-25">
-      <div className="mx-auto max-w-6xl">
-        <h1 className="text-3xl font-semibold">Custom Alignment Quote Builder</h1>
-        <p className="text-neutral-400">
-          Select the services you want, then generate a quote and book a call.
-        </p>
+    <section className="relative min-h-screen font-[Inter] text-white">
+      {/* Brand cinematic layers */}
+      <div className="pointer-events-none absolute inset-0 -z-20">
+        <div className="absolute inset-0 bg-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
+      </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-3">
-          {/* Services list */}
-          <div className="lg:col-span-2 space-y-6">
-            {(["brand", "web", "growth"] as BundleTag[]).map(group => (
-              <section
-                key={group}
-                className="rounded-2xl border border-neutral-800 bg-neutral-900/50 p-4"
-              >
-                <h2 className="text-lg font-semibold capitalize">
-                  {group === "brand"
-                    ? "Brand Systems"
-                    : group === "web"
-                    ? "Web Infrastructure"
-                    : "Growth Architecture"}
-                </h2>
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  {CATALOG.filter(i => i.bundle === group).map(item => (
-                    <label
-                      key={item.id}
-                      className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors ${
-                        selected[item.id]
-                          ? "border-purple-400/60 bg-purple-400/5"
-                          : "border-neutral-800 hover:border-neutral-700"
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        className="mt-1"
-                        checked={!!selected[item.id]}
-                        onChange={() => toggle(item.id)}
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium">{item.name}</span>
-                          <span className="text-sm text-neutral-300">
-                            {currency(item.basePrice)}
-                          </span>
-                        </div>
-                        <div className="text-sm text-neutral-400">{item.desc}</div>
-                        {item.addon && (
-                          <span className="mt-1 inline-block rounded-full border border-neutral-700 px-2 py-0.5 text-[11px] text-neutral-300">
-                            Add-on
-                          </span>
-                        )}
-                      </div>
-                    </label>
+      <div className="px-4 sm:px-6 lg:px-8 py-16 pt-28 md:pt-28">
+        <div className="mx-auto max-w-6xl">
+          <header className="text-center">
+            <h1 className={`${headerCls} text-3xl sm:text-4xl md:text-5xl`}>Custom Alignment Quote Builder</h1>
+            <p className="mt-3 text-white/70">
+              Select the services you want, then generate a quote and book a call.
+            </p>
+          </header>
+
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Services list */}
+            <div className="lg:col-span-2 space-y-6">
+              {(["brand", "web", "growth"] as BundleTag[]).map(group => (
+                <section
+                  key={group}
+                  className="relative overflow-hidden rounded-2xl border border-white/15 backdrop-blur-sm
+                             shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
+                  }}
+                >
+                  {/* subtle brand wash */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(90% 70% at -10% -10%, rgba(0,51,255,0.10), transparent 60%), radial-gradient(90% 70% at 110% -10%, rgba(108,0,255,0.10), transparent 60%)",
+                    }}
+                  />
+                  <div className="relative p-4 sm:p-5">
+                    <h2 className="text-lg sm:text-xl font-semibold capitalize">
+                      {group === "brand"
+                        ? "Brand Systems"
+                        : group === "web"
+                        ? "Web Infrastructure"
+                        : "Growth Architecture"}
+                    </h2>
+
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      {CATALOG.filter(i => i.bundle === group).map(item => (
+                        <label
+                          key={item.id}
+                          className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors
+                            ${selected[item.id]
+                              ? "border-white/20 bg-white/10"
+                              : "border-white/10 hover:border-white/20 bg-white/[0.04]"}
+                          `}
+                        >
+                          <input
+                            type="checkbox"
+                            className="mt-1 h-4 w-4 accent-white"
+                            checked={!!selected[item.id]}
+                            onChange={() => toggle(item.id)}
+                            aria-label={`Toggle ${item.name}`}
+                          />
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="font-medium">{item.name}</span>
+                              <span className="text-sm text-white/80">{currency(item.basePrice)}</span>
+                            </div>
+                            <div className="text-sm text-white/70">{item.desc}</div>
+                            {item.addon && (
+                              <span className="mt-1 inline-block rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-white/80">
+                                Add-on
+                              </span>
+                            )}
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            {/* Summary + form */}
+            <aside className="lg:sticky lg:top-24 h-fit rounded-2xl border border-white/15 backdrop-blur-sm
+                               shadow-[0_20px_80px_rgba(0,0,0,0.35)] p-4 sm:p-5"
+                   style={{
+                     background:
+                       "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
+                   }}
+            >
+              <h3 className="text-lg sm:text-xl font-semibold">Summary</h3>
+
+              {selectedItems.length === 0 ? (
+                <p className="mt-2 text-white/70">Select at least one service to begin.</p>
+              ) : (
+                <ul className="mt-3 space-y-2 text-sm text-white/85">
+                  {selectedItems.map(i => (
+                    <li key={i.id} className="flex items-center justify-between border-b border-white/10 pb-1">
+                      <span>{i.name}</span>
+                      <span className="text-white/70">{currency(i.basePrice)}</span>
+                    </li>
                   ))}
+                </ul>
+              )}
+
+              {/* Breakdown */}
+              <div className="mt-4 space-y-1 text-sm">
+                <div className="flex justify-between text-white/80">
+                  <span>Subtotal</span>
+                  <span>{currency(breakdown.subtotal)}</span>
                 </div>
-              </section>
-            ))}
+                {breakdown.discount > 0 && (
+                  <div className="flex justify-between text-emerald-300/90">
+                    <span>Pack discount</span>
+                    <span>-{currency(breakdown.discount)}</span>
+                  </div>
+                )}
+                {breakdown.complexityFee > 0 && (
+                  <div className="flex justify-between text-purple-300/90">
+                    <span>Complexity fee</span>
+                    <span>+{currency(breakdown.complexityFee)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-white/80">
+                  <span>Adjusted</span>
+                  <span>{currency(breakdown.adjusted)}</span>
+                </div>
+                <div className="flex justify-between text-white/80">
+                  <span>Tax (13%)</span>
+                  <span>{currency(breakdown.tax)}</span>
+                </div>
+                <div className="flex justify-between text-white font-semibold pt-1">
+                  <span>Total</span>
+                  <span>{currency(breakdown.total)}</span>
+                </div>
+                <div className="text-xs text-white/60">
+                  Tier: {breakdown.tier} • ETA: {breakdown.etaWeeks} weeks
+                </div>
+              </div>
+
+              {/* Lead form */}
+              <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <input
+                  className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
+                  placeholder="Your name"
+                  value={lead.name}
+                  onChange={e => setLead({ ...lead, name: e.target.value })}
+                />
+                <input
+                  className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
+                  placeholder="Email"
+                  value={lead.email}
+                  onChange={e => setLead({ ...lead, email: e.target.value })}
+                />
+                <input
+                  className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
+                  placeholder="Company (optional)"
+                  value={lead.company}
+                  onChange={e => setLead({ ...lead, company: e.target.value })}
+                />
+                <input
+                  className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
+                  placeholder="Website (optional)"
+                  value={lead.website}
+                  onChange={e => setLead({ ...lead, website: e.target.value })}
+                />
+              </div>
+
+              <div className="mt-4 flex flex-col sm:flex-row gap-2">
+                <button
+                  className="flex-1 rounded-xl px-4 py-2 text-sm font-medium text-white shadow-sm transition-all
+                             bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
+                             hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
+                             focus:outline-none focus:ring-2 focus:ring-white/20 disabled:opacity-50"
+                  onClick={generateQuote}
+                  disabled={selectedItems.length === 0}
+                >
+                  Generate Quote (PDF)
+                </button>
+                <a
+                  className={`flex-1 rounded-xl border border-white/20 px-4 py-2 text-sm text-center text-white/90 hover:border-white/40 transition ${!quoteId ? "pointer-events-none opacity-50" : ""}`}
+                  href={calendlyUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Book on Calendly
+                </a>
+                <button
+                  className="rounded-xl border border-white/15 px-4 py-2 text-sm text-white/85 hover:border-white/30 transition"
+                  onClick={allClear}
+                >
+                  Clear
+                </button>
+              </div>
+
+              {quoteId && (
+                <div className="mt-3 rounded-lg border border-white/15 bg-white/[0.04] p-3 text-xs text-white/70">
+                  Quote generated: <span className="text-white">{quoteId}</span>. A mock PDF was downloaded.
+                  Use the Calendly button to continue.
+                </div>
+              )}
+            </aside>
           </div>
-
-          {/* Summary + form */}
-          <aside className="rounded-2xl border border-neutral-800 bg-neutral-900/60 p-4">
-            <h3 className="text-lg font-semibold">Summary</h3>
-            {selectedItems.length === 0 ? (
-              <p className="mt-2 text-neutral-400">Select at least one service to begin.</p>
-            ) : (
-              <ul className="mt-2 space-y-2 text-sm text-neutral-200">
-                {selectedItems.map(i => (
-                  <li
-                    key={i.id}
-                    className="flex items-center justify-between border-b border-neutral-800 pb-1"
-                  >
-                    <span>{i.name}</span>
-                    <span className="text-neutral-300">{currency(i.basePrice)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {/* Breakdown */}
-            <div className="mt-4 space-y-1 text-sm">
-              <div className="flex justify-between text-neutral-300">
-                <span>Subtotal</span>
-                <span>{currency(breakdown.subtotal)}</span>
-              </div>
-              {breakdown.discount > 0 && (
-                <div className="flex justify-between text-emerald-300">
-                  <span>Pack discount</span>
-                  <span>-{currency(breakdown.discount)}</span>
-                </div>
-              )}
-              {breakdown.complexityFee > 0 && (
-                <div className="flex justify-between text-purple-300">
-                  <span>Complexity fee</span>
-                  <span>+{currency(breakdown.complexityFee)}</span>
-                </div>
-              )}
-              <div className="flex justify-between text-neutral-300">
-                <span>Adjusted</span>
-                <span>{currency(breakdown.adjusted)}</span>
-              </div>
-              <div className="flex justify-between text-neutral-300">
-                <span>Tax (13%)</span>
-                <span>{currency(breakdown.tax)}</span>
-              </div>
-              <div className="flex justify-between text-white font-semibold pt-1">
-                <span>Total</span>
-                <span>{currency(breakdown.total)}</span>
-              </div>
-              <div className="text-xs text-neutral-400">
-                Tier: {breakdown.tier} • ETA: {breakdown.etaWeeks} weeks
-              </div>
-            </div>
-
-            {/* Lead form */}
-            <div className="mt-5 space-y-2">
-              <input
-                className="w-full rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-2 text-sm"
-                placeholder="Your name"
-                value={lead.name}
-                onChange={e => setLead({ ...lead, name: e.target.value })}
-              />
-              <input
-                className="w-full rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-2 text-sm"
-                placeholder="Email"
-                value={lead.email}
-                onChange={e => setLead({ ...lead, email: e.target.value })}
-              />
-              <input
-                className="w-full rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-2 text-sm"
-                placeholder="Company (optional)"
-                value={lead.company}
-                onChange={e => setLead({ ...lead, company: e.target.value })}
-              />
-              <input
-                className="w-full rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-2 text-sm"
-                placeholder="Website (optional)"
-                value={lead.website}
-                onChange={e => setLead({ ...lead, website: e.target.value })}
-              />
-            </div>
-
-            <div className="mt-4 flex flex-col gap-2">
-              <button
-                className="rounded-xl bg-white px-4 py-2 text-black hover:bg-neutral-200 disabled:opacity-50"
-                onClick={generateQuote}
-                disabled={selectedItems.length === 0}
-              >
-                Generate Quote (PDF)
-              </button>
-              <a
-                className={`rounded-xl border border-neutral-700 px-4 py-2 text-center text-neutral-200 hover:border-neutral-500 ${
-                  !quoteId ? "pointer-events-none opacity-50" : ""
-                }`}
-                href={calendlyUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Book on Calendly
-              </a>
-              <button
-                className="rounded-xl border border-neutral-800 px-4 py-2 text-neutral-300 hover:border-neutral-600"
-                onClick={allClear}
-              >
-                Clear
-              </button>
-            </div>
-
-            {quoteId && (
-              <div className="mt-3 rounded-lg border border-neutral-800 bg-neutral-950 p-3 text-xs text-neutral-400">
-                Quote generated: <span className="text-white">{quoteId}</span>. A mock PDF was
-                downloaded. Use the Calendly button to continue.
-              </div>
-            )}
-          </aside>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
