@@ -97,7 +97,7 @@ export function Navbar() {
             <NavLink to="/" end className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Home</NavLink>
             <NavLink to="/About" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>About</NavLink>
             <NavLink to="/Services" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Services</NavLink>
-            <NavLink to="/team" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Our Team</NavLink>
+            <NavLink to="/work" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Our Work</NavLink>
             <NavLink to="/Contact" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Contact</NavLink>
           </div>
         </div>

@@ -1,3 +1,4 @@
+// src/sections/Work.tsx
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import type { Variants, Transition } from 'framer-motion'
 import { Play, X, ChevronLeft, ChevronRight, Expand, Minimize, Share2, Search, XCircle } from 'lucide-react'
@@ -58,8 +59,7 @@ const projects: Project[] = [
     category: 'Digital Systems',
     thumbnailUrl: blindthumb,
     videoUrl: 'https://drive.google.com/file/d/1t5OggLfiOiLSb5eiTWtp5qId_S8QJ27M/view?usp=sharing',
-    description:
-      'A breathtaking visual narrative exploring the depths of human emotion through stunning cinematography and compelling storytelling.',
+    description: 'A breathtaking visual narrative…',
     client: 'Independent Film',
     director: 'Alex Rodriguez',
     year: '2024',
@@ -70,13 +70,11 @@ const projects: Project[] = [
     aspectRatio: '2.39:1',
     status: 'In Development',
     statusYear: '2024',
-    overview:
-      'An interactive 3D blinds configurator that lets shoppers visualize styles, colors, and mechanics in real time.',
-    objective:
-      'Create an immersive product experience that bridges physical customization with a smooth online flow.',
+    overview: 'An interactive 3D blinds configurator…',
+    objective: 'Create an immersive product experience…',
     roles: ['UI/UX Design', '3D Integration', 'Front-end Dev', 'Copywriting', 'Brand Direction'],
     tools: ['React', 'TypeScript', 'Three.js', 'Vite'],
-    outcomes: ['65% higher demo engagement vs static gallery', 'Modular codebase for five blind models'],
+    outcomes: ['65% higher demo engagement…', 'Modular codebase…'],
     ctaLabel: 'View Case Study',
   },
   {
@@ -85,7 +83,7 @@ const projects: Project[] = [
     category: 'Digital Systems',
     thumbnailUrl: Tailor,
     videoUrl: 'https://drive.google.com/file/d/1yMMFdQ3_oN6F5DCZN2MniruPasQ3t4Mp/view?usp=sharing',
-    description: 'A dynamic commercial piece that captures the essence of modern lifestyle and brand identity.',
+    description: 'A dynamic commercial piece…',
     client: 'TechCorp Inc.',
     director: 'Sarah Chen',
     year: '2024',
@@ -96,13 +94,11 @@ const projects: Project[] = [
     aspectRatio: '16:9',
     status: 'Concept',
     statusYear: '2024',
-    overview:
-      'A boutique theme with measurement wizard and lookbook to showcase bespoke tailoring online.',
-    objective:
-      'Reduce friction from booking to fitting while keeping a premium brand feel.',
+    overview: 'A boutique theme…',
+    objective: 'Reduce friction from booking…',
     roles: ['UI/UX Design', 'Front-end Dev', 'Content Structuring'],
     tools: ['React', 'TypeScript', 'Headless CMS', 'Cloud Functions'],
-    outcomes: ['30% increase in appointment requests (mock tests)', 'Reusable booking component extracted'],
+    outcomes: ['30% increase in appointment requests…', 'Reusable booking component…'],
     ctaLabel: 'View Case Study',
   },
   {
@@ -111,7 +107,7 @@ const projects: Project[] = [
     category: 'Digital Systems',
     thumbnailUrl: mobil,
     videoUrl: 'https://drive.google.com/file/d/1sz0pV2tw4Tv65ClzH6dXwlKQd-AXIr__/view?usp=sharing',
-    description: 'An intimate documentary exploring real stories and authentic human experiences.',
+    description: 'An intimate documentary…',
     client: 'National Geographic',
     director: 'Michael Torres',
     year: '2023',
@@ -122,13 +118,11 @@ const projects: Project[] = [
     aspectRatio: '16:9',
     status: 'Live',
     statusYear: '2024',
-    overview:
-      'A mobile-first template system that scales cleanly from 360 to desktop with component tokens.',
-    objective:
-      'Create a foundation for fast launches across verticals without breaking responsiveness.',
+    overview: 'A mobile-first template system…',
+    objective: 'Create a foundation for fast launches…',
     roles: ['Design System', 'Front-end Dev', 'QA'],
     tools: ['React', 'TypeScript', 'Tailwind', 'Storybook'],
-    outcomes: ['CLS-safe layout shifts on test pages', 'Single codebase applied to three demos'],
+    outcomes: ['CLS-safe layout shifts…', 'Single codebase applied…'],
     ctaLabel: 'View Case Study',
   },
   {
@@ -137,7 +131,7 @@ const projects: Project[] = [
     category: 'Digital Systems',
     thumbnailUrl: Barber,
     videoUrl: 'https://drive.google.com/file/d/1Z8HWZHxHLMmYcDsb_R3DgR_nZMjeQMjq/view?usp=sharing',
-    description: 'A vibrant music video that blends visual artistry with rhythmic storytelling.',
+    description: 'A vibrant music video…',
     client: 'Universal Music',
     director: 'Emma Johnson',
     year: '2024',
@@ -148,13 +142,11 @@ const projects: Project[] = [
     aspectRatio: '2.35:1',
     status: 'Concept',
     statusYear: '2024',
-    overview:
-      'High-contrast theme with booking flow, service tiers, and stylist profiles.',
-    objective:
-      'Drive bookings and showcase before-after galleries with fast load times.',
+    overview: 'High-contrast theme…',
+    objective: 'Drive bookings and showcase…',
     roles: ['UI/UX Design', 'Front-end Dev', 'Copywriting'],
     tools: ['React', 'TypeScript', 'Tailwind', 'Cloud Images'],
-    outcomes: ['Prototype 90+ Lighthouse Performance', 'Booking completion flow reduced to two steps'],
+    outcomes: ['Prototype 90+ Lighthouse…', 'Booking completion flow…'],
     ctaLabel: 'View Case Study',
   },
   {
@@ -163,8 +155,7 @@ const projects: Project[] = [
     category: 'Digital Systems',
     thumbnailUrl: Autodetail,
     videoUrl: 'https://drive.google.com/file/d/172JGsgvwiGP7gL2Q0Ka9ZJ8YPXQdEJHB/view?usp=sharing',
-    description:
-      'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
+    description: 'A cinematic trailer…',
     client: 'Emma & James',
     director: 'Willow Tree Films',
     year: '2022',
@@ -175,13 +166,11 @@ const projects: Project[] = [
     aspectRatio: '2.35:1',
     status: 'Concept',
     statusYear: '2024',
-    overview:
-      'Bold landing with package selector, trust badges, and before-after sliders for detailers.',
-    objective:
-      'Convert ad traffic with a clear pricing ladder and easy booking.',
+    overview: 'Bold landing with package selector…',
+    objective: 'Convert ad traffic…',
     roles: ['Landing Page', 'Front-end Dev', 'CRO'],
     tools: ['React', 'TypeScript', 'Tailwind', 'Framer Motion'],
-    outcomes: ['Reusable pricing grid component', 'Analytics events for A/B tests'],
+    outcomes: ['Reusable pricing grid…', 'Analytics events…'],
     ctaLabel: 'View Case Study',
   },
   {
@@ -190,8 +179,7 @@ const projects: Project[] = [
     category: 'Creative Strategy',
     thumbnailUrl: Livemu,
     videoUrl: 'https://drive.google.com/file/d/1qPdb_gv5zOT1T7JzaQ6rZ6Wa7mks4wen/view?usp=sharing',
-    description:
-      'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
+    description: 'A cinematic trailer…',
     client: 'Emma & James',
     director: 'Willow Tree Films',
     year: '2022',
@@ -202,13 +190,11 @@ const projects: Project[] = [
     aspectRatio: '2.35:1',
     status: 'Live',
     statusYear: '2023',
-    overview:
-      'High-energy recap edit capturing crowd emotion and artist highlights for social drops.',
-    objective:
-      'Deliver a sticky, shareable piece that drives post-event momentum.',
+    overview: 'High-energy recap edit…',
+    objective: 'Deliver a sticky, shareable piece…',
     roles: ['Cinematography', 'Editing', 'Sound Design'],
     tools: ['Sony Mirrorless', 'Final Cut Pro', 'Adobe Audition'],
-    outcomes: ['Cut-downs for reels and stories', 'Export presets for fast turnarounds'],
+    outcomes: ['Cut-downs for reels…', 'Export presets…'],
     ctaLabel: 'View Case Study',
   },
   {
@@ -217,8 +203,7 @@ const projects: Project[] = [
     category: 'Creative Strategy',
     thumbnailUrl: clubpromo,
     videoUrl: 'https://drive.google.com/file/d/1RtaLQ_gOHZUqGhCNe-SXljzNCWaPk26I/view?usp=sharing',
-    description:
-      'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
+    description: 'A cinematic trailer…',
     client: 'Emma & James',
     director: 'Willow Tree Films',
     year: '2022',
@@ -229,13 +214,11 @@ const projects: Project[] = [
     aspectRatio: '2.35:1',
     status: 'Live',
     statusYear: '2023',
-    overview:
-      'Punchy sizzle with typography hits and scene transitions tuned for vertical platforms.',
-    objective:
-      'Drive RSVPs for weekly nights using a repeatable promo format.',
+    overview: 'Punchy sizzle with typography hits…',
+    objective: 'Drive RSVPs…',
     roles: ['Editing', 'Motion Graphics', 'Copy'],
     tools: ['After Effects', 'Premiere Pro', 'Adobe Fonts'],
-    outcomes: ['Template can be versioned in minutes', 'On-brand motion pack created'],
+    outcomes: ['Template can be versioned…', 'On-brand motion pack…'],
     ctaLabel: 'View Case Study',
   },
   {
@@ -244,8 +227,7 @@ const projects: Project[] = [
     category: 'Creative Strategy',
     thumbnailUrl: kind,
     videoUrl: flame, // GIF preview
-    description:
-      'A cinematic trailer of Emma and James’s wedding in the Tuscan hills—pure romance, festivity, and family love.',
+    description: 'A cinematic trailer…',
     client: 'Emma & James',
     director: 'Willow Tree Films',
     year: '2022',
@@ -256,13 +238,11 @@ const projects: Project[] = [
     aspectRatio: '2.35:1',
     status: 'In Development',
     statusYear: '2024',
-    overview:
-      'Brand system and launch visuals for a mental-health-aligned streetwear label.',
-    objective:
-      'Build a visual language that blends grit with empathy and scales across drops.',
+    overview: 'Brand system and launch visuals…',
+    objective: 'Build a visual language…',
     roles: ['Brand Direction', 'Art Direction', 'Copywriting', 'Product Mockups'],
     tools: ['Photoshop', 'Illustrator', 'Blender'],
-    outcomes: ['Consistent kit for socials and site', 'Designs prepped for print-on-demand'],
+    outcomes: ['Consistent kit…', 'Designs prepped…'],
     ctaLabel: 'View Case Study',
   },
 ]
@@ -283,6 +263,25 @@ const useScrollAnimation = () => {
 /* ---------- helpers ---------- */
 const isImageLike = (url: string) => /\.(gif|png|jpe?g|webp|svg)(\?.*)?$/i.test(url ?? '')
 
+// Use the exact Drive "preview" embed that works (no uc-download, no SDK)
+const getEmbedUrl = (url: string) => {
+  if (!url) return ''
+  if (url.includes('drive.google.com')) {
+    const m = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/)
+    const id = m?.[1]
+    return id ? `https://drive.google.com/file/d/${id}/preview` : url
+  }
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    const joiner = url.includes('?') ? '&' : '?'
+    return `${url}${joiner}autoplay=1&mute=1&playsinline=1`
+  }
+  if (url.includes('vimeo.com')) {
+    const joiner = url.includes('?') ? '&' : '?'
+    return `${url}${joiner}autoplay=1&muted=1`
+  }
+  return url
+}
+
 export default function Work() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -300,7 +299,6 @@ export default function Work() {
   const isInView = useInView(ref, { once: true, amount: 0.1 })
   const { containerAnimation, itemAnimation } = useScrollAnimation()
 
-  // Track if we're on a small screen
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)')
     const update = () => setIsSmallScreen(mq.matches)
@@ -373,24 +371,6 @@ export default function Work() {
     }
   }, [selectedProject])
 
-  const getEmbedUrl = (url: string) => {
-    if (!url) return ''
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
-      const joiner = url.includes('?') ? '&' : '?'
-      return `${url}${joiner}autoplay=1&rel=0`
-    }
-    if (url.includes('vimeo.com')) {
-      const joiner = url.includes('?') ? '&' : '?'
-      return `${url}${joiner}autoplay=1`
-    }
-    if (url.includes('drive.google.com')) {
-      const m = url.match(/\/file\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/)
-      const id = m?.[1]
-      if (id) return `https://drive.google.com/file/d/${id}/preview`
-    }
-    return url
-  }
-
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!selectedProject) {
@@ -451,8 +431,8 @@ export default function Work() {
   const cardHoverAnimation = { scale: 1.03, y: -8, transition: { stiffness: 300, damping: 20 } }
 
   return (
-    <section className="relative min-h-screen bg-black text-white font-[Inter] overflow-hidden">
-      {/* Brand background & vignette */}
+    <section className="relative min-h-screen bg-black text-white font-[Inter] overflow-x-hidden overflow-y-visible">
+      {/* Background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-120px,rgba(255,255,255,0.07),transparent_60%)]" />
@@ -470,7 +450,7 @@ export default function Work() {
         >
           <motion.h2
             variants={itemAnimation}
-            className="font-[Space_Grotesk] uppercase tracking-widest text-4xl sm:text-5xl md:text-6xl mb-3"
+            className="font-[Space_Grotesk] uppercase tracking-widest text-4xl sm:text-5xl md:text-6xl mb-3 mt-7"
           >
             Our Work
           </motion.h2>
@@ -487,9 +467,7 @@ export default function Work() {
               <div className="relative flex items-center">
                 <motion.button
                   onClick={toggleSearch}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-white/85 border border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-300 ${
-                    isSearchActive ? 'w-full' : 'w-auto'
-                  }`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-white/85 border border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-300 ${isSearchActive ? 'w-full' : 'w-auto'}`}
                   whileHover={buttonHoverAnimation}
                   whileTap={{ scale: 0.95 }}
                   aria-label="Toggle search"
@@ -537,9 +515,7 @@ export default function Work() {
               <motion.button
                 key={cat}
                 className={`px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  category === cat
-                    ? 'bg-white text-black'
-                    : 'border border-white/20 text-white/85 hover:border-white/40 hover:text-white'
+                  category === cat ? 'bg-white text-black' : 'border border-white/20 text-white/85 hover:border-white/40 hover:text-white'
                 } focus:outline-none`}
                 onClick={() => setCategory(cat)}
                 whileHover={buttonHoverAnimation}
@@ -589,32 +565,15 @@ export default function Work() {
                   </div>
                 )}
 
-                {/* Hover overlay */}
-                <div
-                  className="absolute inset-0 z-10 pointer-events-none
-                             bg-gradient-to-t from-black/90 via-black/40 to-transparent
-                             opacity-0 group-hover:opacity-100 transition-opacity duration-300
-                             flex flex-col justify-end p-6"
-                >
-                  <h3
-                    className="pointer-events-none text-lg sm:text-xl font-semibold text-white mb-1
-                               translate-y-2 opacity-0 transition-all duration-300
-                               group-hover:opacity-100 group-hover:translate-y-0"
-                  >
+                {/* Overlay visible by default on mobile */}
+                <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                  <h3 className="pointer-events-none text-lg sm:text-xl font-semibold text-white mb-1 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-2 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
                     {project.title}
                   </h3>
-                  <p
-                    className="pointer-events-none text-white/80 text-xs uppercase tracking-[0.2em] mb-3
-                               translate-y-3 opacity-0 transition-all duration-300 delay-75
-                               group-hover:opacity-100 group-hover:translate-y-0"
-                  >
+                  <p className="pointer-events-none text-white/80 text-xs uppercase tracking-[0.2em] mb-3 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-3 sm:delay-75 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
                     {project.category}
                   </p>
-                  <div
-                    className="pointer-events-none flex items-center gap-3
-                               translate-y-3 opacity-0 transition-all duration-300 delay-150
-                               group-hover:opacity-100 group-hover:translate-y-0"
-                  >
+                  <div className="pointer-events-none flex items-center gap-3 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-3 sm:delay-150 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
                     <div className="w-12 h-12 rounded bg-white flex items-center justify-center shadow">
                       <Play className="text-black ml-1" size={16} />
                     </div>
@@ -651,7 +610,7 @@ export default function Work() {
       <AnimatePresence>
         {selectedProject && (
           <motion.div
-            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 ${isFullscreen ? 'p-0' : ''}`}
+            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 ${isFullscreen ? 'p-0' : ''} overflow-x-hidden`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -660,15 +619,15 @@ export default function Work() {
           >
             <motion.div
               ref={modalRef}
-              className={`relative w-full overflow-y-auto ${isFullscreen ? 'max-w-none max-h-none h-full' : 'max-w-6xl max-h-[92vh]'}
-                         rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_20px_100px_rgba(0,0,0,0.6)]`}
+              className={`relative w-full ${isFullscreen ? 'max-w-none max-h-none h-full' : 'max-w-6xl max-h-[92vh]'} overflow-y-auto overflow-x-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_20px_100px_rgba(0,0,0,0.6)]`}
               initial={{ scale: 0.96, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.96, opacity: 0, y: 30 }}
               transition={{ damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-3 sm:p-4 bg-gradient-to-b from-black/60 to-transparent">
+              {/* header */}
+              <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between h-12 sm:h-14 px-3 sm:px-4 bg-gradient-to-b from-black/60 to-transparent overflow-x-hidden">
                 <div className="flex items-center gap-3 text-white/85">
                   <span className="text-xs sm:text-sm">
                     {currentProjectIndex + 1} / {filteredProjects.length}
@@ -676,13 +635,13 @@ export default function Work() {
                   <span className="hidden sm:inline text-xs text-white/60">Use ← → to navigate</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={handleShare} className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors" title="Share (S)" aria-label="Share">
+                  <button onClick={handleShare} className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors" title="Share (S)" aria-label="Share">
                     <Share2 size={16} />
                   </button>
-                  <button onClick={toggleFullscreen} className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors" title="Fullscreen (F)" aria-label="Toggle fullscreen">
+                  <button onClick={toggleFullscreen} className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors" title="Fullscreen (F)" aria-label="Toggle fullscreen">
                     {isFullscreen ? <Minimize size={16} /> : <Expand size={16} />}
                   </button>
-                  <button onClick={closeProject} className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/70 transition-colors" title="Close (Esc)" aria-label="Close">
+                  <button onClick={closeProject} className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/70 transition-colors" title="Close (Esc)" aria-label="Close">
                     <X size={16} />
                   </button>
                 </div>
@@ -700,28 +659,42 @@ export default function Work() {
                 </>
               )}
 
-              {/* media */}
-              <div className={`relative z-0 bg-black ${isFullscreen ? 'h-full' : 'h-[78vh] sm:aspect-video'} flex items-center justify-center isolate rounded-t-2xl`}>
+              {/* media — perfect-fit container (same feel as the version you liked) */}
+              <div
+                className={`relative z-0 bg-black ${
+                  isFullscreen ? 'h-[100vh]' : 'h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)]'
+                } w-full grid place-items-center isolate rounded-t-2xl overflow-hidden`}
+              >
                 {isPlaying ? (
                   isImageLike(selectedProject.videoUrl) ? (
                     <img
                       src={selectedProject.videoUrl}
                       alt={selectedProject.title}
-                      className="max-w-full max-h-full object-contain relative z-0"
+                      className="block max-h-full max-w-full object-contain"
                     />
                   ) : (
-                    <iframe
-                      src={getEmbedUrl(selectedProject.videoUrl)}
-                      className="w-full h-full relative z-0"
-                      title={selectedProject.title}
-                      frameBorder={0}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
+                    <div className="relative w-full h-full max-w-full max-h-full grid place-items-center">
+                      {/* aspect box that stays inside modal; looks great on all screens */}
+                      <div className="relative aspect-video w-full h-auto max-w-[1280px] max-h-full mx-auto">
+                        <iframe
+                          src={getEmbedUrl(selectedProject.videoUrl)}
+                          title={selectedProject.title}
+                          frameBorder={0}
+                          allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          referrerPolicy="no-referrer-when-downgrade"
+                          className="absolute inset-0 block w-full h-full"
+                        />
+                      </div>
+                    </div>
                   )
                 ) : (
                   <>
-                    <img src={selectedProject.thumbnailUrl} alt={selectedProject.title} className="w-full h-full object-cover relative z-0" />
+                    <img
+                      src={selectedProject.thumbnailUrl}
+                      alt={selectedProject.title}
+                      className="block w-full h-full object-cover"
+                    />
                     <div className="absolute inset-0 flex items-center justify-center z-10">
                       <motion.button
                         className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center shadow"
@@ -747,18 +720,12 @@ export default function Work() {
                   transition={{ delay: 0.15 }}
                 >
                   <div
-                    className="relative isolate rounded-2xl border border-white/15 bg-white/8 backdrop-blur-md shadow-[0_20px_80px_rgba(0,0,0,0.35)] p-6 sm:p-8 text-white"
-                    style={{
-                      background:
-                        'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%)',
-                    }}
+                    className="relative isolate rounded-2xl border border-white/15 bg-white/8 backdrop-blur-md shadow-[0_20px_80px_rgba(0,0,0,0.35)] p-6 sm:p-8 text-white overflow-hidden"
+                    style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%)' }}
                   >
-                    {/* Header */}
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold">
-                          {selectedProject.title}
-                        </h2>
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold">{selectedProject.title}</h2>
                         <p className="mt-1 text-white/75 text-xs sm:text-sm uppercase tracking-[0.2em]">
                           {selectedProject.category}
                         </p>
@@ -777,7 +744,6 @@ export default function Work() {
                       )}
                     </div>
 
-                    {/* Overview / Objective */}
                     {(selectedProject.overview || selectedProject.objective) && (
                       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                         {selectedProject.overview && (
@@ -799,7 +765,6 @@ export default function Work() {
                       </div>
                     )}
 
-                    {/* Roles & Tools */}
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                       {selectedProject.roles?.length ? (
                         <div>
@@ -827,7 +792,6 @@ export default function Work() {
                       ) : null}
                     </div>
 
-                    {/* Outcome / Impact */}
                     {selectedProject.outcomes?.length ? (
                       <div className="mt-6">
                         <h3 className="text-sm font-semibold mb-2">Outcome / Impact</h3>
@@ -839,7 +803,6 @@ export default function Work() {
                       </div>
                     ) : null}
 
-                    {/* Footer */}
                     <div className="mt-8 flex items-center justify-between gap-4">
                       <div className="text-sm text-white/85">
                         <span className="text-white/70">Client:</span> {selectedProject.client || '—'}

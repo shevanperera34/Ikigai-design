@@ -80,7 +80,7 @@ export default function Contact() {
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-5xl px-6 md:px-8 lg:px-10 py-16 md:py-24">
         <header className="text-center mb-10 md:mb-14">
-          <h1 className="font-[Space_Grotesk] uppercase tracking-widest text-4xl md:text-5xl">
+          <h1 className="font-[Space_Grotesk] uppercase tracking-widest text-4xl md:text-5xl mt-7">
             Contact
           </h1>
           <p className="mt-3 text-white/75">

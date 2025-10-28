@@ -1,21 +1,92 @@
 // src/sections/About.tsx
-import Galaxy from '../components/Galaxy'
+import React, { useEffect, useMemo, useState } from 'react'
+import Particles from '../components/Particles'
 
 // team images (same assets used on /team)
 import sladeIntro from '../assets/slade_pic_intro_1.jpeg'
 import shevanprofile from '../assets/ProfilePic_Shevan.png'
 import seniprofile from '../assets/Seni_picintro.jpeg'
 
-const STEPS = [
-  { title: 'Discovery Call', desc: 'Quick intro chat to understand goals.' },
-  { title: 'Scope & Quote', desc: 'We map out deliverables and costs.' },
-  { title: 'Draft Build', desc: 'First version delivered for review.' },
-  { title: 'Revisions', desc: 'Feedback loop until it feels right.' },
-  { title: 'Launch', desc: 'Project goes live with full support.' },
-  { title: 'Post-Launch Support', desc: '14-day safety net for fixes/questions.' },
+/* -------------------- Types & Data -------------------- */
+type TeamKey = 'Shevan' | 'Seni' | 'Slade'
+
+type TeamMember = {
+  key: TeamKey
+  name: string
+  role: string
+  imageUrl: string
+  imgClass?: string
+  bio: string
+  instagram?: string
+}
+
+const TEAM: TeamMember[] = [
+  {
+    key: 'Shevan',
+    name: 'Shevan',
+    role: 'Marketing and Strategy',
+    imageUrl: shevanprofile,
+    imgClass: 'object-top',
+    bio:
+      'Creative lead focused on brand systems, campaigns, and content that converts. Blends design thinking with strategy to make ideas land.',
+    instagram: 'https://www.instagram.com/sh3van.n',
+  },
+  {
+    key: 'Seni',
+    name: 'Seni',
+    role: 'IT and Strategy',
+    imageUrl: seniprofile,
+    imgClass: 'object-center',
+    bio:
+      'Systems & infrastructure. Builds the backbone—automation, security, and performance—so products ship fast and scale cleanly.',
+    instagram: 'https://www.instagram.com/seniii.r',
+  },
+  {
+    key: 'Slade',
+    name: 'Slade',
+    role: 'Client Relations and Strategy',
+    imageUrl: sladeIntro,
+    imgClass: 'object-center',
+    bio:
+      'Frontline for client growth. Outreach, enablement, and operations—turning conversations into long-term partnerships and results.',
+    instagram: 'https://www.instagram.com/slxde.xx',
+  },
 ]
 
-// --- Simple icons (reuse from Team) ---
+// Toolbox shown inside the modal
+const TOOLBOX: Record<TeamKey, { title: string; items: string[] }[]> = {
+  Seni: [
+    {
+      title: 'IT & Infrastructure',
+      items: [
+        'Azure, AWS',
+        'Windows Server, AD / GPO',
+        'Linux (Fedora, Arch, Debian)',
+        'Aruba/Cisco networking',
+        'SCCM / imaging / endpoint',
+      ],
+    },
+    { title: 'Automation & Scripting', items: ['Python', 'Bash', 'PowerShell basics'] },
+  ],
+  Shevan: [
+    {
+      title: 'Creative Production',
+      items: [
+        'Photoshop, Illustrator, InDesign',
+        'Premiere Pro, Final Cut Pro',
+        'After Effects (motion templates)',
+      ],
+    },
+    { title: '3D & Interactive', items: ['Blender', 'Three.js / OGL prototypes'] },
+    { title: 'Marketing', items: ['Meta Ads', 'Google Ads', 'Content systems'] },
+  ],
+  Slade: [
+    { title: 'Ops & Enablement', items: ['CRM & outreach', 'Lead funnels', 'Campaign ops'] },
+    { title: 'Community', items: ['Social messaging', 'Retention & feedback loops'] },
+  ],
+}
+
+/* -------------------- Icons (matching your About look) -------------------- */
 const XIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
     <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.31l5.74-6.57L0 .75h5.063l3.495 4.633L12.6.75ZM11.47 13.5h1.146L4.74 2.15H3.522l7.95 11.35Z"/>
@@ -32,47 +103,231 @@ const FacebookIcon = () => (
   </svg>
 )
 
-type MiniMember = {
-  name: string
-  role: string
-  image: string
-  imgClass?: string
-  instagram?: string
-}
-
-const MINI_TEAM: MiniMember[] = [
-  { name: 'Shevan', role: 'Marketing and Strategy', image: shevanprofile, imgClass: 'object-top',    instagram: 'https://www.instagram.com/sh3van.n' },
-  { name: 'Seni',   role: 'IT and Strategy',        image: seniprofile,   imgClass: 'object-center', instagram: 'https://www.instagram.com/seniii.r' },
-  { name: 'Slade',  role: 'Client Relations and Strategy', image: sladeIntro, imgClass: 'object-center', instagram: 'https://www.instagram.com/slxde.xx' },
+/* -------------------- Steps data -------------------- */
+const STEPS = [
+  { title: 'Discovery Call', desc: 'Quick intro chat to understand goals.' },
+  { title: 'Scope & Quote', desc: 'We map out deliverables and costs.' },
+  { title: 'Draft Build', desc: 'First version delivered for review.' },
+  { title: 'Revisions', desc: 'Feedback loop until it feels right.' },
+  { title: 'Launch', desc: 'Project goes live with full support.' },
+  { title: 'Post-Launch Support', desc: '14-day safety net for fixes/questions.' },
 ]
 
+/* -------------------- Team Card (click to open) -------------------- */
+function TeamTile({ member, onOpen }: { member: TeamMember; onOpen: () => void }) {
+  const stopCardClick = (e: React.MouseEvent) => e.stopPropagation()
+  const igDisabled = !member.instagram
+
+  return (
+    <button
+      onClick={onOpen}
+      className="relative w-full max-w-[19rem] overflow-hidden rounded-2xl border border-white/15 backdrop-blur-md
+                 shadow-[0_20px_80px_rgba(0,0,0,0.35)] hover:shadow-[0_30px_120px_rgba(0,0,0,0.45)] transition-shadow text-left"
+      style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%)' }}
+      aria-label={`Open profile for ${member.name}`}
+    >
+      {/* subtle brand wash */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(90% 70% at -10% -10%, rgba(0,51,255,0.10), transparent 60%), radial-gradient(90% 70% at 110% -10%, rgba(108,0,255,0.10), transparent 60%)',
+        }}
+      />
+
+      <div className="relative p-3">
+        <div className="rounded-xl overflow-hidden ring-1 ring-white/20 bg-white/[0.06]">
+          <div className="aspect-[3/4] w-full">
+            <img
+              src={member.imageUrl}
+              alt={member.name}
+              className={`h-full w-full object-cover ${member.imgClass ?? ''}`}
+            />
+          </div>
+        </div>
+
+        <div className="mt-3 text-center">
+          <h3 className="text-lg font-semibold text-white">{member.name}</h3>
+          <div className="mt-1 inline-flex items-center rounded-full border border-white/20 bg-white/[0.06] px-3 py-1 text-[11px] text-white/85">
+            {member.role}
+          </div>
+        </div>
+
+        {/* Socials (do not trigger modal) */}
+        <div className="mt-3 mb-1 flex items-center justify-center gap-3" onClick={stopCardClick}>
+          <a
+            href="#"
+            className="p-2 text-white/70 bg-white/[0.06] rounded-full border border-white/15 hover:bg-white/15 hover:text-white transition hover:scale-105"
+            aria-label={`${member.name}'s X profile`}
+          >
+            <XIcon />
+          </a>
+
+          <a
+            href={member.instagram || '#'}
+            target={igDisabled ? undefined : '_blank'}
+            rel={igDisabled ? undefined : 'noopener noreferrer'}
+            className={[
+              'p-2 rounded-full border transition hover:scale-105',
+              igDisabled
+                ? 'cursor-not-allowed text-white/40 bg-white/[0.04] border-white/10'
+                : 'text-white/80 bg-white/[0.06] border-white/15 hover:text-white hover:bg-gradient-to-br hover:from-purple-500/70 hover:to-pink-500/70',
+            ].join(' ')}
+            aria-label={`${member.name}'s Instagram profile`}
+          >
+            <InstagramIcon />
+          </a>
+
+          <a
+            href="#"
+            className="p-2 text-white/70 bg-white/[0.06] rounded-full border border-white/15 hover:bg-white/15 hover:text-white transition hover:scale-105"
+            aria-label={`${member.name}'s Facebook profile`}
+          >
+            <FacebookIcon />
+          </a>
+        </div>
+      </div>
+    </button>
+  )
+}
+
+/* -------------------- Full-screen Modal -------------------- */
+function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => void }) {
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = prev
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [onClose])
+
+  const sections = useMemo(() => TOOLBOX[member.key], [member.key])
+
+  return (
+    <div className="fixed inset-0 z-[100]" role="dialog" aria-modal="true" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+
+      <div
+        className="absolute inset-3 md:inset-6 lg:inset-10 rounded-2xl overflow-hidden border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_20px_100px_rgba(0,0,0,0.6)] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="sticky top-0 z-10 flex items-center justify-between px-5 md:px-8 py-4 bg-gradient-to-b from-black/20 to-transparent backdrop-blur-sm">
+          <div className="text-white/90">
+            <div className="text-2xl md:text-3xl font-semibold">{member.name}</div>
+            <div className="text-white/70">{member.role}</div>
+          </div>
+          <button
+            onClick={onClose}
+            className="rounded-full bg-white/15 hover:bg-white/25 text-white p-2 border border-white/20"
+            aria-label="Close profile"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-[420px_minmax(0,1fr)] gap-0">
+            {/* Portrait */}
+            <div className="relative lg:sticky lg:top-0 p-5 md:p-8 self-start">
+              <div className="relative w-full h-[480px] lg:h-[calc(100vh-10rem)] rounded-2xl overflow-hidden ring-1 ring-white/20 bg-black/30">
+                <img
+                  src={member.imageUrl}
+                  alt={member.name}
+                  className={`absolute inset-0 w-full h-full object-cover ${member.imgClass ?? ''}`}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              </div>
+            </div>
+
+            {/* Details */}
+            <div className="px-5 md:px-8 pb-10">
+              <section className="pt-2 md:pt-4">
+                <h3 className="text-xl font-semibold text-white/95">About</h3>
+                <p className="mt-3 text-white/85 leading-relaxed">{member.bio}</p>
+              </section>
+
+              <section className="mt-10">
+                <h3 className="text-xl font-semibold text-white/95">Toolbox</h3>
+                <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {sections.map((sec) => (
+                    <div key={sec.title} className="rounded-xl border border-white/15 bg-white/7 backdrop-blur-md p-4 md:p-5">
+                      <div className="font-medium text-white/95">{sec.title}</div>
+                      <ul className="mt-3 space-y-1.5 text-white/85 text-sm leading-relaxed">
+                        {sec.items.map((it, i) => (
+                          <li key={i} className="flex gap-2">
+                            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-white/60" />
+                            <span>{it}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="mt-10">
+                <h3 className="text-xl font-semibold text-white/95">Links</h3>
+                <div className="mt-3 flex gap-3">
+                  <a className="px-3 py-2 rounded-lg bg-white text-black text-sm font-medium hover:bg-white/90" href="/Work">
+                    View Work
+                  </a>
+                  <a
+                    className="px-3 py-2 rounded-lg border border-white/25 text-white/90 text-sm hover:bg-white/10"
+                    href="https://calendly.com/theikigaiproject-ca/30min?month=2025-10"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Connect
+                  </a>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* -------------------- Page -------------------- */
 export default function About() {
+  const [openKey, setOpenKey] = useState<TeamKey | null>(null)
+  const active = TEAM.find((m) => m.key === openKey) || null
+
   return (
     <section className="relative min-h-[110vh] overflow-hidden text-white font-[Inter] bg-black">
-      {/* Brand gradient base (below galaxy for subtle color cast) */}
+      {/* Brand gradient base */}
       <div className="pointer-events-none absolute inset-0 -z-20">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
       </div>
 
-      {/* Galaxy canvas sits above the section background */}
+      {/* Particles background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <Galaxy
-          transparent
-          mouseRepulsion
-          mouseInteraction
-          density={1.5}
-          glowIntensity={0.5}
-          saturation={0.8}
-          hueShift={240}
-          starSpeed={0.5}
-          speed={1}
-          rotationSpeed={0.08}
-          twinkleIntensity={0.4}
-        />
+        <div className="w-full h-full relative">
+          <Particles
+            particleColors={['#ffffff', '#ffffff']}
+            particleCount={220}
+            particleSpread={10}
+            speed={0.1}
+            particleBaseSize={400}
+            moveParticlesOnHover={true}
+            alphaParticles={false}
+            disableRotation={false}
+            className="pointer-events-none"
+          />
+        </div>
       </div>
 
-      {/* Soft vignette ABOVE galaxy but BELOW content for readability */}
+      {/* Soft vignette */}
       <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(60%_40%_at_50%_-10%,rgba(0,0,0,0.18),rgba(0,0,0,0))]" />
 
       {/* Content */}
@@ -96,7 +351,7 @@ export default function About() {
           </p>
         </div>
 
-        {/* OUR EXCEPTIONAL TEAM — Glassy tiles with socials */}
+        {/* OUR EXCEPTIONAL TEAM — tiles that open modal */}
         <section className="mt-16 md:mt-20">
           <header className="text-center mb-8 md:mb-10">
             <h2 className="font-[Space_Grotesk] tracking-widest text-3xl md:text-5xl">
@@ -108,85 +363,11 @@ export default function About() {
           </header>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 justify-items-center">
-            {MINI_TEAM.map((m) => {
-              const igDisabled = !m.instagram
-              return (
-                <article
-                  key={m.name}
-                  className="relative w-full max-w-[19rem] overflow-hidden rounded-2xl border border-white/15 backdrop-blur-md
-                             shadow-[0_20px_80px_rgba(0,0,0,0.35)] hover:shadow-[0_30px_120px_rgba(0,0,0,0.45)] transition-shadow"
-                  style={{
-                    background:
-                      'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%)',
-                  }}
-                >
-                  {/* subtle brand wash */}
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0"
-                    style={{
-                      background:
-                        'radial-gradient(90% 70% at -10% -10%, rgba(0,51,255,0.10), transparent 60%), radial-gradient(90% 70% at 110% -10%, rgba(108,0,255,0.10), transparent 60%)',
-                    }}
-                  />
-                  <div className="relative p-3">
-                    <div className="rounded-xl overflow-hidden ring-1 ring-white/20 bg-white/[0.06]">
-                      <div className="aspect-[3/4] w-full">
-                        <img
-                          src={m.image}
-                          alt={m.name}
-                          className={`h-full w-full object-cover ${m.imgClass ?? ''}`}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mt-3 text-center">
-                      <h3 className="text-lg font-semibold">{m.name}</h3>
-                      <div className="mt-1 inline-flex items-center rounded-full border border-white/20 bg-white/[0.06] px-3 py-1 text-[11px] text-white/85">
-                        {m.role}
-                      </div>
-                    </div>
-
-                    {/* Socials */}
-                    <div className="mt-3 mb-1 flex items-center justify-center gap-3">
-                      <a
-                        href="#"
-                        className="p-2 text-white/70 bg-white/[0.06] rounded-full border border-white/15 hover:bg-white/15 hover:text-white transition hover:scale-105"
-                        aria-label={`${m.name}'s X profile`}
-                      >
-                        <XIcon />
-                      </a>
-
-                      <a
-                        href={m.instagram || '#'}
-                        target={igDisabled ? undefined : '_blank'}
-                        rel={igDisabled ? undefined : 'noopener noreferrer'}
-                        className={[
-                          'p-2 rounded-full border transition hover:scale-105',
-                          igDisabled
-                            ? 'cursor-not-allowed text-white/40 bg-white/[0.04] border-white/10'
-                            : 'text-white/80 bg-white/[0.06] border-white/15 hover:text-white hover:bg-gradient-to-br hover:from-purple-500/70 hover:to-pink-500/70',
-                        ].join(' ')}
-                        aria-label={`${m.name}'s Instagram profile`}
-                      >
-                        <InstagramIcon />
-                      </a>
-
-                      <a
-                        href="#"
-                        className="p-2 text-white/70 bg-white/[0.06] rounded-full border border-white/15 hover:bg-white/15 hover:text-white transition hover:scale-105"
-                        aria-label={`${m.name}'s Facebook profile`}
-                      >
-                        <FacebookIcon />
-                      </a>
-                    </div>
-                  </div>
-                </article>
-              )
-            })}
+            {TEAM.map((m) => (
+              <TeamTile key={m.key} member={m} onOpen={() => setOpenKey(m.key)} />
+            ))}
           </div>
         </section>
-        {/* END TEAM TILES */}
 
         {/* PROCESS */}
         <div className="mt-20 md:mt-28">
@@ -199,35 +380,22 @@ export default function About() {
 
           {/* Vertical timeline */}
           <div className="relative max-w-3xl mx-auto">
-            {/* vertical line */}
             <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-white/15" />
-
             <ul className="space-y-8 md:space-y-10">
               {STEPS.map((s, i) => (
                 <li key={s.title} className="relative">
-                  {/* node */}
                   <div className="absolute left-1/2 -translate-x-1/2">
                     <div className="flex items-center justify-center h-9 w-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_30px_rgba(255,255,255,0.15)]">
                       <span className="text-sm font-semibold">{i + 1}</span>
                     </div>
                   </div>
 
-                  {/* card */}
-                  <div
-                    className={[
-                      'mt-4',
-                      i % 2 === 0 ? 'md:pr-16 md:mr-[52%]' : 'md:pl-16 md:ml-[52%]',
-                    ].join(' ')}
-                  >
+                  <div className={['mt-4', i % 2 === 0 ? 'md:pr-16 md:mr-[52%]' : 'md:pl-16 md:ml-[52%]'].join(' ')}>
                     <div
                       className="relative overflow-hidden rounded-2xl border border-white/15 backdrop-blur-md
                                  shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
-                      style={{
-                        background:
-                          'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)',
-                      }}
+                      style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)' }}
                     >
-                      {/* subtle brand wash */}
                       <div
                         aria-hidden
                         className="pointer-events-none absolute inset-0"
@@ -243,7 +411,6 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* connector arrow */}
                   {i < STEPS.length - 1 && (
                     <div className="absolute left-1/2 -translate-x-1/2 mt-3">
                       <div className="h-7 w-px bg-white/20 mx-auto" />
@@ -255,8 +422,10 @@ export default function About() {
             </ul>
           </div>
         </div>
-        {/* END PROCESS */}
       </div>
+
+      {/* Modal */}
+      {active && <ProfileModal member={active} onClose={() => setOpenKey(null)} />}
     </section>
   )
 }

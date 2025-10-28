@@ -145,7 +145,7 @@ export default function Services() {
 
       {/* Page header */}
       <header className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 pt-12 md:pt-22">
-        <h1 className="text-center font-[Space_Grotesk] uppercase tracking-widest text-4xl md:text-5xl">
+        <h1 className="text-center font-[Space_Grotesk] uppercase tracking-widest text-4xl md:text-5xl mt-10">
           Find Your Alignment
         </h1>
         <p className="mt-3 text-center text-white/70">
@@ -390,11 +390,7 @@ export default function Services() {
 
                     <div className="mt-6 flex flex-wrap gap-3">
                       <button
-                        className="rounded-xl px-4 py-2 text-sm font-medium
-                                   text-white shadow-sm transition-all
-                                   bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
-                                   hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
-                                   focus:outline-none focus:ring-2 focus:ring-white/20"
+                        className="rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40"
                         onClick={() => {
                           setShowCustom(false);
                           setCustomLocked(false);
@@ -403,7 +399,10 @@ export default function Services() {
                         Done
                       </button>
                       <button
-                        className="rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40"
+                        className="rounded-xl px-4 py-2 text-sm font-medium
+                                   text-white shadow-sm transition-all                                         bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
+                                   hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
+                                   focus:outline-none focus:ring-2 focus:ring-white/20"
                         onClick={() => goToQuote(Array.from(customSet))}
                       >
                         Get Quote
