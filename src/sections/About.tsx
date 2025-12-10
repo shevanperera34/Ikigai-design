@@ -18,6 +18,8 @@ type TeamMember = {
   imgClass?: string
   bio: string
   instagram?: string
+  linkedin?: string
+  x?: string
 }
 
 const TEAM: TeamMember[] = [
@@ -30,6 +32,8 @@ const TEAM: TeamMember[] = [
     bio:
       'Creative lead focused on brand systems, campaigns, and content that converts. Blends design thinking with strategy to make ideas land.',
     instagram: 'https://www.instagram.com/sh3van.n',
+    linkedin: '#',
+    x: '#',
   },
   {
     key: 'Seni',
@@ -40,6 +44,8 @@ const TEAM: TeamMember[] = [
     bio:
       'Systems & infrastructure. Builds the backbone—automation, security, and performance—so products ship fast and scale cleanly.',
     instagram: 'https://www.instagram.com/seniii.r',
+    linkedin: '#',
+    x: '#',
   },
   {
     key: 'Slade',
@@ -50,6 +56,8 @@ const TEAM: TeamMember[] = [
     bio:
       'Frontline for client growth. Outreach, enablement, and operations—turning conversations into long-term partnerships and results.',
     instagram: 'https://www.instagram.com/slxde.xx',
+    linkedin: '#',
+    x: '#',
   },
 ]
 
@@ -86,20 +94,41 @@ const TOOLBOX: Record<TeamKey, { title: string; items: string[] }[]> = {
   ],
 }
 
-/* -------------------- Icons (matching your About look) -------------------- */
-const XIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-    <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.31l5.74-6.57L0 .75h5.063l3.495 4.633L12.6.75ZM11.47 13.5h1.146L4.74 2.15H3.522l7.95 11.35Z"/>
+/* -------------------- Icons -------------------- */
+const LinkedInIcon = ({ size = 16 }: { size?: number }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 382 382"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M347.445,0H34.555C15.471,0,0,15.471,0,34.555v312.889C0,366.529,15.471,382,34.555,382h312.889
+      C366.529,382,382,366.529,382,347.444V34.555C382,15.471,366.529,0,347.445,0z M118.207,329.844
+      c0,5.554-4.502,10.056-10.056,10.056H65.345c-5.554,0-10.056-4.502-10.056-10.056V150.403
+      c0-5.554,4.502-10.056,10.056-10.056h42.806c5.554,0,10.056,4.502,10.056,10.056V329.844z
+      M86.748,123.432c-22.459,0-40.666-18.207-40.666-40.666S64.289,42.1,86.748,42.1
+      s40.666,18.207,40.666,40.666S109.208,123.432,86.748,123.432z M341.91,330.654
+      c0,5.106-4.14,9.246-9.246,9.246H286.73c-5.106,0-9.246-4.14-9.246-9.246v-84.168
+      c0-12.556,3.683-55.021-32.813-55.021c-28.309,0-34.051,29.066-35.204,42.11v97.079
+      c0,5.106-4.139,9.246-9.246,9.246h-44.426c-5.106,0-9.246-4.14-9.246-9.246V149.593
+      c0-5.106,4.14-9.246,9.246-9.246h44.426c5.106,0,9.246,4.14,9.246,9.246v15.655
+      c10.497-15.753,26.097-27.912,59.312-27.912c73.552,0,73.131,68.716,73.131,106.472V330.654z" />
   </svg>
-)
+);
+
+
+
 const InstagramIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
     <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003Zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.282.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.231 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.843-.038 1.096-.047 3.232-.047h.001Zm4.905 1.882a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4ZM8 4.465a3.535 3.535 0 1 0 0 7.07 3.535 3.535 0 0 0 0-7.07ZM8 5.535a2.465 2.465 0 1 1 0 4.93 2.465 2.465 0 0 1 0-4.93Z"/>
   </svg>
 )
-const FacebookIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-    <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0 0 3.603 0 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H11.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+
+const XIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+    <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.31l5.74-6.57L0 .75h5.063l3.495 4.633L12.6.75ZM11.47 13.5h1.146L4.74 2.15H3.522l7.95 11.35Z"/>
   </svg>
 )
 
@@ -117,12 +146,16 @@ const STEPS = [
 function TeamTile({ member, onOpen }: { member: TeamMember; onOpen: () => void }) {
   const stopCardClick = (e: React.MouseEvent) => e.stopPropagation()
   const igDisabled = !member.instagram
+  const liDisabled = !member.linkedin
+  const xDisabled  = !member.x
 
   return (
     <button
       onClick={onOpen}
       className="relative w-full max-w-[19rem] overflow-hidden rounded-2xl border border-white/15 backdrop-blur-md
-                 shadow-[0_20px_80px_rgba(0,0,0,0.35)] hover:shadow-[0_30px_120px_rgba(0,0,0,0.45)] transition-shadow text-left"
+                 shadow-[0_20px_80px_rgba(0,0,0,0.35)] transition-transform duration-300 transform-gpu
+                 hover:-translate-y-1 hover:scale-[1.03]
+                 hover:shadow-[0_30px_120px_rgba(0,0,0,0.45)] text-left"
       style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%)' }}
       aria-label={`Open profile for ${member.name}`}
     >
@@ -154,16 +187,25 @@ function TeamTile({ member, onOpen }: { member: TeamMember; onOpen: () => void }
           </div>
         </div>
 
-        {/* Socials (do not trigger modal) */}
+        {/* Socials (do not trigger modal) — LinkedIn, Instagram, X */}
         <div className="mt-3 mb-1 flex items-center justify-center gap-3" onClick={stopCardClick}>
+          {/* LinkedIn */}
           <a
-            href="#"
-            className="p-2 text-white/70 bg-white/[0.06] rounded-full border border-white/15 hover:bg-white/15 hover:text-white transition hover:scale-105"
-            aria-label={`${member.name}'s X profile`}
+            href={member.linkedin || '#'}
+            target={liDisabled ? undefined : '_blank'}
+            rel={liDisabled ? undefined : 'noopener noreferrer'}
+            className={[
+              'p-2 rounded-full border transition hover:scale-105',
+              liDisabled
+                ? 'cursor-not-allowed text-white/40 bg-white/[0.04] border-white/10'
+                : 'text-white/80 bg-white/[0.06] border-white/15 hover:text-white hover:bg-white/15',
+            ].join(' ')}
+            aria-label={`${member.name}'s LinkedIn profile`}
           >
-            <XIcon />
+            <LinkedInIcon />
           </a>
 
+          {/* Instagram */}
           <a
             href={member.instagram || '#'}
             target={igDisabled ? undefined : '_blank'}
@@ -179,12 +221,20 @@ function TeamTile({ member, onOpen }: { member: TeamMember; onOpen: () => void }
             <InstagramIcon />
           </a>
 
+          {/* X */}
           <a
-            href="#"
-            className="p-2 text-white/70 bg-white/[0.06] rounded-full border border-white/15 hover:bg-white/15 hover:text-white transition hover:scale-105"
-            aria-label={`${member.name}'s Facebook profile`}
+            href={member.x || '#'}
+            target={xDisabled ? undefined : '_blank'}
+            rel={xDisabled ? undefined : 'noopener noreferrer'}
+            className={[
+              'p-2 rounded-full border transition hover:scale-105',
+              xDisabled
+                ? 'cursor-not-allowed text-white/40 bg-white/[0.04] border-white/10'
+                : 'text-white/80 bg-white/[0.06] border-white/15 hover:text-white hover:bg-white/15',
+            ].join(' ')}
+            aria-label={`${member.name}'s X profile`}
           >
-            <FacebookIcon />
+            <XIcon />
           </a>
         </div>
       </div>
@@ -303,22 +353,31 @@ export default function About() {
   const active = TEAM.find((m) => m.key === openKey) || null
 
   return (
-    <section className="relative min-h-[110vh] overflow-hidden text-white font-[Inter] bg-black">
-      {/* Brand gradient base */}
-      <div className="pointer-events-none absolute inset-0 -z-20">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
+    <section className="relative min-h-[110vh] overflow-hidden text-white font-[Inter] bg-[#060a18]">
+      {/* --- Hue background (match Services) --- */}
+      <div className="pointer-events-none absolute inset-0 -z-30">
+        {/* deep navy base to near-black */}
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(180deg, #0b1220 0%, #070a14 40%, #05070d 100%)' }}
+        />
+        {/* top blue wash */}
+        <div className="absolute inset-0 bg-[radial-gradient(900px_520px_at_50%_-140px,rgba(59,130,246,0.18),transparent_60%)]" />
+        {/* right purple glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(900px_600px_at_82%_48%,rgba(168,85,247,0.12),transparent_60%)]" />
+        {/* left blue glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(900px_600px_at_18%_56%,rgba(59,130,246,0.10),transparent_60%)]" />
       </div>
 
       {/* Particles background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="w-full h-full relative">
           <Particles
-            particleColors={['#ffffff', '#ffffff']}
+            particleColors={['#8ab4ff', '#b388ff', '#ffffff']}
             particleCount={220}
             particleSpread={10}
             speed={0.1}
-            particleBaseSize={400}
+            particleBaseSize={300}
             moveParticlesOnHover={true}
             alphaParticles={false}
             disableRotation={false}

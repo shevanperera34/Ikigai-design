@@ -647,19 +647,55 @@ export default function Work() {
                 </div>
               </div>
 
-              {/* navigation arrows (hidden on phones) */}
-              {filteredProjects.length > 1 && !isSmallScreen && (
-                <>
-                  <button onClick={() => navigateProject('prev')} className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors" title="Previous (←)" aria-label="Previous">
-                    <ChevronLeft size={20} />
-                  </button>
-                  <button onClick={() => navigateProject('next')} className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors" title="Next (→)" aria-label="Next">
-                    <ChevronRight size={20} />
-                  </button>
-                </>
-              )}
+		
+      		{/* navigation arrows (hidden on phones) */}
+{filteredProjects.length > 1 && !isSmallScreen && (
+  <>
+    <button
+      onClick={() => navigateProject('prev')}
+      className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors"
+      title="Previous (←)"
+      aria-label="Previous"
+    >
+      {/* ChevronLeft, nudged right */}
+      <svg viewBox="0 0 24 24" width={40} height={20}>
+        <path
+          d="M15 18L9 12L15 6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          transform="translate(2,0)"   // move the arrow 2px right
+        />
+      </svg>
+    </button>
 
-              {/* media — perfect-fit container (same feel as the version you liked) */}
+    <button
+      onClick={() => navigateProject('next')}
+      className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors"
+      title="Next (→)"
+      aria-label="Next"
+    >
+      {/* ChevronRight, nudged right */}
+      <svg viewBox="0 0 24 24" width={40} height={20}>
+        <path
+          d="M9 18L15 12L9 6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          transform="translate(2,0)"   // move the arrow 2px right
+        />
+      </svg>
+    </button>
+  </>
+)}
+	      
+
+
+              {/* media with the dope-fit container */}
               <div
                 className={`relative z-0 bg-black ${
                   isFullscreen ? 'h-[100vh]' : 'h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)]'

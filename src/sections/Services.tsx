@@ -316,23 +316,28 @@ export default function Services() {
               </text>
 
               {/* Center CTA */}
-              <foreignObject x="430" y="355" width="140" height="80">
-                <div className="flex h-full w-full items-center justify-center">
-                  <button
-                    className="rounded-xl px-3 py-2 text-sm text-black transition-colors
-                               bg-gradient-to-r from-[#ffffff] to-[#e9e9e9] hover:from-[#f0f0f0] hover:to-[#dcdcdc]"
-                    onClick={() => {
-                      setHoveredKey(null);
-                      setSelectedKey(null);
-                      setShowCustom(true);
-                      setCustomLocked(true);
-                    }}
-                  >
-                    Custom Alignment
-                  </button>
-                </div>
-              </foreignObject>
-            </svg>
+            <foreignObject x="430" y="355" width="140" height="80">
+  <div className="flex h-full w-full items-center justify-center">
+    <button
+      className="
+        rounded-xl px-3 py-2 text-sm font-medium transition-all shadow-sm
+        text-black bg-white/90
+        hover:text-white hover:shadow-[0_8px_24px_rgba(108,0,255,0.35)]
+        hover:bg-gradient-to-r hover:from-[rgba(0,51,255,0.95)] hover:to-[rgba(108,0,255,0.95)]
+        focus:outline-none focus:ring-2 focus:ring-white/30
+      "
+      onClick={() => {
+        setHoveredKey(null);
+        setSelectedKey(null);
+        setShowCustom(true);
+        setCustomLocked(true);
+      }}
+    >
+      Custom Alignment
+    </button>
+  </div>
+</foreignObject>	      
+	      </svg>
           </div>
 
           {/* Right: Panel */}
