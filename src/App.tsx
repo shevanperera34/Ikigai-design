@@ -8,13 +8,14 @@ import Services from './sections/Services'
 import Contact from './sections/Contact'
 import About from './sections/About'
 import IkigaiQuoteFlow from "./sections/Services-GetQuote";
+import Home from './sections/Home'
 
 export default function App() {
   return (
     <div className="min-h-screen bg-base text-white antialiased">
       <Navbar />
       <Routes>
-        <Route path="/" element={<Hero />} />
+        <Route path="/" element={<Home />} />
         <Route path="/team" element={<TeamMemberSection />} />
         <Route path="/work" element={<Work />} />  
 	<Route path="/services" element={<Services />} />
