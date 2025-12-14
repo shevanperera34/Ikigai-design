@@ -445,7 +445,7 @@ export default function Work() {
           ref={ref}
           variants={containerAnimation}
           initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
+          animate="visible"
           className="text-center mb-12 sm:mb-16"
         >
           <motion.h2
@@ -461,7 +461,7 @@ export default function Work() {
         </motion.div>
 
         {/* search + filters */}
-        <motion.div variants={containerAnimation} initial="hidden" animate={isInView ? 'visible' : 'hidden'} className="mb-12 sm:mb-16">
+        <motion.div variants={containerAnimation} initial="hidden" animate="visible" className="mb-12 sm:mb-16">
           <div className="mb-8 flex justify-center">
             <motion.div className="relative w-full max-w-xl">
               <div className="relative flex items-center">
@@ -533,25 +533,26 @@ export default function Work() {
           layout
           variants={containerAnimation}
           initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
+          animate="visible"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8"
         >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
-              <motion.div
-                layout
-                key={project.id}
-                variants={itemAnimation}
-                className="relative group cursor-pointer rounded-2xl overflow-hidden h-72 sm:h-80 border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
-                onClick={() => openProject(project)}
-                whileHover={cardHoverAnimation}
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.85 }}
-                transition={{ duration: 0.35 }}
-                aria-label={`Open ${project.title}`}
-              >
-                {!imageError[project.id] ? (
+<motion.div
+  layout
+  key={project.id}
+  variants={itemAnimation}
+  className="relative group cursor-pointer rounded-2xl overflow-hidden h-72 sm:h-80 border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
+  onClick={() => openProject(project)}
+  whileHover={cardHoverAnimation}
+  initial={{ opacity: 0, scale: 0.85 }}
+  animate={{ opacity: 1, scale: 1 }}
+  exit={{ opacity: 0, scale: 0.85 }}
+  transition={{ duration: 0.35 }}
+  aria-label={`Open ${project.title}`}
+>
+
+		    {!imageError[project.id] ? (
                   <img
                     src={project.thumbnailUrl}
                     alt={project.title}

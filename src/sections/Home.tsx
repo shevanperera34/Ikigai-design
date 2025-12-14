@@ -1,6 +1,10 @@
 // src/sections/Home.tsx
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Hero } from "./Hero";
+import ServicesPreview from "../components/ServicesPreview";
+import WorkPreview from "../components/WorkPreview";
+import ContactPreview from "../components/ContactPreview";
 
 /* =====================
    TYPES
@@ -45,6 +49,7 @@ const TEAM: TeamMember[] = [
     name: "Shevan",
     role: "Marketing and Strategy",
     imageUrl: shevanprofile,
+    imgClass: "object-top",
     bio:
       "Creative lead focused on brand systems, campaigns, and content that converts.",
     instagram: "https://www.instagram.com/sh3van.n",
@@ -54,6 +59,7 @@ const TEAM: TeamMember[] = [
     name: "Seni",
     role: "IT and Strategy",
     imageUrl: seniprofile,
+    imgClass: "object-center",
     bio:
       "Systems & infrastructure. Builds automation, security, and performance.",
     instagram: "https://www.instagram.com/seniii.r",
@@ -63,62 +69,72 @@ const TEAM: TeamMember[] = [
     name: "Slade",
     role: "Client Relations and Strategy",
     imageUrl: sladeIntro,
+    imgClass: "object-center",
     bio:
       "Client growth, outreach, and partnerships that last.",
     instagram: "https://www.instagram.com/slxde.xx",
   },
 ];
 
-const servicePillars: ServicePillar[] = [
-  {
-    title: "Brand Systems",
-    subtitle: "Make you recognizable.",
-    points: ["Identity", "Messaging", "Visual direction"],
-  },
-  {
-    title: "Web Infrastructure",
-    subtitle: "Make you findable.",
-    points: ["Websites", "Integrations", "Performance"],
-  },
-  {
-    title: "Growth Architecture",
-    subtitle: "Make you scalable.",
-    points: ["Funnels", "Content", "Analytics"],
-  },
-];
-
-const featuredProjects: Project[] = [
-  {
-    label: "Digital Systems",
-    name: "Zuma Blinds",
-    blurb: "Premium blinds site with 3D visuals.",
-  },
-  {
-    label: "Digital Systems",
-    name: "QuickTread",
-    blurb: "Fast-quote tire experience.",
-  },
-  {
-    label: "Creative Strategy",
-    name: "Barber Campaign",
-    blurb: "Brand + visuals + offer stack.",
-  },
-];
-
 /* =====================
-   TEAM CARD
+   TEAM TILE (Home)
 ===================== */
 function TeamTile({ member }: { member: TeamMember }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="max-w-[18rem] rounded-2xl border border-white/15 bg-white/5 p-4 backdrop-blur-md
-                    shadow-[0_20px_80px_rgba(0,0,0,0.35)]">
-      <div className="aspect-[3/4] rounded-xl overflow-hidden">
-        <img src={member.imageUrl} className="w-full h-full object-cover" />
+    <button
+      onClick={() => navigate("/about")}
+      className="group relative w-full max-w-[19rem] overflow-hidden rounded-2xl border border-white/15 backdrop-blur-md
+                 shadow-[0_20px_80px_rgba(0,0,0,0.35)] transition-transform duration-300 transform-gpu
+                 hover:-translate-y-1 hover:scale-[1.03]
+                 hover:shadow-[0_30px_120px_rgba(0,0,0,0.45)] text-left"
+      style={{
+        background:
+          "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%)",
+      }}
+      aria-label={`Go to About page (team) from ${member.name}`}
+    >
+      {/* subtle brand wash (same vibe as About.tsx tiles) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(90% 70% at -10% -10%, rgba(0,51,255,0.10), transparent 60%), radial-gradient(90% 70% at 110% -10%, rgba(108,0,255,0.10), transparent 60%)",
+        }}
+      />
+
+      <div className="relative p-3">
+        <div className="rounded-xl overflow-hidden ring-1 ring-white/20 bg-white/[0.06]">
+          <div className="aspect-[3/4] w-full">
+            <img
+              src={member.imageUrl}
+              alt={member.name}
+              className={`h-full w-full object-cover ${member.imgClass ?? ""}`}
+            />
+          </div>
+        </div>
+
+        <div className="mt-3 text-center">
+          <h3 className="text-lg font-semibold text-white">{member.name}</h3>
+          <div className="mt-1 inline-flex items-center rounded-full border border-white/20 bg-white/[0.06] px-3 py-1 text-[11px] text-white/85">
+            {member.role}
+          </div>
+        </div>
+
+        <p className="mt-3 px-2 pb-1 text-[11px] leading-relaxed text-white/70 text-center">
+          {member.bio}
+        </p>
+
+        {/* tiny hint on hover */}
+        <div className="mt-3 flex items-center justify-center">
+          <span className="text-[10px] text-white/55 transition group-hover:text-white/80">
+            View full team →
+          </span>
+        </div>
       </div>
-      <h3 className="mt-3 text-lg font-semibold text-white text-center">{member.name}</h3>
-      <p className="text-xs text-white/70 text-center">{member.role}</p>
-      <p className="mt-2 text-[11px] text-white/70 text-center">{member.bio}</p>
-    </div>
+    </button>
   );
 }
 
@@ -147,42 +163,22 @@ export default function Home() {
       </section>
 
       {/* SERVICES */}
-      <section id="services" className="mt-32 px-6 max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-3 gap-8">
-          {servicePillars.map((s) => (
-            <div key={s.title} className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <h3 className="uppercase tracking-widest text-sm">{s.title}</h3>
-              <p className="mt-2 text-slate-300">{s.subtitle}</p>
-              <ul className="mt-3 text-xs text-slate-400 space-y-1">
-                {s.points.map((p) => <li key={p}>• {p}</li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
+      {/* SERVICES (Venn Preview) */}
+      <section id="services" className="mt-32">
+        <ServicesPreview />
       </section>
 
       {/* WORK */}
-      <section id="work" className="mt-32 px-6 max-w-6xl mx-auto">
-        <h2 className="text-center text-3xl tracking-widest uppercase">Our Work</h2>
-        <div className="mt-12 grid md:grid-cols-3 gap-6">
-          {featuredProjects.map((p) => (
-            <div key={p.name} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase text-slate-400">{p.label}</p>
-              <h3 className="mt-2 text-lg">{p.name}</h3>
-              <p className="mt-1 text-sm text-slate-400">{p.blurb}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+<section id="work" className="mt-32">
+  <WorkPreview />
+</section>
 
       {/* CONTACT */}
-      <section id="contact" className="mt-32 px-6 pb-32 max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl tracking-widest uppercase">Let’s Build</h2>
-        <p className="mt-4 text-slate-300">
-          Tell us what you’re building. We’ll help align it.
-        </p>
-      </section>
-    </main>
+      {/* CONTACT */}
+<section id="contact" className="mt-32 pb-32">
+  <ContactPreview />
+</section>
+      </main>
   );
 }
 
