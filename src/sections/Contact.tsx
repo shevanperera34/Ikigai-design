@@ -1,6 +1,6 @@
 // src/sections/Contact.tsx
 import Prism from '../components/Prism'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 
 type Purpose = 'call' | 'quote' | 'question'
 type ProjectType = 'Brand' | 'Web' | 'Growth'
@@ -24,6 +24,28 @@ export default function Contact() {
 
   const isNameValid = name.trim().length > 1
   const isEmailValid = /.+@.+\..+/.test(email)
+
+  const isBrave = typeof (navigator as any).brave !== 'undefined'
+  const isOpera = /OPR\//.test(navigator.userAgent)
+  const isChrome = /Chrome\//.test(navigator.userAgent) && !isBrave && !isOpera
+  const dprCap = (isChrome || isOpera) ? 1.25 : 2
+
+  const [isScrolling, setIsScrolling] = useState(false)
+  const scrollTimer = useRef<number | null>(null)
+
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolling(true)
+      if (scrollTimer.current) window.clearTimeout(scrollTimer.current)
+      scrollTimer.current = window.setTimeout(() => setIsScrolling(false), 120)
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (scrollTimer.current) window.clearTimeout(scrollTimer.current)
+    }
+  }, [])
 
   const canSubmit = useMemo(() => {
     if (!isNameValid || !isEmailValid || !agree) return false
@@ -94,7 +116,8 @@ export default function Contact() {
       <div className="absolute inset-0 z-0">
         <Prism
           animationType="rotate"
-          timeScale={0.15}
+          // ✅ pause while scrolling to remove Chrome/Opera stutter
+          timeScale={isScrolling ? 0 : 0.15}
           height={3.5}
           baseWidth={4}
           scale={3.6}
@@ -102,9 +125,10 @@ export default function Contact() {
           colorFrequency={1}
           noise={0}
           glow={0.7}
-	  tint={[0.55, 0.20, 1.0]} 
-  	  tintStrength={0.85}
+          tint={[0.55, 0.20, 1.0]}
+          tintStrength={0.85}
           suspendWhenOffscreen
+	  dprCap={dprCap}
         />
       </div>
 

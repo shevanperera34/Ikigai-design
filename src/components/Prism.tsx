@@ -19,6 +19,7 @@ type PrismProps = {
   timeScale?: number;
   tint?: [number, number, number];      // RGB 0..1
   tintStrength?: number;                // 0..1
+  dprCap?: number;
 };
 
 const Prism: React.FC<PrismProps> = ({
@@ -38,6 +39,7 @@ const Prism: React.FC<PrismProps> = ({
   suspendWhenOffscreen = false,
   timeScale = 0.5,
   tint = [1, 1, 1],
+  dprCap = 2,
   tintStrength = 0
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -67,8 +69,8 @@ const Prism: React.FC<PrismProps> = ({
     const TINT = tint;
     const TINT_STRENGTH = Math.max(0, Math.min(1, tintStrength ?? 0));
 
-
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
+	
+    const dpr = Math.min(dprCap, window.devicePixelRatio || 1)
     const renderer = new Renderer({
       dpr,
       alpha: transparent,
