@@ -377,7 +377,7 @@ export default function Services() {
                     <h2 className="text-xl sm:text-2xl font-semibold mb-1.5 font-[Space_Grotesk] uppercase tracking-widest">
                       Custom Alignment
                     </h2>
-                    <p className="text-white/70 mb-5 text-sm sm:text-base">
+                    <p className="text-white/70 mb-5 text-sm">
                       Mix &amp; match the areas you want. Items you added are already checked.
                     </p>
 

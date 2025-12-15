@@ -298,6 +298,10 @@ export default function Work() {
   const isInView = useInView(ref, { once: true, amount: 0.1 })
   const { containerAnimation, itemAnimation } = useScrollAnimation()
 
+  const touchStartX = useRef<number | null>(null)
+  const touchStartY = useRef<number | null>(null)
+  const SWIPE_PX = 40 
+
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)')
     const update = () => setIsSmallScreen(mq.matches)
@@ -353,6 +357,43 @@ export default function Work() {
     },
     [currentProjectIndex, filteredProjects]
   )
+
+
+  const onTouchStartMedia = (e: React.TouchEvent) => {
+  if (!isSmallScreen || !selectedProject || filteredProjects.length < 2) return
+  const t = e.touches[0]
+  touchStartX.current = t.clientX
+  touchStartY.current = t.clientY
+}
+
+const onTouchEndMedia = () => {
+  touchStartX.current = null
+  touchStartY.current = null
+}
+
+const onTouchMoveMedia = (e: React.TouchEvent) => {
+  if (!isSmallScreen || !selectedProject || filteredProjects.length < 2) return
+  if (touchStartX.current == null || touchStartY.current == null) return
+
+  const t = e.touches[0]
+  const dx = t.clientX - touchStartX.current
+  const dy = t.clientY - touchStartY.current
+
+  // only treat as swipe if mostly horizontal
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_PX) {
+    // prevent page from scrolling while swiping
+    e.preventDefault()
+
+    // swipe left -> next, swipe right -> prev
+    if (dx < 0) navigateProject('next')
+    else navigateProject('prev')
+
+    // reset so it only triggers once per swipe
+    touchStartX.current = null
+    touchStartY.current = null
+  }
+}
+
 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -711,47 +752,69 @@ export default function Work() {
               )}
 
               {/* media */}
-              <div
-                className={`relative z-0 bg-black ${
-                  isFullscreen ? 'h-[100vh]' : 'h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)]'
-                } w-full grid place-items-center isolate rounded-t-2xl overflow-hidden`}
-              >
-                {isPlaying ? (
-                  isImageLike(selectedProject.videoUrl) ? (
-                    <img src={selectedProject.videoUrl} alt={selectedProject.title} className="block max-h-full max-w-full object-contain" />
-                  ) : (
-                    <div className="relative w-full h-full max-w-full max-h-full grid place-items-center">
-                      <div className="relative aspect-video w-full h-auto max-w-[1280px] max-h-full mx-auto">
-                        <iframe
-                          src={getEmbedUrl(selectedProject.videoUrl)}
-                          title={selectedProject.title}
-                          frameBorder={0}
-                          allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          referrerPolicy="no-referrer-when-downgrade"
-                          className="absolute inset-0 block w-full h-full"
-                        />
-                      </div>
-                    </div>
-                  )
-                ) : (
-                  <>
-                    <img src={selectedProject.thumbnailUrl} alt={selectedProject.title} className="block w-full h-full object-cover" />
-                    <div className="absolute inset-0 flex items-center justify-center z-10">
-                      <motion.button
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center shadow"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={handlePlayClick}
-                        title="Play (Space)"
-                        aria-label="Play"
-                      >
-                        <Play className="text-black ml-1" size={24} />
-                      </motion.button>
-                    </div>
-                  </>
-                )}
-              </div>
+	{/* media */}
+  <div
+  className={`relative z-0 bg-black w-full isolate overflow-hidden ${
+    isFullscreen ? 'h-[100svh]' : 'h-[55svh] sm:h-[calc(100vh-64px)]'
+  } rounded-t-2xl`}
+  onTouchStart={onTouchStartMedia}
+  onTouchMove={onTouchMoveMedia}
+  onTouchEnd={onTouchEndMedia}
+  style={{ touchAction: 'pan-y' }} // allow vertical scroll, we handle horizontal
+>
+
+	
+	{/* keep content centered */}
+  <div className="absolute inset-0 grid place-items-center p-0 sm:p-4">
+    {isPlaying ? (
+      isImageLike(selectedProject.videoUrl) ? (
+        <img
+          src={selectedProject.videoUrl}
+          alt={selectedProject.title}
+          className="block w-full h-full object-contain"
+        />
+      ) : (
+        <div className="w-full h-full grid place-items-center">
+          {/* Responsive video frame */}
+          <div className="w-full max-w-[1280px] px-0 sm:px-4">
+            <div className="relative w-full aspect-video overflow-hidden rounded-xl">
+              <iframe
+                src={getEmbedUrl(selectedProject.videoUrl)}
+                title={selectedProject.title}
+                frameBorder={0}
+                allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+          </div>
+        </div>
+      )
+    ) : (
+      <div className="relative w-full h-full">
+        <img
+          src={selectedProject.thumbnailUrl}
+          alt={selectedProject.title}
+          className="block w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <motion.button
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center shadow"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={handlePlayClick}
+            title="Play (Space)"
+            aria-label="Play"
+          >
+            <Play className="text-black ml-1" size={24} />
+          </motion.button>
+        </div>
+      </div>
+    )}
+  </div>
+</div>		
+
 
               {/* CASE STUDY PANEL */}
               {!isFullscreen && selectedProject && (
