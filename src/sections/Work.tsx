@@ -1,7 +1,7 @@
 // src/sections/Work.tsx
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import type { Variants, Transition } from 'framer-motion'
-import { Play, X, ChevronLeft, ChevronRight, Expand, Minimize, Share2, Search, XCircle } from 'lucide-react'
+import { Play, X, Expand, Minimize, Share2, Search, XCircle } from 'lucide-react'
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import blindthumb from '../assets/Blinds_thumbnail_2.png'
 import Autodetail from '../assets/AutoDetailing_thumbnail.png'
@@ -263,7 +263,6 @@ const useScrollAnimation = () => {
 /* ---------- helpers ---------- */
 const isImageLike = (url: string) => /\.(gif|png|jpe?g|webp|svg)(\?.*)?$/i.test(url ?? '')
 
-// Use the exact Drive "preview" embed that works (no uc-download, no SDK)
 const getEmbedUrl = (url: string) => {
   if (!url) return ''
   if (url.includes('drive.google.com')) {
@@ -431,12 +430,14 @@ export default function Work() {
   const cardHoverAnimation = { scale: 1.03, y: -8, transition: { stiffness: 300, damping: 20 } }
 
   return (
-    <section className="relative min-h-screen bg-black text-white font-[Inter] overflow-x-hidden overflow-y-visible">
-      {/* Background */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
+    <section
+      className="relative min-h-screen overflow-x-hidden overflow-y-visible font-[Inter] text-white"
+      style={{ backgroundColor: '#000000' }}
+    >
+      {/* Services-style global brand glow layer (this is the hue match) */}
+      <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-120px,rgba(255,255,255,0.07),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(900px_500px_at_50%_120%,rgba(0,0,0,0.55),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 md:py-20 relative z-10">
@@ -538,21 +539,20 @@ export default function Work() {
         >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
-<motion.div
-  layout
-  key={project.id}
-  variants={itemAnimation}
-  className="relative group cursor-pointer rounded-2xl overflow-hidden h-72 sm:h-80 border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
-  onClick={() => openProject(project)}
-  whileHover={cardHoverAnimation}
-  initial={{ opacity: 0, scale: 0.85 }}
-  animate={{ opacity: 1, scale: 1 }}
-  exit={{ opacity: 0, scale: 0.85 }}
-  transition={{ duration: 0.35 }}
-  aria-label={`Open ${project.title}`}
->
-
-		    {!imageError[project.id] ? (
+              <motion.div
+                layout
+                key={project.id}
+                variants={itemAnimation}
+                className="relative group cursor-pointer rounded-2xl overflow-hidden h-72 sm:h-80 border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
+                onClick={() => openProject(project)}
+                whileHover={cardHoverAnimation}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ duration: 0.35 }}
+                aria-label={`Open ${project.title}`}
+              >
+                {!imageError[project.id] ? (
                   <img
                     src={project.thumbnailUrl}
                     alt={project.title}
@@ -611,7 +611,9 @@ export default function Work() {
       <AnimatePresence>
         {selectedProject && (
           <motion.div
-            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 ${isFullscreen ? 'p-0' : ''} overflow-x-hidden`}
+            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 ${
+              isFullscreen ? 'p-0' : ''
+            } overflow-x-hidden`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -620,7 +622,9 @@ export default function Work() {
           >
             <motion.div
               ref={modalRef}
-              className={`relative w-full ${isFullscreen ? 'max-w-none max-h-none h-full' : 'max-w-6xl max-h-[92vh]'} overflow-y-auto overflow-x-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_20px_100px_rgba(0,0,0,0.6)]`}
+              className={`relative w-full ${
+                isFullscreen ? 'max-w-none max-h-none h-full' : 'max-w-6xl max-h-[92vh]'
+              } overflow-y-auto overflow-x-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_20px_100px_rgba(0,0,0,0.6)]`}
               initial={{ scale: 0.96, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.96, opacity: 0, y: 30 }}
@@ -636,67 +640,77 @@ export default function Work() {
                   <span className="hidden sm:inline text-xs text-white/60">Use ← → to navigate</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={handleShare} className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors" title="Share (S)" aria-label="Share">
+                  <button
+                    onClick={handleShare}
+                    className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors"
+                    title="Share (S)"
+                    aria-label="Share"
+                  >
                     <Share2 size={16} />
                   </button>
-                  <button onClick={toggleFullscreen} className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors" title="Fullscreen (F)" aria-label="Toggle fullscreen">
+                  <button
+                    onClick={toggleFullscreen}
+                    className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white hover:text-black transition-colors"
+                    title="Fullscreen (F)"
+                    aria-label="Toggle fullscreen"
+                  >
                     {isFullscreen ? <Minimize size={16} /> : <Expand size={16} />}
                   </button>
-                  <button onClick={closeProject} className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/70 transition-colors" title="Close (Esc)" aria-label="Close">
+                  <button
+                    onClick={closeProject}
+                    className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/70 transition-colors"
+                    title="Close (Esc)"
+                    aria-label="Close"
+                  >
                     <X size={16} />
                   </button>
                 </div>
               </div>
 
-		
-      		{/* navigation arrows (hidden on phones) */}
-{filteredProjects.length > 1 && !isSmallScreen && (
-  <>
-    <button
-      onClick={() => navigateProject('prev')}
-      className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors"
-      title="Previous (←)"
-      aria-label="Previous"
-    >
-      {/* ChevronLeft, nudged right */}
-      <svg viewBox="0 0 24 24" width={40} height={20}>
-        <path
-          d="M15 18L9 12L15 6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          transform="translate(2,0)"   // move the arrow 2px right
-        />
-      </svg>
-    </button>
+              {/* navigation arrows (hidden on phones) */}
+              {filteredProjects.length > 1 && !isSmallScreen && (
+                <>
+                  <button
+                    onClick={() => navigateProject('prev')}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors"
+                    title="Previous (←)"
+                    aria-label="Previous"
+                  >
+                    <svg viewBox="0 0 24 24" width={40} height={20}>
+                      <path
+                        d="M15 18L9 12L15 6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        transform="translate(2,0)"
+                      />
+                    </svg>
+                  </button>
 
-    <button
-      onClick={() => navigateProject('next')}
-      className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors"
-      title="Next (→)"
-      aria-label="Next"
-    >
-      {/* ChevronRight, nudged right */}
-      <svg viewBox="0 0 24 24" width={40} height={20}>
-        <path
-          d="M9 18L15 12L9 6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          transform="translate(2,0)"   // move the arrow 2px right
-        />
-      </svg>
-    </button>
-  </>
-)}
-	      
+                  <button
+                    onClick={() => navigateProject('next')}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-xl border border-white/20 bg-black/50 text-white hover:bg-white hover:text-black transition-colors"
+                    title="Next (→)"
+                    aria-label="Next"
+                  >
+                    <svg viewBox="0 0 24 24" width={40} height={20}>
+                      <path
+                        d="M9 18L15 12L9 6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        transform="translate(2,0)"
+                      />
+                    </svg>
+                  </button>
+                </>
+              )}
 
-
-              {/* media with the dope-fit container */}
+              {/* media */}
               <div
                 className={`relative z-0 bg-black ${
                   isFullscreen ? 'h-[100vh]' : 'h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)]'
@@ -704,14 +718,9 @@ export default function Work() {
               >
                 {isPlaying ? (
                   isImageLike(selectedProject.videoUrl) ? (
-                    <img
-                      src={selectedProject.videoUrl}
-                      alt={selectedProject.title}
-                      className="block max-h-full max-w-full object-contain"
-                    />
+                    <img src={selectedProject.videoUrl} alt={selectedProject.title} className="block max-h-full max-w-full object-contain" />
                   ) : (
                     <div className="relative w-full h-full max-w-full max-h-full grid place-items-center">
-                      {/* aspect box that stays inside modal; looks great on all screens */}
                       <div className="relative aspect-video w-full h-auto max-w-[1280px] max-h-full mx-auto">
                         <iframe
                           src={getEmbedUrl(selectedProject.videoUrl)}
@@ -727,11 +736,7 @@ export default function Work() {
                   )
                 ) : (
                   <>
-                    <img
-                      src={selectedProject.thumbnailUrl}
-                      alt={selectedProject.title}
-                      className="block w-full h-full object-cover"
-                    />
+                    <img src={selectedProject.thumbnailUrl} alt={selectedProject.title} className="block w-full h-full object-cover" />
                     <div className="absolute inset-0 flex items-center justify-center z-10">
                       <motion.button
                         className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center shadow"
@@ -750,12 +755,7 @@ export default function Work() {
 
               {/* CASE STUDY PANEL */}
               {!isFullscreen && selectedProject && (
-                <motion.div
-                  className="p-6 sm:p-8 md:p-10"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 }}
-                >
+                <motion.div className="p-6 sm:p-8 md:p-10" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
                   <div
                     className="relative isolate rounded-2xl border border-white/15 bg-white/8 backdrop-blur-md shadow-[0_20px_80px_rgba(0,0,0,0.35)] p-6 sm:p-8 text-white overflow-hidden"
                     style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%)' }}
@@ -763,9 +763,7 @@ export default function Work() {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold">{selectedProject.title}</h2>
-                        <p className="mt-1 text-white/75 text-xs sm:text-sm uppercase tracking-[0.2em]">
-                          {selectedProject.category}
-                        </p>
+                        <p className="mt-1 text-white/75 text-xs sm:text-sm uppercase tracking-[0.2em]">{selectedProject.category}</p>
                       </div>
                       {(selectedProject.status || selectedProject.statusYear) && (
                         <div className="text-right">
@@ -774,9 +772,7 @@ export default function Work() {
                               {selectedProject.status}
                             </span>
                           )}
-                          {selectedProject.statusYear && (
-                            <div className="mt-1 text-xs text-white/70">{selectedProject.statusYear}</div>
-                          )}
+                          {selectedProject.statusYear && <div className="mt-1 text-xs text-white/70">{selectedProject.statusYear}</div>}
                         </div>
                       )}
                     </div>
@@ -786,17 +782,13 @@ export default function Work() {
                         {selectedProject.overview && (
                           <div>
                             <h3 className="text-sm font-semibold mb-2">Overview</h3>
-                            <p className="leading-relaxed text-sm text-white/90">
-                              {selectedProject.overview}
-                            </p>
+                            <p className="leading-relaxed text-sm text-white/90">{selectedProject.overview}</p>
                           </div>
                         )}
                         {selectedProject.objective && (
                           <div>
                             <h3 className="text-sm font-semibold mb-2">Objective</h3>
-                            <p className="leading-relaxed text-sm text-white/90">
-                              {selectedProject.objective}
-                            </p>
+                            <p className="leading-relaxed text-sm text-white/90">{selectedProject.objective}</p>
                           </div>
                         )}
                       </div>

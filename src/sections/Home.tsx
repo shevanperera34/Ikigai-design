@@ -9,18 +9,6 @@ import ContactPreview from "../components/ContactPreview";
 /* =====================
    TYPES
 ===================== */
-type ServicePillar = {
-  title: string;
-  subtitle: string;
-  points: string[];
-};
-
-type Project = {
-  label: string;
-  name: string;
-  blurb: string;
-};
-
 type TeamKey = "Shevan" | "Seni" | "Slade";
 
 type TeamMember = {
@@ -50,8 +38,7 @@ const TEAM: TeamMember[] = [
     role: "Marketing and Strategy",
     imageUrl: shevanprofile,
     imgClass: "object-top",
-    bio:
-      "Creative lead focused on brand systems, campaigns, and content that converts.",
+    bio: "Creative lead focused on brand systems, campaigns, and content that converts.",
     instagram: "https://www.instagram.com/sh3van.n",
   },
   {
@@ -60,8 +47,7 @@ const TEAM: TeamMember[] = [
     role: "IT and Strategy",
     imageUrl: seniprofile,
     imgClass: "object-center",
-    bio:
-      "Systems & infrastructure. Builds automation, security, and performance.",
+    bio: "Systems & infrastructure. Builds automation, security, and performance.",
     instagram: "https://www.instagram.com/seniii.r",
   },
   {
@@ -70,11 +56,17 @@ const TEAM: TeamMember[] = [
     role: "Client Relations and Strategy",
     imageUrl: sladeIntro,
     imgClass: "object-center",
-    bio:
-      "Client growth, outreach, and partnerships that last.",
+    bio: "Client growth, outreach, and partnerships that last.",
     instagram: "https://www.instagram.com/slxde.xx",
   },
 ];
+
+/* =====================
+   SHARED HOME TITLE STYLE
+   (matches Services page vibe)
+===================== */
+const HOME_TITLE =
+  "font-[Space_Grotesk] uppercase tracking-widest text-3xl sm:text-4xl md:text-5xl";
 
 /* =====================
    TEAM TILE (Home)
@@ -95,7 +87,7 @@ function TeamTile({ member }: { member: TeamMember }) {
       }}
       aria-label={`Go to About page (team) from ${member.name}`}
     >
-      {/* subtle brand wash (same vibe as About.tsx tiles) */}
+      {/* subtle brand wash */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -117,7 +109,10 @@ function TeamTile({ member }: { member: TeamMember }) {
         </div>
 
         <div className="mt-3 text-center">
-          <h3 className="text-lg font-semibold text-white">{member.name}</h3>
+          {/* title font applied here too */}
+          <h3 className="font-[Space_Grotesk] uppercase tracking-widest text-lg text-white">
+            {member.name}
+          </h3>
           <div className="mt-1 inline-flex items-center rounded-full border border-white/20 bg-white/[0.06] px-3 py-1 text-[11px] text-white/85">
             {member.role}
           </div>
@@ -127,7 +122,6 @@ function TeamTile({ member }: { member: TeamMember }) {
           {member.bio}
         </p>
 
-        {/* tiny hint on hover */}
         <div className="mt-3 flex items-center justify-center">
           <span className="text-[10px] text-white/55 transition group-hover:text-white/80">
             View full team →
@@ -147,9 +141,14 @@ export default function Home() {
       {/* HERO — untouched */}
       <Hero />
 
+      {/* SERVICES */}
+      <section id="services" className="mt-32">
+        <ServicesPreview />
+      </section>
+
       {/* ABOUT */}
       <section id="about" className="mt-32 px-6 max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl tracking-widest uppercase">Who We Are</h2>
+        <h2 className={HOME_TITLE}>Who We Are</h2>
         <p className="mt-4 text-slate-300 max-w-3xl mx-auto">
           We’re The Ikigai Project blending creative marketing with technical execution.
           No buzzwords. Just systems that work.
@@ -162,23 +161,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SERVICES */}
-      {/* SERVICES (Venn Preview) */}
-      <section id="services" className="mt-32">
-        <ServicesPreview />
+      {/* WORK */}
+      <section id="work" className="mt-32">
+        <WorkPreview />
       </section>
 
-      {/* WORK */}
-<section id="work" className="mt-32">
-  <WorkPreview />
-</section>
-
       {/* CONTACT */}
-      {/* CONTACT */}
-<section id="contact" className="mt-32 pb-32">
-  <ContactPreview />
-</section>
-      </main>
+      <section id="contact" className="mt-32 pb-32">
+        <ContactPreview />
+      </section>
+    </main>
   );
 }
 
