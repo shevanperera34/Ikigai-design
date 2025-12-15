@@ -17,6 +17,8 @@ type PrismProps = {
   bloom?: number;
   suspendWhenOffscreen?: boolean;
   timeScale?: number;
+  tint?: [number, number, number];      // RGB 0..1
+  tintStrength?: number;                // 0..1
 };
 
 const Prism: React.FC<PrismProps> = ({
@@ -34,7 +36,9 @@ const Prism: React.FC<PrismProps> = ({
   inertia = 0.05,
   bloom = 1,
   suspendWhenOffscreen = false,
-  timeScale = 0.5
+  timeScale = 0.5,
+  tint = [1, 1, 1],
+  tintStrength = 0
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -60,6 +64,9 @@ const Prism: React.FC<PrismProps> = ({
     const TS = Math.max(0, timeScale || 1);
     const HOVSTR = Math.max(0, hoverStrength || 1);
     const INERT = Math.max(0, Math.min(1, inertia || 0.12));
+    const TINT = tint;
+    const TINT_STRENGTH = Math.max(0, Math.min(1, tintStrength ?? 0));
+
 
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const renderer = new Renderer({
@@ -93,6 +100,9 @@ const Prism: React.FC<PrismProps> = ({
 
       uniform vec2  iResolution;
       uniform float iTime;
+      uniform vec3  uTint;
+      uniform float uTintStrength;
+
 
       uniform float uHeight;
       uniform float uBaseHalf;
@@ -200,6 +210,14 @@ const Prism: React.FC<PrismProps> = ({
         if(abs(uHueShift) > 0.0001){
           col = clamp(hueRotation(uHueShift) * col, 0.0, 1.0);
         }
+	// Force a palette tint (keeps luminance, pushes hue toward uTint)
+        if (uTintStrength > 0.0001) {
+          float lum2 = dot(col, vec3(0.2126, 0.7152, 0.0722));
+          vec3 tinted = lum2 * uTint;
+          col = clamp(mix(col, tinted, uTintStrength), 0.0, 1.0);
+        }
+
+
 
         gl_FragColor = vec4(col, o.a);
       }
@@ -214,6 +232,8 @@ const Prism: React.FC<PrismProps> = ({
       fragment,
       uniforms: {
         iResolution: { value: iResBuf },
+	uTint: { value: new Float32Array(TINT) },
+        uTintStrength: { value: TINT_STRENGTH },
         iTime: { value: 0 },
         uHeight: { value: H },
         uBaseHalf: { value: BASE_HALF },
@@ -448,6 +468,8 @@ const Prism: React.FC<PrismProps> = ({
     hoverStrength,
     inertia,
     bloom,
+    tint?.[0], tint?.[1], tint?.[2],
+    tintStrength,
     suspendWhenOffscreen
   ]);
 

@@ -95,13 +95,15 @@ export default function Contact() {
         <Prism
           animationType="rotate"
           timeScale={0.15}
-          height={3}
-          baseWidth={5}
-          scale={3}
+          height={3.5}
+          baseWidth={4}
+          scale={3.6}
           hueShift={0}
           colorFrequency={1}
           noise={0}
           glow={0.7}
+	  tint={[0.55, 0.20, 1.0]} 
+  	  tintStrength={0.85}
           suspendWhenOffscreen
         />
       </div>
