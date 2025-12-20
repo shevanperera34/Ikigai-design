@@ -16,21 +16,21 @@ const BUNDLES: Bundle[] = [
   {
     key: "brand",
     title: "Brand Systems Build",
-    tagline: "Define who you are.",
+    tagline: "Define who you are.Then make it unmistakable",
     includes: ["Logo & identity", "Brand messaging", "Copy systems", "Creative direction"],
     price: "From $1,500",
   },
   {
     key: "web",
     title: "Intelligent Web Infrastructure",
-    tagline: "Bring it to life digitally.",
+    tagline: "Turn strategy into systems that actually perform",
     includes: ["Web design", "Automation setup", "3D integration", "Performance tracking"],
     price: "From $2,000",
   },
   {
     key: "growth",
     title: "Growth Architecture",
-    tagline: "Scale with purpose.",
+    tagline: "Scale intentionally, without losing control",
     includes: ["Paid media setup", "Campaign management", "Content funnels", "Analytics & reporting"],
     price: "From $1,200",
   },
@@ -84,8 +84,8 @@ export default function ServicesPreview() {
           Services
         </h2>
         <p className="mt-3 text-center text-white/70">
-          Three pathways. Pick one or combine them later.
-        </p>
+        Three core systems designed to build clarity, confidence, and growth Or Combine services into a single, aligned system built around your goals
+	</p>
       </header>
 
       {/* 3 “right-panel style” tiles */}

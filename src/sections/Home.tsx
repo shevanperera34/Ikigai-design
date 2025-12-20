@@ -150,8 +150,7 @@ export default function Home() {
       <section id="about" className="mt-32 px-6 max-w-6xl mx-auto text-center">
         <h2 className={HOME_TITLE}>Who We Are</h2>
         <p className="mt-4 text-slate-300 max-w-3xl mx-auto">
-          We’re The Ikigai Project blending creative marketing with technical execution.
-          No buzzwords. Just systems that work.
+          We’re The Ikigai Project. We design systems that give brands clarity, confidence, and the power to move decisively
         </p>
 
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
