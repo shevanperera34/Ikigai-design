@@ -67,6 +67,13 @@ export default function ServicesPreview() {
     navigate("/services/get-quote", { state: { bundles } });
   };
 
+  // ✅ per-card CTA labels (left-to-right based on key)
+  const quoteLabel: Record<BundleKey, string> = {
+    brand: "Build the Brand",
+    web: "Build the system",
+    growth: "Plan growth",
+  };
+
   return (
     <section className="relative overflow-hidden font-[Inter] text-white">
       {/* toast */}
@@ -84,8 +91,9 @@ export default function ServicesPreview() {
           Services
         </h2>
         <p className="mt-3 text-center text-white/70">
-        Three core systems designed to build clarity, confidence, and growth Or Combine services into a single, aligned system built around your goals
-	</p>
+          Three core systems designed to build clarity, confidence, and growth Or Combine services into
+          a single, aligned system built around your goals
+        </p>
       </header>
 
       {/* 3 “right-panel style” tiles */}
@@ -111,11 +119,11 @@ export default function ServicesPreview() {
                 }}
               />
 
-              <div className="relative">
+              <div className="relative flex h-full flex-col">
                 <h3 className="text-xl md:text-2xl font-semibold mb-1.5 font-[Space_Grotesk] uppercase tracking-widest">
                   {b.title}
                 </h3>
-                <p className="text-white/70 mb-4">{b.tagline}</p>
+                <p className="text-white/70 mb-4 min-h-[48px] md:min-h-[56px]">{b.tagline}</p>
 
                 <ul className="text-sm text-white/85 space-y-1.5 mb-5 leading-6">
                   {b.includes.map((item, idx) => (
@@ -134,7 +142,7 @@ export default function ServicesPreview() {
                                focus:outline-none focus:ring-2 focus:ring-white/20"
                     onClick={() => goToQuote([b.key])}
                   >
-                    Get Quote
+                    {quoteLabel[b.key]}
                   </button>
 
                   <button
@@ -172,4 +180,3 @@ export default function ServicesPreview() {
     </section>
   );
 }
-

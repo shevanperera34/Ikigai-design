@@ -99,7 +99,7 @@ export default function WorkPreview() {
 
                   <div className="mt-4 flex items-center gap-3">
                     <span className="text-[11px] text-white/60 group-hover:text-white/80 transition">
-                      Click to view in Our Work →
+                      Open Project →
                     </span>
                   </div>
                 </button>
