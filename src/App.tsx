@@ -12,6 +12,7 @@ import IkigaiQuoteFlow from "./sections/Services-GetQuote";
 import Home from "./sections/Home";
 
 import Footer from "./components/Footer";
+//test
 
 export default function App() {
   return (
