@@ -15,22 +15,22 @@ interface ServiceItem {
 
 const CATALOG: ServiceItem[] = [
   // Brand
-  { id: "logo",  name: "Logo & Identity",          bundle: "brand",  desc: "Primary logo, marks, colors, typography.", basePrice: 900 },
-  { id: "voice", name: "Voice & Messaging Guide",  bundle: "brand",  desc: "Tone, taglines, brand statements.",         basePrice: 600 },
-  { id: "copy",  name: "Landing Copy",             bundle: "brand",  desc: "Hero, offer, proof, CTA copy.",            basePrice: 450, addon: true },
+  { id: "logo", name: "Logo & Identity", bundle: "brand", desc: "Primary logo, marks, colors, typography.", basePrice: 900 },
+  { id: "voice", name: "Voice & Messaging Guide", bundle: "brand", desc: "Tone, taglines, brand statements.", basePrice: 600 },
+  { id: "copy", name: "Landing Copy", bundle: "brand", desc: "Hero, offer, proof, CTA copy.", basePrice: 450, addon: true },
 
   // Web
-  { id: "site1", name: "1-Page Website",           bundle: "web",    desc: "High-performance single page + form.",     basePrice: 1200 },
-  { id: "site5", name: "3-5 Page Website",         bundle: "web",    desc: "Multi-page site with routing.",            basePrice: 2600 },
-  { id: "crm",   name: "Booking/CRM Setup",        bundle: "web",    desc: "Forms → CRM → notifications.",             basePrice: 600, addon: true },
-  { id: "seo",   name: "Speed & SEO Pass",         bundle: "web",    desc: "Performance, meta, basic schema.",         basePrice: 400, addon: true },
-  { id: "three", name: "3D Component Hook",        bundle: "web",    desc: "Embed 3D viewer / model.",                 basePrice: 750, addon: true },
+  { id: "site1", name: "1-Page Website", bundle: "web", desc: "High-performance single page + form.", basePrice: 1200 },
+  { id: "site5", name: "3-5 Page Website", bundle: "web", desc: "Multi-page site with routing.", basePrice: 2600 },
+  { id: "crm", name: "Booking/CRM Setup", bundle: "web", desc: "Forms → CRM → notifications.", basePrice: 600, addon: true },
+  { id: "seo", name: "Speed & SEO Pass", bundle: "web", desc: "Performance, meta, basic schema.", basePrice: 400, addon: true },
+  { id: "three", name: "3D Component Hook", bundle: "web", desc: "Embed 3D viewer / model.", basePrice: 750, addon: true },
 
   // Growth
-  { id: "adssetup", name: "Ad Account + Pixel Setup", bundle: "growth", desc: "Meta/Google accounts, events.",         basePrice: 350 },
-  { id: "ugc",      name: "UGC Ad Creative Pack (3)", bundle: "growth", desc: "Three short videos, captions.",         basePrice: 800, addon: true },
-  { id: "retarget", name: "Retargeting Setup",        bundle: "growth", desc: "Audiences + placements.",               basePrice: 450, addon: true },
-  { id: "email",    name: "Email/SMS Welcome Flow",   bundle: "growth", desc: "Welcome + abandon cart/booking.",       basePrice: 700 },
+  { id: "adssetup", name: "Ad Account + Pixel Setup", bundle: "growth", desc: "Meta/Google accounts, events.", basePrice: 350 },
+  { id: "ugc", name: "UGC Ad Creative Pack (3)", bundle: "growth", desc: "Three short videos, captions.", basePrice: 800, addon: true },
+  { id: "retarget", name: "Retargeting Setup", bundle: "growth", desc: "Audiences + placements.", basePrice: 450, addon: true },
+  { id: "email", name: "Email/SMS Welcome Flow", bundle: "growth", desc: "Welcome + abandon cart/booking.", basePrice: 700 },
 ];
 
 function currency(n: number) {
@@ -38,7 +38,6 @@ function currency(n: number) {
 }
 
 function isoDate(d = new Date()) {
-  // YYYY-MM-DD
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
@@ -57,43 +56,61 @@ function makeQuoteId() {
   return `IQ-${new Date(n).getFullYear()}-${String(seq).padStart(3, "0")}`;
 }
 
+function toCents(amountCAD: number) {
+  // safest for floats: round dollars to cents
+  return Math.round(amountCAD * 100);
+}
+
 export default function IkigaiQuoteFlowMockup() {
   const location = useLocation();
   const bundlesFromState = (location.state as { bundles?: BundleTag[] } | null)?.bundles ?? [];
 
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [lead, setLead] = useState({
-    name: "", email: "", company: "", website: "", niche: "", timeline: "Soon", budget: ""
+    name: "",
+    email: "",
+    company: "",
+    website: "",
+    niche: "",
+    timeline: "Soon",
+    budget: "",
   });
   const [quoteId, setQuoteId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // ✅ set this to your backend base
- const API_BASE = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
+  // ✅ env-first, local fallback
+  const API_BASE = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 
   // Pre-select NON-add-on items for incoming bundles
   useEffect(() => {
     if (!bundlesFromState.length) return;
     const next: Record<string, boolean> = {};
-    CATALOG.forEach(item => {
+    CATALOG.forEach((item) => {
       if (!item.addon && bundlesFromState.includes(item.bundle)) next[item.id] = true;
     });
     setSelected(next);
   }, [bundlesFromState]);
 
-  const selectedItems = useMemo(() => CATALOG.filter(i => selected[i.id]), [selected]);
+  const selectedItems = useMemo(() => CATALOG.filter((i) => selected[i.id]), [selected]);
+
   const bundlesUsed = useMemo(
-    () => Array.from(new Set(selectedItems.map(i => i.bundle))),
+    () => Array.from(new Set(selectedItems.map((i) => i.bundle))),
     [selectedItems]
   );
 
   const breakdown = useMemo(() => {
     const subtotal = selectedItems.reduce((s, i) => s + i.basePrice, 0);
-    let discount = 0, complexityFee = 0;
+    let discount = 0,
+      complexityFee = 0;
 
     const counts: Record<BundleTag, number> = { brand: 0, web: 0, growth: 0 };
-    selectedItems.forEach(i => { counts[i.bundle]++; });
-    if (Object.values(counts).some(c => c >= 3)) discount += subtotal * 0.05;
+    selectedItems.forEach((i) => {
+      counts[i.bundle]++;
+    });
+
+    // pack discount (>=3 in any bundle)
+    if (Object.values(counts).some((c) => c >= 3)) discount += subtotal * 0.05;
+    // complexity fee (2+ bundles)
     if (bundlesUsed.length >= 2) complexityFee += subtotal * 0.10;
 
     const adjusted = Math.max(0, subtotal - discount + complexityFee);
@@ -108,8 +125,9 @@ export default function IkigaiQuoteFlowMockup() {
   }, [selectedItems, bundlesUsed]);
 
   function toggle(id: string) {
-    setSelected(prev => ({ ...prev, [id]: !prev[id] }));
+    setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
   }
+
   function allClear() {
     setSelected({});
     setQuoteId(null);
@@ -125,6 +143,45 @@ export default function IkigaiQuoteFlowMockup() {
     return `${base}?${params}`;
   }, [quoteId, breakdown.total, breakdown.tier]);
 
+  async function postQuoteToDb(id: string) {
+    // payload shape to match your intake.py create_quote
+    const dbPayload = {
+      quote_id: id,
+      name: lead.name,
+      email: lead.email,
+      company: lead.company || null,
+      website: lead.website || null,
+      bundles: bundlesUsed,
+      items: selectedItems.map((i) => ({
+        id: i.id,
+        name: i.name,
+        bundle: i.bundle,
+        basePrice: i.basePrice,
+        desc: i.desc,
+        addon: !!i.addon,
+      })),
+      subtotal_cents: toCents(breakdown.subtotal),
+      complexity_fee_cents: toCents(breakdown.complexityFee),
+      tax_cents: toCents(breakdown.tax),
+      total_cents: toCents(breakdown.total),
+      tier: breakdown.tier,
+      eta_weeks: breakdown.etaWeeks,
+      calendly_url: calendlyUrl,
+    };
+
+    const res = await fetch(`${API_BASE}/api/quotes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dbPayload),
+    });
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`DB save failed (${res.status}). ${text}`);
+    }
+    return res.json().catch(() => null);
+  }
+
   async function generateQuote() {
     if (!lead.name || !lead.email) {
       alert("Enter name and email to generate your quote.");
@@ -136,14 +193,14 @@ export default function IkigaiQuoteFlowMockup() {
     setQuoteId(id);
     setIsGenerating(true);
 
-    // Shape payload to exactly match quote.html expectations
-    const payload = {
+    // Shape payload to exactly match quote.html expectations (PDF endpoint)
+    const pdfPayload = {
       client: {
         name: lead.name,
         email: lead.email,
         company: lead.company,
         website: lead.website,
-        notes: "", // optional – you can wire niche/timeline/budget here if you want
+        notes: "", // optional
       },
       quote: {
         number: id,
@@ -151,13 +208,11 @@ export default function IkigaiQuoteFlowMockup() {
         valid_until: addDaysISO(14),
         tier: breakdown.tier,
         eta_weeks: breakdown.etaWeeks,
-        bundles: bundlesUsed, // ["brand","web","growth"]
-        items: selectedItems.map(i => ({
+        bundles: bundlesUsed,
+        items: selectedItems.map((i) => ({
           name: i.name,
           bundle: i.bundle,
           desc: i.desc,
-          // OPTIONAL: you can add a scope array later for bullet lists like the mock
-          // scope: ["Bullet 1", "Bullet 2", "Bullet 3"],
           amount: currency(i.basePrice),
         })),
         subtotal: currency(breakdown.subtotal),
@@ -170,10 +225,18 @@ export default function IkigaiQuoteFlowMockup() {
     };
 
     try {
+      // 1) Save to DB first (non-blocking for PDF — we still proceed if it fails)
+      try {
+        await postQuoteToDb(id);
+      } catch (dbErr) {
+        console.warn("Quote DB save failed (continuing to PDF):", dbErr);
+      }
+
+      // 2) Generate PDF
       const res = await fetch(`${API_BASE}/api/quote/pdf`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(pdfPayload),
       });
 
       if (!res.ok) {
@@ -211,22 +274,19 @@ export default function IkigaiQuoteFlowMockup() {
         <div className="mx-auto max-w-6xl">
           <header className="text-center">
             <h1 className={`${headerCls} text-3xl sm:text-4xl md:text-5xl`}>Custom Alignment Quote Builder</h1>
-            <p className="mt-3 text-white/70">
-              Select the services you want, then generate a quote and book a call.
-            </p>
+            <p className="mt-3 text-white/70">Select the services you want, then generate a quote and book a call.</p>
           </header>
 
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Services list */}
             <div className="lg:col-span-2 space-y-6">
-              {(["brand", "web", "growth"] as BundleTag[]).map(group => (
+              {(["brand", "web", "growth"] as BundleTag[]).map((group) => (
                 <section
                   key={group}
                   className="relative overflow-hidden rounded-2xl border border-white/15 backdrop-blur-sm
                              shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
                   style={{
-                    background:
-                      "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
+                    background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
                   }}
                 >
                   <div
@@ -239,21 +299,15 @@ export default function IkigaiQuoteFlowMockup() {
                   />
                   <div className="relative p-4 sm:p-5">
                     <h2 className="text-lg sm:text-xl font-semibold capitalize">
-                      {group === "brand"
-                        ? "Brand Systems"
-                        : group === "web"
-                        ? "Web Infrastructure"
-                        : "Growth Architecture"}
+                      {group === "brand" ? "Brand Systems" : group === "web" ? "Web Infrastructure" : "Growth Architecture"}
                     </h2>
 
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                      {CATALOG.filter(i => i.bundle === group).map(item => (
+                      {CATALOG.filter((i) => i.bundle === group).map((item) => (
                         <label
                           key={item.id}
                           className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors
-                            ${selected[item.id]
-                              ? "border-white/20 bg-white/10"
-                              : "border-white/10 hover:border-white/20 bg-white/[0.04]"}
+                            ${selected[item.id] ? "border-white/20 bg-white/10" : "border-white/10 hover:border-white/20 bg-white/[0.04]"}
                           `}
                         >
                           <input
@@ -288,8 +342,7 @@ export default function IkigaiQuoteFlowMockup() {
               className="lg:sticky lg:top-24 h-fit rounded-2xl border border-white/15 backdrop-blur-sm
                          shadow-[0_20px_80px_rgba(0,0,0,0.35)] p-4 sm:p-5"
               style={{
-                background:
-                  "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
+                background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
               }}
             >
               <h3 className="text-lg sm:text-xl font-semibold">Summary</h3>
@@ -298,7 +351,7 @@ export default function IkigaiQuoteFlowMockup() {
                 <p className="mt-2 text-white/70">Select at least one service to begin.</p>
               ) : (
                 <ul className="mt-3 space-y-2 text-sm text-white/85">
-                  {selectedItems.map(i => (
+                  {selectedItems.map((i) => (
                     <li key={i.id} className="flex items-center justify-between border-b border-white/10 pb-1">
                       <span>{i.name}</span>
                       <span className="text-white/70">{currency(i.basePrice)}</span>
@@ -346,25 +399,25 @@ export default function IkigaiQuoteFlowMockup() {
                   className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="Your name"
                   value={lead.name}
-                  onChange={e => setLead({ ...lead, name: e.target.value })}
+                  onChange={(e) => setLead({ ...lead, name: e.target.value })}
                 />
                 <input
                   className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="Email"
                   value={lead.email}
-                  onChange={e => setLead({ ...lead, email: e.target.value })}
+                  onChange={(e) => setLead({ ...lead, email: e.target.value })}
                 />
                 <input
                   className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="Company (optional)"
                   value={lead.company}
-                  onChange={e => setLead({ ...lead, company: e.target.value })}
+                  onChange={(e) => setLead({ ...lead, company: e.target.value })}
                 />
                 <input
                   className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="Website (optional)"
                   value={lead.website}
-                  onChange={e => setLead({ ...lead, website: e.target.value })}
+                  onChange={(e) => setLead({ ...lead, website: e.target.value })}
                 />
               </div>
 
@@ -381,7 +434,9 @@ export default function IkigaiQuoteFlowMockup() {
                 </button>
 
                 <a
-                  className={`flex-1 rounded-xl border border-white/20 px-4 py-2 text-sm text-center text-white/90 hover:border-white/40 transition ${!quoteId ? "pointer-events-none opacity-50" : ""}`}
+                  className={`flex-1 rounded-xl border border-white/20 px-4 py-2 text-sm text-center text-white/90 hover:border-white/40 transition ${
+                    !quoteId ? "pointer-events-none opacity-50" : ""
+                  }`}
                   href={calendlyUrl}
                   target="_blank"
                   rel="noreferrer"

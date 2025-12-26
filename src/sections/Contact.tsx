@@ -1,12 +1,16 @@
 // src/sections/Contact.tsx
 import Prism from '../components/Prism'
-import { useMemo, useState, useEffect, useRef } from 'react'
+import React, { useMemo, useState, useEffect, useRef } from 'react'
 
 type Purpose = 'call' | 'quote' | 'question'
 type ProjectType = 'Brand' | 'Web' | 'Growth'
 
 export default function Contact() {
+  const API_BASE = import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:8000'
+
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   // ui state
   const [purpose, setPurpose] = useState<Purpose>('quote')
@@ -28,7 +32,7 @@ export default function Contact() {
   const isBrave = typeof (navigator as any).brave !== 'undefined'
   const isOpera = /OPR\//.test(navigator.userAgent)
   const isChrome = /Chrome\//.test(navigator.userAgent) && !isBrave && !isOpera
-  const dprCap = (isChrome || isOpera) ? 1.25 : 2
+  const dprCap = isChrome || isOpera ? 1.25 : 2
 
   const [isScrolling, setIsScrolling] = useState(false)
   const scrollTimer = useRef<number | null>(null)
@@ -47,6 +51,19 @@ export default function Contact() {
     }
   }, [])
 
+  // If user flips away from quote mode, clear quote-only fields to keep DB clean
+  useEffect(() => {
+    setErrorMsg(null)
+    if (purpose !== 'quote') {
+      setTypes(new Set())
+      setBudget('')
+      setTimeline('')
+    }
+    if (purpose !== 'question') {
+      setSubject('')
+    }
+  }, [purpose])
+
   const canSubmit = useMemo(() => {
     if (!isNameValid || !isEmailValid || !agree) return false
     if (purpose === 'quote') {
@@ -61,17 +78,64 @@ export default function Contact() {
     const params = new URLSearchParams({
       name,
       email,
-      purpose
+      purpose,
     })
     return `${base}?${params.toString()}`
   }, [name, email, purpose])
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  async function postContactToDb() {
+    // payload shape to match intake.py create_contact
+    const payload = {
+      purpose,
+      name: name.trim(),
+      email: email.trim(),
+      company: company.trim() || null,
+      project_types: purpose === 'quote' ? Array.from(types) : [],
+      budget: purpose === 'quote' ? (budget || null) : null,
+      timeline: purpose === 'quote' ? (timeline || null) : null,
+      subject: purpose === 'question' ? (subject.trim() || null) : null,
+      message: message.trim(),
+    }
+
+    const res = await fetch(`${API_BASE}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => '')
+      throw new Error(`Contact submit failed (${res.status}). ${text}`)
+    }
+    return res.json().catch(() => null)
+  }
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!canSubmit) return
-    // wire up here when backend is ready
-    setSent(true)
-    setTimeout(() => setSent(false), 3000)
+    setErrorMsg(null)
+    if (!canSubmit || sending) return
+
+    setSending(true)
+    try {
+      await postContactToDb()
+
+      setSent(true)
+      setTimeout(() => setSent(false), 3000)
+
+      // If they chose "call", open Calendly after successful DB write
+      if (purpose === 'call') {
+        window.open(calendlyUrl, '_blank', 'noopener,noreferrer')
+      }
+
+      // Optional: keep fields (so they can tweak) OR clear them.
+      // I’m clearing message only (feels nice UX-wise).
+      setMessage('')
+    } catch (err: any) {
+      console.error(err)
+      setErrorMsg(err?.message || 'Failed to send your message. Try again.')
+    } finally {
+      setSending(false)
+    }
   }
 
   const inputBase =
@@ -125,10 +189,10 @@ export default function Contact() {
           colorFrequency={1}
           noise={0}
           glow={0.7}
-          tint={[0.55, 0.20, 1.0]}
+          tint={[0.55, 0.2, 1.0]}
           tintStrength={0.85}
           suspendWhenOffscreen
-	  dprCap={dprCap}
+          dprCap={dprCap}
         />
       </div>
 
@@ -138,12 +202,8 @@ export default function Contact() {
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-8 lg:px-10 py-16 md:py-24">
         <header className="text-center mb-10 md:mb-14">
-          <h1 className="font-[Space_Grotesk] uppercase tracking-widest text-4xl md:text-5xl mt-7">
-            Contact
-          </h1>
-          <p className="mt-3 text-white/75">
-            Tell us a bit about your project and we’ll get back to you.
-          </p>
+          <h1 className="font-[Space_Grotesk] uppercase tracking-widest text-4xl md:text-5xl mt-7">Contact</h1>
+          <p className="mt-3 text-white/75">Tell us a bit about your project and we’ll get back to you.</p>
         </header>
 
         {/* === Two-column layout: Form (left) + Right rail (right) === */}
@@ -236,12 +296,7 @@ export default function Contact() {
               {purpose === 'quote' && (
                 <div>
                   <label className="mb-1.5 block text-sm text-white/80">Budget (optional)</label>
-                  <select
-                    className={inputBase}
-                    name="budget"
-                    value={budget}
-                    onChange={(e) => setBudget(e.target.value)}
-                  >
+                  <select className={inputBase} name="budget" value={budget} onChange={(e) => setBudget(e.target.value)}>
                     <option value="" disabled>
                       Select a range
                     </option>
@@ -335,6 +390,13 @@ export default function Contact() {
               </label>
             </div>
 
+            {/* error */}
+            {errorMsg && (
+              <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                {errorMsg}
+              </div>
+            )}
+
             <div className="relative mt-6 md:mt-8 flex flex-wrap items-center gap-3">
               <button
                 type="submit"
@@ -342,9 +404,9 @@ export default function Contact() {
                            bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
                            hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
                            focus:outline-none focus:ring-2 focus:ring-white/20 disabled:opacity-50"
-                disabled={!canSubmit}
+                disabled={!canSubmit || sending}
               >
-                {purpose === 'call' ? 'Send & Go to Calendly' : 'Send message'}
+                {sending ? 'Sending…' : purpose === 'call' ? 'Send & Go to Calendly' : 'Send message'}
               </button>
 
               <a
@@ -407,4 +469,3 @@ export default function Contact() {
     </section>
   )
 }
-
