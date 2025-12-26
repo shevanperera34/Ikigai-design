@@ -1,5 +1,5 @@
 // src/sections/Services-GetQuote.tsx
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 type BundleTag = "brand" | "web" | "growth";
@@ -15,82 +15,46 @@ interface ServiceItem {
 
 const CATALOG: ServiceItem[] = [
   // Brand
-  { id: "logo", name: "Logo & Identity", bundle: "brand", desc: "Primary logo, marks, colors, typography.", basePrice: 900 },
-  { id: "voice", name: "Voice & Messaging Guide", bundle: "brand", desc: "Tone, taglines, brand statements.", basePrice: 600 },
-  { id: "copy", name: "Landing Copy", bundle: "brand", desc: "Hero, offer, proof, CTA copy.", basePrice: 450, addon: true },
+  { id: "logo",  name: "Logo & Identity",          bundle: "brand",  desc: "Primary logo, marks, colors, typography.", basePrice: 900 },
+  { id: "voice", name: "Voice & Messaging Guide",  bundle: "brand",  desc: "Tone, taglines, brand statements.",         basePrice: 600 },
+  { id: "copy",  name: "Landing Copy",             bundle: "brand",  desc: "Hero, offer, proof, CTA copy.",            basePrice: 450, addon: true },
 
   // Web
-  { id: "site1", name: "1-Page Website", bundle: "web", desc: "High-performance single page + form.", basePrice: 1200 },
-  { id: "site5", name: "3-5 Page Website", bundle: "web", desc: "Multi-page site with routing.", basePrice: 2600 },
-  { id: "crm", name: "Booking/CRM Setup", bundle: "web", desc: "Forms → CRM → notifications.", basePrice: 600, addon: true },
-  { id: "seo", name: "Speed & SEO Pass", bundle: "web", desc: "Performance, meta, basic schema.", basePrice: 400, addon: true },
-  { id: "three", name: "3D Component Hook", bundle: "web", desc: "Embed 3D viewer / model.", basePrice: 750, addon: true },
+  { id: "site1", name: "1-Page Website",           bundle: "web",    desc: "High-performance single page + form.",     basePrice: 1200 },
+  { id: "site5", name: "3-5 Page Website",         bundle: "web",    desc: "Multi-page site with routing.",            basePrice: 2600 },
+  { id: "crm",   name: "Booking/CRM Setup",        bundle: "web",    desc: "Forms → CRM → notifications.",             basePrice: 600, addon: true },
+  { id: "seo",   name: "Speed & SEO Pass",         bundle: "web",    desc: "Performance, meta, basic schema.",         basePrice: 400, addon: true },
+  { id: "three", name: "3D Component Hook",        bundle: "web",    desc: "Embed 3D viewer / model.",                 basePrice: 750, addon: true },
 
   // Growth
-  { id: "adssetup", name: "Ad Account + Pixel Setup", bundle: "growth", desc: "Meta/Google accounts, events.", basePrice: 350 },
-  { id: "ugc", name: "UGC Ad Creative Pack (3)", bundle: "growth", desc: "Three short videos, captions.", basePrice: 800, addon: true },
-  { id: "retarget", name: "Retargeting Setup", bundle: "growth", desc: "Audiences + placements.", basePrice: 450, addon: true },
-  { id: "email", name: "Email/SMS Welcome Flow", bundle: "growth", desc: "Welcome + abandon cart/booking.", basePrice: 700 },
+  { id: "adssetup", name: "Ad Account + Pixel Setup", bundle: "growth", desc: "Meta/Google accounts, events.",         basePrice: 350 },
+  { id: "ugc",      name: "UGC Ad Creative Pack (3)", bundle: "growth", desc: "Three short videos, captions.",         basePrice: 800, addon: true },
+  { id: "retarget", name: "Retargeting Setup",        bundle: "growth", desc: "Audiences + placements.",               basePrice: 450, addon: true },
+  { id: "email",    name: "Email/SMS Welcome Flow",   bundle: "growth", desc: "Welcome + abandon cart/booking.",       basePrice: 700 },
 ];
 
 function currency(n: number) {
   return n.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
 }
 
-/**
- * IMPORTANT:
- * Set VITE_API_URL in your frontend .env
- * Example:
- *   VITE_API_URL=http://192.168.0.73:8000
- */
-const API_BASE = (import.meta as any).env?.VITE_API_URL || "http://192.168.0.73:8000";
-
-function fmtDate(d: Date) {
+function isoDate(d = new Date()) {
   // YYYY-MM-DD
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
 }
 
-function addDays(d: Date, days: number) {
-  const x = new Date(d);
-  x.setDate(x.getDate() + days);
-  return x;
+function addDaysISO(days: number) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return isoDate(d);
 }
 
-// minimal “scope bullets” (backend template expects bullets array)
-function bulletsForItem(item: ServiceItem): string[] {
-  // You can tune these later; this is sane default mapping.
-  // If you want exact copy from your mock PDF, we can tighten it after.
-  switch (item.id) {
-    case "logo":
-      return ["Primary logo + responsive marks", "Color & type system", "Usage sheet (PDF)"];
-    case "voice":
-      return ["Tone + brand voice rules", "Taglines + positioning notes", "Key messaging pillars"];
-    case "copy":
-      return ["Hero/offer copy", "CTA + proof sections", "Conversion structure guidance"];
-    case "site1":
-      return ["Single page build", "Performance-first layout", "Form + basic tracking"];
-    case "site5":
-      return ["Multi-page routing", "Reusable sections", "SEO-ready structure"];
-    case "crm":
-      return ["Forms → CRM pipeline", "Auto notifications", "Booking-ready workflow"];
-    case "seo":
-      return ["Core Web Vitals pass", "Meta + headings cleanup", "Basic schema (where applicable)"];
-    case "three":
-      return ["3D embed integration", "Model viewer hook", "Interaction + performance tuning"];
-    case "adssetup":
-      return ["Meta/Google account setup", "Pixel/events wiring", "Baseline conversion tracking"];
-    case "ugc":
-      return ["3 short ad concepts", "Caption + hook variations", "Delivery-ready pack"];
-    case "retarget":
-      return ["Audience setup", "Placement strategy", "Retarget funnel wiring"];
-    case "email":
-      return ["Welcome sequence", "Abandon/booking follow-up", "Copy + automation rules"];
-    default:
-      return [item.desc];
-  }
+function makeQuoteId() {
+  const n = Date.now();
+  const seq = (Math.random() * 1000) | 0;
+  return `IQ-${new Date(n).getFullYear()}-${String(seq).padStart(3, "0")}`;
 }
 
 export default function IkigaiQuoteFlowMockup() {
@@ -99,42 +63,37 @@ export default function IkigaiQuoteFlowMockup() {
 
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [lead, setLead] = useState({
-    name: "",
-    email: "",
-    company: "",
-    website: "",
-    niche: "",
-    timeline: "Soon",
-    budget: "",
+    name: "", email: "", company: "", website: "", niche: "", timeline: "Soon", budget: ""
   });
-
   const [quoteId, setQuoteId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  // ✅ set this to your backend base
+ const API_BASE = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 
   // Pre-select NON-add-on items for incoming bundles
   useEffect(() => {
     if (!bundlesFromState.length) return;
     const next: Record<string, boolean> = {};
-    CATALOG.forEach((item) => {
+    CATALOG.forEach(item => {
       if (!item.addon && bundlesFromState.includes(item.bundle)) next[item.id] = true;
     });
     setSelected(next);
   }, [bundlesFromState]);
 
-  const selectedItems = useMemo(() => CATALOG.filter((i) => selected[i.id]), [selected]);
-  const bundlesUsed = useMemo(() => Array.from(new Set(selectedItems.map((i) => i.bundle))), [selectedItems]);
+  const selectedItems = useMemo(() => CATALOG.filter(i => selected[i.id]), [selected]);
+  const bundlesUsed = useMemo(
+    () => Array.from(new Set(selectedItems.map(i => i.bundle))),
+    [selectedItems]
+  );
 
   const breakdown = useMemo(() => {
     const subtotal = selectedItems.reduce((s, i) => s + i.basePrice, 0);
-    let discount = 0,
-      complexityFee = 0;
+    let discount = 0, complexityFee = 0;
 
     const counts: Record<BundleTag, number> = { brand: 0, web: 0, growth: 0 };
-    selectedItems.forEach((i) => {
-      counts[i.bundle]++;
-    });
-    if (Object.values(counts).some((c) => c >= 3)) discount += subtotal * 0.05;
+    selectedItems.forEach(i => { counts[i.bundle]++; });
+    if (Object.values(counts).some(c => c >= 3)) discount += subtotal * 0.05;
     if (bundlesUsed.length >= 2) complexityFee += subtotal * 0.10;
 
     const adjusted = Math.max(0, subtotal - discount + complexityFee);
@@ -149,118 +108,11 @@ export default function IkigaiQuoteFlowMockup() {
   }, [selectedItems, bundlesUsed]);
 
   function toggle(id: string) {
-    setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
-    setQuoteId(null);
-    setError(null);
+    setSelected(prev => ({ ...prev, [id]: !prev[id] }));
   }
-
   function allClear() {
     setSelected({});
     setQuoteId(null);
-    setError(null);
-  }
-
-  async function downloadBlobAsFile(blob: Blob, filename: string) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  function makeQuoteId() {
-    const n = Date.now();
-    const seq = (Math.random() * 1000) | 0;
-    return `IQ-${new Date(n).getFullYear()}-${String(seq).padStart(3, "0")}`;
-  }
-
-  function bundleLabel(b: BundleTag) {
-    if (b === "brand") return "Brand";
-    if (b === "web") return "Web";
-    return "Growth";
-  }
-
-  async function generateQuote() {
-    setError(null);
-
-    if (!lead.name || !lead.email) {
-      alert("Enter name and email to generate your quote.");
-      return;
-    }
-    if (selectedItems.length === 0) return;
-
-    const id = makeQuoteId();
-    setQuoteId(id);
-
-    // Build backend payload (matches your HTML→PDF template expectations)
-    const today = new Date();
-    const payload = {
-      brand: {
-        website: "ikigaiproject.com",
-        email: "theikigaiproject@outlook.com",
-      },
-      quote: {
-        number: id,
-        date: fmtDate(today),
-        valid_until: fmtDate(addDays(today, 14)),
-      },
-      client: {
-        company: lead.company || "",
-        name: lead.name,
-        email: lead.email,
-        website: lead.website || "",
-        notes: lead.niche ? `Niche: ${lead.niche}` : "",
-      },
-      summary: {
-        tier: breakdown.tier,
-        timeline: `${breakdown.etaWeeks} weeks`,
-        bundles: bundlesUsed.map(bundleLabel),
-      },
-      items: selectedItems.map((item) => ({
-        name: item.name,
-        bundle: bundleLabel(item.bundle),
-        qty: 1,
-        amount: item.basePrice,
-        bullets: bulletsForItem(item),
-      })),
-      totals: {
-        subtotal: Number(breakdown.subtotal.toFixed(2)),
-        complexity_fee: Number(breakdown.complexityFee.toFixed(2)), // backend template uses totals.complexity_fee
-        adjusted: Number(breakdown.adjusted.toFixed(2)),
-        tax: Number(breakdown.tax.toFixed(2)),
-        total: Number(breakdown.total.toFixed(2)),
-      },
-      next: {
-        calendly: "https://calendly.com/theikigaiproject-ca/30min",
-      },
-    };
-
-    setIsGenerating(true);
-
-    try {
-      const res = await fetch(`${API_BASE}/api/quote/pdf`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(`PDF generation failed (${res.status}) ${text}`);
-      }
-
-      const blob = await res.blob();
-      await downloadBlobAsFile(blob, `${id}.pdf`);
-    } catch (e: any) {
-      console.error(e);
-      setError(e?.message || "PDF generation failed");
-      // keep quoteId but show error; user can try again
-    } finally {
-      setIsGenerating(false);
-    }
   }
 
   const calendlyUrl = useMemo(() => {
@@ -272,6 +124,77 @@ export default function IkigaiQuoteFlowMockup() {
     }).toString();
     return `${base}?${params}`;
   }, [quoteId, breakdown.total, breakdown.tier]);
+
+  async function generateQuote() {
+    if (!lead.name || !lead.email) {
+      alert("Enter name and email to generate your quote.");
+      return;
+    }
+    if (selectedItems.length === 0) return;
+
+    const id = quoteId ?? makeQuoteId();
+    setQuoteId(id);
+    setIsGenerating(true);
+
+    // Shape payload to exactly match quote.html expectations
+    const payload = {
+      client: {
+        name: lead.name,
+        email: lead.email,
+        company: lead.company,
+        website: lead.website,
+        notes: "", // optional – you can wire niche/timeline/budget here if you want
+      },
+      quote: {
+        number: id,
+        date: isoDate(),
+        valid_until: addDaysISO(14),
+        tier: breakdown.tier,
+        eta_weeks: breakdown.etaWeeks,
+        bundles: bundlesUsed, // ["brand","web","growth"]
+        items: selectedItems.map(i => ({
+          name: i.name,
+          bundle: i.bundle,
+          desc: i.desc,
+          // OPTIONAL: you can add a scope array later for bullet lists like the mock
+          // scope: ["Bullet 1", "Bullet 2", "Bullet 3"],
+          amount: currency(i.basePrice),
+        })),
+        subtotal: currency(breakdown.subtotal),
+        complexity_fee: currency(breakdown.complexityFee),
+        adjusted: currency(breakdown.adjusted),
+        tax: currency(breakdown.tax),
+        total: currency(breakdown.total),
+        calendly_url: calendlyUrl,
+      },
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/api/quote/pdf`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`PDF failed (${res.status}). ${text}`);
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Ikigai_Quote_${id}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e: any) {
+      console.error(e);
+      alert(e?.message || "Failed to generate PDF.");
+    } finally {
+      setIsGenerating(false);
+    }
+  }
 
   const headerCls = "font-[Space_Grotesk] uppercase tracking-widest";
 
@@ -288,22 +211,24 @@ export default function IkigaiQuoteFlowMockup() {
         <div className="mx-auto max-w-6xl">
           <header className="text-center">
             <h1 className={`${headerCls} text-3xl sm:text-4xl md:text-5xl`}>Custom Alignment Quote Builder</h1>
-            <p className="mt-3 text-white/70">Select the services you want, then generate a quote and book a call.</p>
+            <p className="mt-3 text-white/70">
+              Select the services you want, then generate a quote and book a call.
+            </p>
           </header>
 
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Services list */}
             <div className="lg:col-span-2 space-y-6">
-              {(["brand", "web", "growth"] as BundleTag[]).map((group) => (
+              {(["brand", "web", "growth"] as BundleTag[]).map(group => (
                 <section
                   key={group}
                   className="relative overflow-hidden rounded-2xl border border-white/15 backdrop-blur-sm
                              shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
                   style={{
-                    background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
+                    background:
+                      "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
                   }}
                 >
-                  {/* subtle brand wash */}
                   <div
                     aria-hidden
                     className="pointer-events-none absolute inset-0"
@@ -314,15 +239,21 @@ export default function IkigaiQuoteFlowMockup() {
                   />
                   <div className="relative p-4 sm:p-5">
                     <h2 className="text-lg sm:text-xl font-semibold capitalize">
-                      {group === "brand" ? "Brand Systems" : group === "web" ? "Web Infrastructure" : "Growth Architecture"}
+                      {group === "brand"
+                        ? "Brand Systems"
+                        : group === "web"
+                        ? "Web Infrastructure"
+                        : "Growth Architecture"}
                     </h2>
 
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                      {CATALOG.filter((i) => i.bundle === group).map((item) => (
+                      {CATALOG.filter(i => i.bundle === group).map(item => (
                         <label
                           key={item.id}
                           className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors
-                            ${selected[item.id] ? "border-white/20 bg-white/10" : "border-white/10 hover:border-white/20 bg-white/[0.04]"}
+                            ${selected[item.id]
+                              ? "border-white/20 bg-white/10"
+                              : "border-white/10 hover:border-white/20 bg-white/[0.04]"}
                           `}
                         >
                           <input
@@ -355,9 +286,10 @@ export default function IkigaiQuoteFlowMockup() {
             {/* Summary + form */}
             <aside
               className="lg:sticky lg:top-24 h-fit rounded-2xl border border-white/15 backdrop-blur-sm
-                               shadow-[0_20px_80px_rgba(0,0,0,0.35)] p-4 sm:p-5"
+                         shadow-[0_20px_80px_rgba(0,0,0,0.35)] p-4 sm:p-5"
               style={{
-                background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
               }}
             >
               <h3 className="text-lg sm:text-xl font-semibold">Summary</h3>
@@ -366,7 +298,7 @@ export default function IkigaiQuoteFlowMockup() {
                 <p className="mt-2 text-white/70">Select at least one service to begin.</p>
               ) : (
                 <ul className="mt-3 space-y-2 text-sm text-white/85">
-                  {selectedItems.map((i) => (
+                  {selectedItems.map(i => (
                     <li key={i.id} className="flex items-center justify-between border-b border-white/10 pb-1">
                       <span>{i.name}</span>
                       <span className="text-white/70">{currency(i.basePrice)}</span>
@@ -375,7 +307,6 @@ export default function IkigaiQuoteFlowMockup() {
                 </ul>
               )}
 
-              {/* Breakdown */}
               <div className="mt-4 space-y-1 text-sm">
                 <div className="flex justify-between text-white/80">
                   <span>Subtotal</span>
@@ -410,31 +341,30 @@ export default function IkigaiQuoteFlowMockup() {
                 </div>
               </div>
 
-              {/* Lead form */}
               <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <input
                   className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="Your name"
                   value={lead.name}
-                  onChange={(e) => setLead({ ...lead, name: e.target.value })}
+                  onChange={e => setLead({ ...lead, name: e.target.value })}
                 />
                 <input
                   className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="Email"
                   value={lead.email}
-                  onChange={(e) => setLead({ ...lead, email: e.target.value })}
+                  onChange={e => setLead({ ...lead, email: e.target.value })}
                 />
                 <input
                   className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="Company (optional)"
                   value={lead.company}
-                  onChange={(e) => setLead({ ...lead, company: e.target.value })}
+                  onChange={e => setLead({ ...lead, company: e.target.value })}
                 />
                 <input
                   className="w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
                   placeholder="Website (optional)"
                   value={lead.website}
-                  onChange={(e) => setLead({ ...lead, website: e.target.value })}
+                  onChange={e => setLead({ ...lead, website: e.target.value })}
                 />
               </div>
 
@@ -451,9 +381,7 @@ export default function IkigaiQuoteFlowMockup() {
                 </button>
 
                 <a
-                  className={`flex-1 rounded-xl border border-white/20 px-4 py-2 text-sm text-center text-white/90 hover:border-white/40 transition ${
-                    !quoteId ? "pointer-events-none opacity-50" : ""
-                  }`}
+                  className={`flex-1 rounded-xl border border-white/20 px-4 py-2 text-sm text-center text-white/90 hover:border-white/40 transition ${!quoteId ? "pointer-events-none opacity-50" : ""}`}
                   href={calendlyUrl}
                   target="_blank"
                   rel="noreferrer"
@@ -464,28 +392,16 @@ export default function IkigaiQuoteFlowMockup() {
                 <button
                   className="rounded-xl border border-white/15 px-4 py-2 text-sm text-white/85 hover:border-white/30 transition"
                   onClick={allClear}
-                  disabled={isGenerating}
                 >
                   Clear
                 </button>
               </div>
 
-              {error && (
-                <div className="mt-3 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-100">
-                  {error}
-                </div>
-              )}
-
-              {quoteId && !error && (
+              {quoteId && (
                 <div className="mt-3 rounded-lg border border-white/15 bg-white/[0.04] p-3 text-xs text-white/70">
-                  Quote generated: <span className="text-white">{quoteId}</span>. Your PDF was downloaded.
-                  Use the Calendly button to continue.
+                  Quote ID: <span className="text-white">{quoteId}</span>
                 </div>
               )}
-
-              <div className="mt-4 text-[11px] text-white/45">
-                API: <span className="text-white/60">{API_BASE}</span>
-              </div>
             </aside>
           </div>
         </div>
