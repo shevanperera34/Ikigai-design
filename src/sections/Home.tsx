@@ -1,10 +1,14 @@
 // src/sections/Home.tsx
-import React from "react";
+import { useEffect } from "react";
+import { api } from "../lib/api";
 import { useNavigate } from "react-router-dom";
 import { Hero } from "./Hero";
 import ServicesPreview from "../components/ServicesPreview";
 import WorkPreview from "../components/WorkPreview";
 import ContactPreview from "../components/ContactPreview";
+
+
+
 
 /* =====================
    TYPES
@@ -136,6 +140,12 @@ function TeamTile({ member }: { member: TeamMember }) {
    PAGE
 ===================== */
 export default function Home() {
+useEffect(() => {
+  api.health()
+    .then((r) => console.log("API health:", r))
+    .catch((e) => console.error("API health failed:", e));
+}, []);
+
   return (
     <main className="bg-[#050712] text-slate-100 overflow-x-hidden">
       {/* HERO — untouched */}
