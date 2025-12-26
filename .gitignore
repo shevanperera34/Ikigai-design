@@ -24,7 +24,6 @@ dist-ssr
 *.sw?
 
 # assets (don’t version these)
-src/assets/
 *.mp4
 *.mov
 *.zip
