@@ -184,10 +184,18 @@ export default function IkigaiQuoteFlowMockup() {
 
   async function generateQuote() {
     if (!lead.name || !lead.email) {
-      alert("Enter name and email to generate your quote.");
-      return;
-    }
-    if (selectedItems.length === 0) return;
+  alert("Enter name and email to generate your quote.");
+  return;
+}
+
+const isEmailValid = /.+@.+\..+/.test(lead.email);
+if (!isEmailValid) {
+  alert("Enter a valid email (ex: name@email.com).");
+  return;
+}
+
+if (selectedItems.length === 0) return;
+
 
     const id = quoteId ?? makeQuoteId();
     setQuoteId(id);
