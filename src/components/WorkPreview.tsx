@@ -1,5 +1,5 @@
 // src/components/WorkPreview.tsx
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play } from "lucide-react";

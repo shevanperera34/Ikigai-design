@@ -1,5 +1,5 @@
 // src/components/ServicesPreview.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 type BundleKey = "brand" | "web" | "growth";

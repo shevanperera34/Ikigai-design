@@ -1,5 +1,5 @@
 // src/components/Navbar.tsx
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 
 export function Navbar() {
