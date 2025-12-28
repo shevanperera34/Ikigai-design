@@ -1,94 +1,129 @@
 // src/lib/api.ts
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
+const RAW_BASE =
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  "http://127.0.0.1:8000";
+
+// Normalize (remove trailing slash)
+const API_BASE = RAW_BASE.replace(/\/+$/, "");
+
+type ApiErrorShape =
+  | { detail?: any; message?: string; error?: string }
+  | any;
+
+async function parseError(res: Response): Promise<string> {
+  const contentType = res.headers.get("content-type") || "";
+  try {
+    if (contentType.includes("application/json")) {
+      const data: ApiErrorShape = await res.json();
+      // FastAPI typically returns { detail: ... }
+      if (typeof data?.detail === "string") return data.detail;
+      if (Array.isArray(data?.detail)) return JSON.stringify(data.detail);
+      return data?.message || data?.error || `Request failed (${res.status})`;
+    }
+    const text = await res.text();
+    return text || `Request failed (${res.status})`;
+  } catch {
+    return `Request failed (${res.status})`;
+  }
+}
+
+async function requestJSON<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
       ...(options.headers || {}),
     },
   });
 
   if (!res.ok) {
-    let msg = `Request failed (${res.status})`;
-    try {
-      const data = await res.json();
-      msg = data?.detail || data?.message || msg;
-    } catch {}
-    throw new Error(msg);
+    throw new Error(await parseError(res));
   }
 
-  // Some endpoints might return empty
+  // Handle empty responses
   const text = await res.text();
   return text ? (JSON.parse(text) as T) : ({} as T);
 }
 
-/* -------------------- Types -------------------- */
-export type LeadPayload = {
-  intent: "get_quote" | "book_call" | "general_question";
-  full_name: string;
+async function requestBlob(path: string, options: RequestInit = {}): Promise<Blob> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    headers: {
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...(options.headers || {}),
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(await parseError(res));
+  }
+
+  return await res.blob();
+}
+
+/* -------------------- Types (match backend intake.py) -------------------- */
+
+export type IntakeQuotePayload = {
+  quote_id: string;
+  name: string;
   email: string;
-  company?: string;
-  budget_range?: string;
-  timeline?: string;
-  project_type: "brand" | "web" | "growth";
-  details: string;
-  consent: boolean;
-  source_path?: string;
+  company?: string | null;
+  website?: string | null;
+  bundles: string[];
+  items: any[];
+  subtotal_cents: number;
+  complexity_fee_cents: number;
+  tax_cents: number;
+  total_cents: number;
+  tier?: string | null;
+  eta_weeks?: number | null;
+  calendly_url?: string | null;
 };
 
-export type QuotePayload = {
-  client: {
-    name: string;
-    email: string;
-    company?: string;
-    website?: string;
-  };
-  notes?: string;
-  summary: {
-    tier: string;
-    timeline: string;
-    bundles: string[];
-  };
-  services: Array<{
-    name: string;
-    category: "Brand" | "Web" | "Growth";
-    description?: string;
-    scope: string[];
-    qty: number;
-    amount: string; // "$1,500.00"
-  }>;
-  pricing: {
-    subtotal: string;
-    complexity_fee: string;
-    adjusted: string;
-    hst: string;
-    total: string;
-    currency: "CAD";
-  };
-  calendly_url: string;
+export type ContactPayload = {
+  purpose: "call" | "quote" | "question";
+  name: string;
+  email: string;
+  company?: string | null;
+  project_types?: string[];
+  budget?: string | null;
+  timeline?: string | null;
+  subject?: string | null;
+  message: string;
 };
 
-export type OkResponse = { ok: true };
-
-/* -------------------- API calls -------------------- */
 export const api = {
-  health: () => request<{ ok: boolean }>("/health"),
+  // basic
+  baseUrl: API_BASE,
+  health: () => requestJSON<{ ok: boolean }>("/health"),
+  whoami: () => requestJSON<{ ok: boolean; service: string; cors: string }>("/whoami"),
 
-  createLead: (payload: LeadPayload) =>
-    request<{ ok: true; id?: string }>("/api/leads", {
+  // intake endpoints (FastAPI router prefix="/api")
+  createQuote: (payload: IntakeQuotePayload) =>
+    requestJSON<{ ok: true; quote_id: string; id: string; existing: boolean }>("/api/quotes", {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
-  generateQuoteAndEmail: (payload: QuotePayload) =>
-    request<{ ok: true; quote_number?: string }>("/api/quotes/generate-and-email", {
+  listQuotes: (limit = 50) => requestJSON<any[]>(`/api/quotes?limit=${limit}`),
+
+  createContact: (payload: ContactPayload) =>
+    requestJSON<{ ok: true; id: string }>("/api/contact", {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
-  // Admin (we’ll wire these later)
-  getAdminLeads: () => request<any[]>("/api/admin/leads"),
-  getAdminQuotes: () => request<any[]>("/api/admin/quotes"),
+  listContacts: (limit = 50) => requestJSON<any[]>(`/api/contact?limit=${limit}`),
+
+  // PDF endpoints (blob)
+  quotePdf: (payload: any) =>
+    requestBlob("/api/quote/pdf", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  testPdf: () => requestBlob("/api/test/pdf"),
 };
