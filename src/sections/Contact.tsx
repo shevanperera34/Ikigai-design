@@ -1,13 +1,12 @@
 // src/sections/Contact.tsx
 import Prism from '../components/Prism'
 import React, { useMemo, useState, useEffect, useRef } from 'react'
+import { api } from '../lib/api'
 
 type Purpose = 'call' | 'quote' | 'question'
 type ProjectType = 'Brand' | 'Web' | 'Growth'
 
 export default function Contact() {
-  const API_BASE = import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:8000'
-
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -97,17 +96,8 @@ export default function Contact() {
       message: message.trim(),
     }
 
-    const res = await fetch(`${API_BASE}/api/contact`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-
-    if (!res.ok) {
-      const text = await res.text().catch(() => '')
-      throw new Error(`Contact submit failed (${res.status}). ${text}`)
-    }
-    return res.json().catch(() => null)
+    // ✅ use shared API client (same as Get Quote)
+    return await api.createContact(payload)
   }
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -120,7 +110,7 @@ export default function Contact() {
       await postContactToDb()
 
       setSent(true)
-      setTimeout(() => setSent(false), 3000)
+      window.setTimeout(() => setSent(false), 3000)
 
       // If they chose "call", open Calendly after successful DB write
       if (purpose === 'call') {
@@ -128,7 +118,7 @@ export default function Contact() {
       }
 
       // Optional: keep fields (so they can tweak) OR clear them.
-      // I’m clearing message only (feels nice UX-wise).
+      // Clearing message only (nice UX-wise).
       setMessage('')
     } catch (err: any) {
       console.error(err)
