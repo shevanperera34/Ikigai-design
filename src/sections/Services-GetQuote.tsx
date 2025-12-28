@@ -1,6 +1,7 @@
 // src/sections/Services-GetQuote.tsx
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { api } from "../lib/api";
 
 type BundleTag = "brand" | "web" | "growth";
 
@@ -57,7 +58,6 @@ function makeQuoteId() {
 }
 
 function toCents(amountCAD: number) {
-  // safest for floats: round dollars to cents
   return Math.round(amountCAD * 100);
 }
 
@@ -78,7 +78,12 @@ export default function IkigaiQuoteFlowMockup() {
   const [quoteId, setQuoteId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const API_BASE = (import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
+  // Optional: quick health check in console so you know env is correct
+  useEffect(() => {
+    api.health()
+      .then((r) => console.log("✅ API health:", r))
+      .catch((e) => console.error("❌ API health failed:", e));
+  }, []);
 
   // Pre-select NON-add-on items for incoming bundles
   useEffect(() => {
@@ -99,8 +104,8 @@ export default function IkigaiQuoteFlowMockup() {
 
   const breakdown = useMemo(() => {
     const subtotal = selectedItems.reduce((s, i) => s + i.basePrice, 0);
-    let discount = 0,
-      complexityFee = 0;
+    let discount = 0;
+    let complexityFee = 0;
 
     const counts: Record<BundleTag, number> = { brand: 0, web: 0, growth: 0 };
     selectedItems.forEach((i) => {
@@ -116,7 +121,9 @@ export default function IkigaiQuoteFlowMockup() {
     const tax = adjusted * 0.13;
     const total = adjusted + tax;
 
-    const tier = total < 1500 ? "Starter" : total < 4500 ? "Core" : total < 9000 ? "System" : "Flagship";
+    const tier =
+      total < 1500 ? "Starter" : total < 4500 ? "Core" : total < 9000 ? "System" : "Flagship";
+
     const baseWeeks = Math.ceil(selectedItems.length / 2) || 1;
     const etaWeeks = Math.min(12, baseWeeks + (bundlesUsed.length - 1));
 
@@ -143,7 +150,6 @@ export default function IkigaiQuoteFlowMockup() {
   }, [quoteId, breakdown.total, breakdown.tier]);
 
   async function postQuoteToDb(id: string) {
-    // payload shape to match your intake.py create_quote
     const dbPayload = {
       quote_id: id,
       name: lead.name,
@@ -168,46 +174,35 @@ export default function IkigaiQuoteFlowMockup() {
       calendly_url: calendlyUrl,
     };
 
-    const res = await fetch(`${API_BASE}/api/quotes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dbPayload),
-    });
-
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(`DB save failed (${res.status}). ${text}`);
-    }
-    return res.json().catch(() => null);
+    // uses api.ts (base url + errors centralized)
+    return api.createQuote(dbPayload);
   }
 
   async function generateQuote() {
     if (!lead.name || !lead.email) {
-  alert("Enter name and email to generate your quote.");
-  return;
-}
+      alert("Enter name and email to generate your quote.");
+      return;
+    }
 
-const isEmailValid = /.+@.+\..+/.test(lead.email);
-if (!isEmailValid) {
-  alert("Enter a valid email (ex: name@email.com).");
-  return;
-}
+    const isEmailValid = /.+@.+\..+/.test(lead.email);
+    if (!isEmailValid) {
+      alert("Enter a valid email (ex: name@email.com).");
+      return;
+    }
 
-if (selectedItems.length === 0) return;
-
+    if (selectedItems.length === 0) return;
 
     const id = quoteId ?? makeQuoteId();
     setQuoteId(id);
     setIsGenerating(true);
 
-    // Shape payload to exactly match quote.html expectations (PDF endpoint)
     const pdfPayload = {
       client: {
         name: lead.name,
         email: lead.email,
         company: lead.company,
         website: lead.website,
-        notes: "", // optional
+        notes: "",
       },
       quote: {
         number: id,
@@ -232,26 +227,16 @@ if (selectedItems.length === 0) return;
     };
 
     try {
-      // 1) Save to DB first (non-blocking for PDF — we still proceed if it fails)
+      // 1) Save to DB (non-blocking)
       try {
         await postQuoteToDb(id);
       } catch (dbErr) {
         console.warn("Quote DB save failed (continuing to PDF):", dbErr);
       }
 
-      // 2) Generate PDF
-      const res = await fetch(`${API_BASE}/api/quote/pdf`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pdfPayload),
-      });
+      // 2) Generate PDF via api client
+      const blob = await api.quotePdf(pdfPayload);
 
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(`PDF failed (${res.status}). ${text}`);
-      }
-
-      const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;

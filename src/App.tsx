@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
-import ScrollToTop from "./components/ScrollToTop"; // <- keep your existing one (rename path if needed)
+import ScrollToTop from "./components/ScrollToTop"; 
 
 import TeamMemberSection from "./sections/Team";
 import Work from "./sections/Work";
