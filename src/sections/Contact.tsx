@@ -1,6 +1,6 @@
 // src/sections/Contact.tsx
-import Prism from '../components/Prism'
-import React, { useMemo, useState, useEffect, useRef } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
+import Aurora from '../components/Aurora'
 import { api } from '../lib/api'
 
 type Purpose = 'call' | 'quote' | 'question'
@@ -27,28 +27,6 @@ export default function Contact() {
 
   const isNameValid = name.trim().length > 1
   const isEmailValid = /.+@.+\..+/.test(email)
-
-  const isBrave = typeof (navigator as any).brave !== 'undefined'
-  const isOpera = /OPR\//.test(navigator.userAgent)
-  const isChrome = /Chrome\//.test(navigator.userAgent) && !isBrave && !isOpera
-  const dprCap = isChrome || isOpera ? 1.25 : 2
-
-  const [isScrolling, setIsScrolling] = useState(false)
-  const scrollTimer = useRef<number | null>(null)
-
-  useEffect(() => {
-    const onScroll = () => {
-      setIsScrolling(true)
-      if (scrollTimer.current) window.clearTimeout(scrollTimer.current)
-      scrollTimer.current = window.setTimeout(() => setIsScrolling(false), 120)
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      if (scrollTimer.current) window.clearTimeout(scrollTimer.current)
-    }
-  }, [])
 
   // If user flips away from quote mode, clear quote-only fields to keep DB clean
   useEffect(() => {
@@ -166,23 +144,13 @@ export default function Contact() {
         <div className="absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
       </div>
 
-      {/* Animated background above base, below content */}
-      <div className="absolute inset-0 z-0">
-        <Prism
-          animationType="rotate"
-          // ✅ pause while scrolling to remove Chrome/Opera stutter
-          timeScale={isScrolling ? 0 : 0.15}
-          height={3.5}
-          baseWidth={4}
-          scale={3.6}
-          hueShift={0}
-          colorFrequency={1}
-          noise={0}
-          glow={0.7}
-          tint={[0.55, 0.2, 1.0]}
-          tintStrength={0.85}
-          suspendWhenOffscreen
-          dprCap={dprCap}
+      {/* Aurora background above base, below content */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <Aurora
+          colorStops={["#1b2d52",  "#000000" ,"#380a65"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
         />
       </div>
 
@@ -459,3 +427,4 @@ export default function Contact() {
     </section>
   )
 }
+

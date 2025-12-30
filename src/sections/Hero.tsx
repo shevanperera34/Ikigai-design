@@ -2,11 +2,13 @@
 import LightRays from '../components/LightRays'
 import { LogoCanvas } from '../components/LogoCanvas'
 import { Link } from 'react-router-dom'
-import TextType from '../components/TextType'
 
 export function Hero() {
   return (
-    <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden font-[Inter] text-white">
+    <section
+      id="home-hero"
+      className="relative min-h-[92vh] flex items-center justify-center overflow-hidden font-[Inter] text-white"
+    >
       {/* Brand base + cinematic gradients */}
       <div className="absolute inset-0 -z-20">
         <div className="absolute inset-0 bg-black" />
@@ -33,17 +35,9 @@ export function Hero() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-4 text-center">
-        {/* Headline ABOVE logo (typed) */}
-        <h1 className="mt-22 font-[Space_Grotesk] uppercase tracking-widest text-xl sm:text-3xl md:text-3xl text-white/95 min-h-[2.5rem] sm:min-h-[3rem]">
-          <TextType
-            text={['Confidence, built into every digital experience.']}
-            typingSpeed={60}
-            pauseDuration={20000}
-            showCursor={false}
-            cursorCharacter="|"
-          />
-          {/* Fallback (helps with SEO/accessibility if JS hiccups) */}
-          <span className="sr-only">Confidence, built into every digital experience.</span>
+        {/* Headline ABOVE logo (STATIC now) */}
+        <h1 className="mt-22 font-[Space_Grotesk] uppercase tracking-widest text-xl sm:text-3xl md:text-3xl text-white/95">
+          THE IKIGAI PROJECT
         </h1>
 
         {/* Logo */}
