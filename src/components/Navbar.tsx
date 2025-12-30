@@ -83,8 +83,15 @@ export function Navbar() {
     <div className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-20 w-[calc(100%-1.5rem)] sm:w-auto">
       <div
         className={[
-          'relative flex items-center gap-4 sm:gap-6 rounded-2xl border border-white/10',
-          'bg-white/5 backdrop-blur-xl shadow-lg shadow-black/20 px-4 sm:px-6 py-3',
+          // base
+          'relative flex items-center rounded-2xl border border-white/10',
+          'bg-white/5 backdrop-blur-xl shadow-lg shadow-black/20',
+          // tighter spacing (helps the "fat" feel)
+          'px-4 sm:px-5 py-3',
+          // ✅ lock desktop width so it doesn't expand when brand appears
+          'w-[680px] max-w-full',
+          // ✅ reduce gap that visually inflates it
+          'gap-3 sm:gap-4',
           containerAlign,
         ].join(' ')}
       >
@@ -99,14 +106,24 @@ export function Navbar() {
         />
 
         {/* Brand / Logo (HOME: hidden at top, slides in after hero) */}
-        <div className={brandWrapClass}>
-          <svg viewBox="0 0 1024 1024" width="20" height="20" aria-hidden="true" className="opacity-90">
+        <div className={brandWrapClass + ' min-w-0'}>
+          <svg
+            viewBox="0 0 1024 1024"
+            width="20"
+            height="20"
+            aria-hidden="true"
+            className="opacity-90 shrink-0"
+          >
             <path
               fill="currentColor"
               d="M912.5,511.5c0-220.91-179.09-400-400-400S112.5,290.59,112.5,511.5c0,205.64,155.19,375.04,354.84,397.47,0,0,64.72-95,69.66-131.97,5.46-40.88-39.67-119.92-36-161,1.27-14.27,25.52-35.89,28-50,2.47-14.02-17-43-16.5-54.5.03-.71,30.76,42.79,30.5,59.5-.19,12.44-18.55,33.57-19,46-1.54,42.66,40.53,122.45,44,165,2.6,31.85-12.49,127.21-12.49,127.21,200.69-21.45,356.99-191.32,356.99-397.71Z"
             />
           </svg>
-          <span className="font-[Space_Grotesk] uppercase tracking-widest text-sm">The Ikigai Project</span>
+
+          {/* ✅ prevent text from widening navbar */}
+          <span className="font-[Space_Grotesk] uppercase tracking-widest text-sm whitespace-nowrap overflow-hidden text-ellipsis">
+            The Ikigai Project
+          </span>
         </div>
 
         {/* Desktop nav */}
