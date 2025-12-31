@@ -1,10 +1,10 @@
 // src/sections/Contact.tsx
-import React, { useMemo, useState, useEffect } from 'react'
-import Aurora from '../components/Aurora'
-import { api } from '../lib/api'
+import React, { useMemo, useState, useEffect } from "react"
+import Aurora from "../components/Aurora"
+import { api } from "../lib/api"
 
-type Purpose = 'call' | 'quote' | 'question'
-type ProjectType = 'Brand' | 'Web' | 'Growth'
+type Purpose = "call" | "quote" | "question"
+type ProjectType = "Brand" | "Web" | "Growth"
 
 export default function Contact() {
   const [sent, setSent] = useState(false)
@@ -12,18 +12,18 @@ export default function Contact() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   // ui state
-  const [purpose, setPurpose] = useState<Purpose>('quote')
+  const [purpose, setPurpose] = useState<Purpose>("quote")
   const [types, setTypes] = useState<Set<ProjectType>>(new Set())
   const [agree, setAgree] = useState(false)
 
   // minimal local state so we can build a Calendly URL and tweak required fields
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [company, setCompany] = useState('')
-  const [budget, setBudget] = useState('')
-  const [timeline, setTimeline] = useState('')
-  const [subject, setSubject] = useState('')
-  const [message, setMessage] = useState('')
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [company, setCompany] = useState("")
+  const [budget, setBudget] = useState("")
+  const [timeline, setTimeline] = useState("")
+  const [subject, setSubject] = useState("")
+  const [message, setMessage] = useState("")
 
   const isNameValid = name.trim().length > 1
   const isEmailValid = /.+@.+\..+/.test(email)
@@ -31,19 +31,19 @@ export default function Contact() {
   // If user flips away from quote mode, clear quote-only fields to keep DB clean
   useEffect(() => {
     setErrorMsg(null)
-    if (purpose !== 'quote') {
+    if (purpose !== "quote") {
       setTypes(new Set())
-      setBudget('')
-      setTimeline('')
+      setBudget("")
+      setTimeline("")
     }
-    if (purpose !== 'question') {
-      setSubject('')
+    if (purpose !== "question") {
+      setSubject("")
     }
   }, [purpose])
 
   const canSubmit = useMemo(() => {
     if (!isNameValid || !isEmailValid || !agree) return false
-    if (purpose === 'quote') {
+    if (purpose === "quote") {
       return types.size > 0 && !!timeline // budget optional
     }
     // call / question
@@ -51,7 +51,7 @@ export default function Contact() {
   }, [purpose, isNameValid, isEmailValid, agree, types, timeline])
 
   const calendlyUrl = useMemo(() => {
-    const base = 'https://calendly.com/theikigaiproject-ca/30min'
+    const base = "https://calendly.com/theikigaiproject-ca/30min"
     const params = new URLSearchParams({
       name,
       email,
@@ -67,10 +67,10 @@ export default function Contact() {
       name: name.trim(),
       email: email.trim(),
       company: company.trim() || null,
-      project_types: purpose === 'quote' ? Array.from(types) : [],
-      budget: purpose === 'quote' ? (budget || null) : null,
-      timeline: purpose === 'quote' ? (timeline || null) : null,
-      subject: purpose === 'question' ? (subject.trim() || null) : null,
+      project_types: purpose === "quote" ? Array.from(types) : [],
+      budget: purpose === "quote" ? (budget || null) : null,
+      timeline: purpose === "quote" ? (timeline || null) : null,
+      subject: purpose === "question" ? (subject.trim() || null) : null,
       message: message.trim(),
     }
 
@@ -91,26 +91,59 @@ export default function Contact() {
       window.setTimeout(() => setSent(false), 3000)
 
       // If they chose "call", open Calendly after successful DB write
-      if (purpose === 'call') {
-        window.open(calendlyUrl, '_blank', 'noopener,noreferrer')
+      if (purpose === "call") {
+        window.open(calendlyUrl, "_blank", "noopener,noreferrer")
       }
 
-      // Optional: keep fields (so they can tweak) OR clear them.
       // Clearing message only (nice UX-wise).
-      setMessage('')
+      setMessage("")
     } catch (err: any) {
       console.error(err)
-      setErrorMsg(err?.message || 'Failed to send your message. Try again.')
+      setErrorMsg(err?.message || "Failed to send your message. Try again.")
     } finally {
       setSending(false)
     }
   }
 
   const inputBase =
-    'w-full bg-transparent text-white placeholder-white/60 ' +
-    'border border-white/15 rounded-lg px-4 py-3 outline-none ' +
-    'focus:border-white/50 focus:ring-2 focus:ring-white/20 transition'
+    "w-full bg-transparent text-white placeholder-white/60 " +
+    "border border-white/15 rounded-lg px-4 py-3 outline-none " +
+    "focus:border-white/50 focus:ring-2 focus:ring-white/20 transition"
 
+  /* ------------------------------------------------------------------ */
+  /* ✅ Button system (matches Services/Footer)                           */
+  /* ------------------------------------------------------------------ */
+
+  // Primary CTA: blue -> purple, hover purple -> black
+  const btnPrimary =
+    "inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm font-medium text-white shadow-sm " +
+    "transition-all focus:outline-none focus:ring-2 focus:ring-white/20 disabled:opacity-50 " +
+    "bg-gradient-to-r from-[#1d2d52] to-[#380A65] " +
+    "hover:from-[#380A65] hover:to-black " +
+    "hover:-translate-y-[1px] active:translate-y-0"
+
+  // Secondary CTA: glass -> hover purple -> black
+  const btnSecondary =
+    "inline-flex items-center justify-center rounded-lg px-4 py-3 text-sm font-medium " +
+    "border border-white/20 bg-white/5 text-white/90 " +
+    "transition-all focus:outline-none focus:ring-2 focus:ring-white/20 " +
+    "hover:border-white/35 hover:text-white hover:bg-gradient-to-r hover:from-[#380A65] hover:to-black " +
+    "hover:-translate-y-[1px] active:translate-y-0"
+
+  // Segmented control buttons (Book a call / Get a quote / General question)
+  const segBase =
+    "rounded-full px-3 py-1.5 text-sm transition-all border focus:outline-none focus:ring-2 focus:ring-white/20 " +
+    "hover:-translate-y-[1px] active:translate-y-0"
+
+  const segActive =
+    "text-white shadow-sm border-white/0 bg-gradient-to-r from-[#1d2d52] to-[#380A65] " +
+    "hover:from-[#380A65] hover:to-black"
+
+  const segInactive =
+    "border-white/20 bg-white/5 text-white/85 hover:border-white/35 hover:text-white " +
+    "hover:bg-gradient-to-r hover:from-[#380A65] hover:to-black"
+
+  // Project type chips (Brand/Web/Growth) — same active style as segmented
   const chip = (label: ProjectType) => {
     const active = types.has(label)
     return (
@@ -122,12 +155,7 @@ export default function Contact() {
           else next.add(label)
           setTypes(next)
         }}
-        className={
-          'rounded-full px-3 py-1.5 text-sm transition border ' +
-          (active
-            ? 'text-white shadow-sm bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)] border-white/0 hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]'
-            : 'border-white/20 text-white/85 hover:border-white/40')
-        }
+        className={segBase + " " + (active ? segActive : segInactive)}
         aria-pressed={active}
         aria-label={`Toggle ${label}`}
       >
@@ -146,12 +174,7 @@ export default function Contact() {
 
       {/* Aurora background above base, below content */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <Aurora
-          colorStops={["#1b2d52",  "#000000" ,"#380a65"]}
-          blend={0.5}
-          amplitude={1.0}
-          speed={0.5}
-        />
+        <Aurora colorStops={["#380a65", "#000000", "#380a65"]} blend={0.5} amplitude={1.0} speed={0.5} />
       </div>
 
       {/* Soft vignette for readability */}
@@ -178,7 +201,7 @@ export default function Contact() {
               className="pointer-events-none absolute inset-0 -z-0"
               style={{
                 background:
-                  'radial-gradient(80% 60% at 20% -10%, rgba(0,51,255,0.08), transparent 60%), radial-gradient(80% 60% at 120% -10%, rgba(108,0,255,0.08), transparent 60%)',
+                  "radial-gradient(80% 60% at 20% -10%, rgba(0,51,255,0.08), transparent 60%), radial-gradient(80% 60% at 120% -10%, rgba(108,0,255,0.08), transparent 60%)",
               }}
             />
 
@@ -187,9 +210,9 @@ export default function Contact() {
               <span className="block text-sm text-white/80 mb-2">What do you want to do today?</span>
               <div className="flex flex-wrap gap-2">
                 {([
-                  { k: 'call', label: 'Book a call' },
-                  { k: 'quote', label: 'Get a quote' },
-                  { k: 'question', label: 'General question' },
+                  { k: "call", label: "Book a call" },
+                  { k: "quote", label: "Get a quote" },
+                  { k: "question", label: "General question" },
                 ] as { k: Purpose; label: string }[]).map(({ k, label }) => {
                   const active = purpose === k
                   return (
@@ -197,12 +220,7 @@ export default function Contact() {
                       key={k}
                       type="button"
                       onClick={() => setPurpose(k)}
-                      className={
-                        'rounded-full px-3 py-1.5 text-sm transition border ' +
-                        (active
-                          ? 'text-white shadow-sm bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)] border-white/0 hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]'
-                          : 'border-white/20 text-white/85 hover:border-white/40')
-                      }
+                      className={segBase + " " + (active ? segActive : segInactive)}
                       aria-pressed={active}
                       aria-label={`Select purpose: ${label}`}
                     >
@@ -218,7 +236,7 @@ export default function Contact() {
               <div>
                 <label className="mb-1.5 block text-sm text-white/80">Full name</label>
                 <input
-                  className={inputBase + (isNameValid ? '' : ' border-red-500/60')}
+                  className={inputBase + (isNameValid ? "" : " border-red-500/60")}
                   name="name"
                   placeholder="Jane Doe"
                   value={name}
@@ -229,7 +247,7 @@ export default function Contact() {
               <div>
                 <label className="mb-1.5 block text-sm text-white/80">Email</label>
                 <input
-                  className={inputBase + (isEmailValid ? '' : ' border-red-500/60')}
+                  className={inputBase + (isEmailValid ? "" : " border-red-500/60")}
                   name="email"
                   placeholder="you@email.com"
                   type="email"
@@ -251,7 +269,7 @@ export default function Contact() {
               </div>
 
               {/* Budget only for "quote" */}
-              {purpose === 'quote' && (
+              {purpose === "quote" && (
                 <div>
                   <label className="mb-1.5 block text-sm text-white/80">Budget (optional)</label>
                   <select className={inputBase} name="budget" value={budget} onChange={(e) => setBudget(e.target.value)}>
@@ -267,14 +285,14 @@ export default function Contact() {
               )}
 
               {/* Project type chips + Timeline only for "quote" */}
-              {purpose === 'quote' && (
+              {purpose === "quote" && (
                 <>
                   <div>
                     <label className="mb-1.5 block text-sm text-white/80">Project type</label>
                     <div className="flex flex-wrap gap-2">
-                      {chip('Brand')}
-                      {chip('Web')}
-                      {chip('Growth')}
+                      {chip("Brand")}
+                      {chip("Web")}
+                      {chip("Growth")}
                     </div>
                   </div>
 
@@ -285,7 +303,7 @@ export default function Contact() {
                       name="timeline"
                       value={timeline}
                       onChange={(e) => setTimeline(e.target.value)}
-                      required={purpose === 'quote'}
+                      required={purpose === "quote"}
                     >
                       <option value="" disabled>
                         Select a timeline
@@ -300,7 +318,7 @@ export default function Contact() {
               )}
 
               {/* Subject only for "question" */}
-              {purpose === 'question' && (
+              {purpose === "question" && (
                 <div className="md:col-span-2">
                   <label className="mb-1.5 block text-sm text-white/80">Subject</label>
                   <input
@@ -316,15 +334,15 @@ export default function Contact() {
               {/* Details / message — keep in all modes */}
               <div className="md:col-span-2">
                 <label className="mb-1.5 block text-sm text-white/80">
-                  {purpose === 'question' ? 'Your question / details' : 'Project details'}
+                  {purpose === "question" ? "Your question / details" : "Project details"}
                 </label>
                 <textarea
-                  className={inputBase + ' min-h-[140px]'}
+                  className={inputBase + " min-h-[140px]"}
                   name="message"
                   placeholder={
-                    purpose === 'question'
-                      ? 'What can we help with? Links and context welcome…'
-                      : 'What are you building? Timelines, goals, links…'
+                    purpose === "question"
+                      ? "What can we help with? Links and context welcome…"
+                      : "What are you building? Timelines, goals, links…"
                   }
                   rows={6}
                   value={message}
@@ -356,22 +374,12 @@ export default function Contact() {
             )}
 
             <div className="relative mt-6 md:mt-8 flex flex-wrap items-center gap-3">
-              <button
-                type="submit"
-                className="rounded-lg px-5 py-3 text-sm font-medium text-white shadow-sm transition-all
-                           bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
-                           hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
-                           focus:outline-none focus:ring-2 focus:ring-white/20 disabled:opacity-50"
-                disabled={!canSubmit || sending}
-              >
-                {sending ? 'Sending…' : purpose === 'call' ? 'Send & Go to Calendly' : 'Send message'}
+              <button type="submit" className={btnPrimary} disabled={!canSubmit || sending}>
+                {sending ? "Sending…" : purpose === "call" ? "Send & Go to Calendly" : "Send message"}
               </button>
 
               <a
-                className={
-                  'rounded-lg border border-white/20 text-white/90 px-4 py-3 hover:border-white/40 transition ' +
-                  (!(isNameValid && isEmailValid) ? 'pointer-events-none opacity-50' : '')
-                }
+                className={btnSecondary + " " + (!(isNameValid && isEmailValid) ? "pointer-events-none opacity-50" : "")}
                 href={isNameValid && isEmailValid ? calendlyUrl : undefined}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -382,7 +390,7 @@ export default function Contact() {
               {sent && <span className="text-emerald-300/90 text-sm">Thanks — we’ll be in touch shortly.</span>}
 
               <span className="ml-auto text-xs text-white/60">
-                Prefer email?{' '}
+                Prefer email?{" "}
                 <a className="underline hover:text-white" href="mailto:hello@example.com">
                   hello@example.com
                 </a>
@@ -400,7 +408,7 @@ export default function Contact() {
               className="pointer-events-none absolute inset-0 -z-0"
               style={{
                 background:
-                  'radial-gradient(80% 60% at 20% -10%, rgba(0,51,255,0.08), transparent 60%), radial-gradient(80% 60% at 120% -10%, rgba(108,0,255,0.08), transparent 60%)',
+                  "radial-gradient(80% 60% at 20% -10%, rgba(0,51,255,0.08), transparent 60%), radial-gradient(80% 60% at 120% -10%, rgba(108,0,255,0.08), transparent 60%)",
               }}
             />
             <div className="relative">
@@ -408,15 +416,13 @@ export default function Contact() {
               <p className="mt-2 text-white/75">
                 Unsure what you need? Start your Custom Alignment to pick services and get an instant quote.
               </p>
-              <a
-                className="mt-4 inline-flex rounded-lg px-4 py-2 text-sm font-medium
-                           text-white shadow-sm transition-all
-                           bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
-                           hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
-                           focus:outline-none focus:ring-2 focus:ring-white/20"
-                href="/Services#custom"
-              >
+
+              <a className={"mt-4 " + btnPrimary} href="/Services#custom">
                 Start Custom Alignment
+              </a>
+
+              <a className={"mt-4 " + btnSecondary} href="/Services#custom">
+                Already Discovered Alignment?
               </a>
             </div>
           </aside>
@@ -427,4 +433,3 @@ export default function Contact() {
     </section>
   )
 }
-

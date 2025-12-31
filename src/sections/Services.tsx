@@ -28,7 +28,8 @@ const BUNDLES: Bundle[] = [
     key: "brand",
     title: "Brand Systems Build",
     tagline: "Define who you are, and make it unmistakable",
-    short_description: "Brand systems that clarify your identity, sharpen your messaging, and give every touchpoint a consistent foundation",
+    short_description:
+      "Brand systems that clarify your identity, sharpen your messaging, and give every touchpoint a consistent foundation",
     includes: [
       "Logo & visual identity",
       "Brand messaging & positioning",
@@ -41,16 +42,28 @@ const BUNDLES: Bundle[] = [
     key: "web",
     title: "Intelligent Web Infrastructure",
     tagline: "High-performance websites and systems built to scale",
-    short_description: "We design and develop fast, scalable websites with automation, tracking, and modern interactions built in from day one",
-    includes: ["Web design & development", "Automation & CRM setup", "3D & interactive integration", "Performance & analytics tracking"],
+    short_description:
+      "We design and develop fast, scalable websites with automation, tracking, and modern interactions built in from day one",
+    includes: [
+      "Web design & development",
+      "Automation & CRM setup",
+      "3D & interactive integration",
+      "Performance & analytics tracking",
+    ],
     price: "From $2,000",
   },
   {
     key: "growth",
     title: "Growth Architecture",
     tagline: "Growth systems that turn traffic into momentum",
-    short_description: "Paid media, funnels, and reporting designed to grow what’s already aligned, not paper over broken foundations",
-    includes: ["•	Paid media setup (Meta & Google)", "Campaign management", "Content & funnel systems", "Analytics & reporting"],
+    short_description:
+      "Paid media, funnels, and reporting designed to grow what’s already aligned, not paper over broken foundations",
+    includes: [
+      "•\tPaid media setup (Meta & Google)",
+      "Campaign management",
+      "Content & funnel systems",
+      "Analytics & reporting",
+    ],
     price: "From $1,200",
   },
 ];
@@ -73,7 +86,9 @@ export default function Services() {
   const [customLocked, setCustomLocked] = useState(false);
 
   // toast state
-  const [toast, setToast] = useState<{ id: number; message: string } | null>(null);
+  const [toast, setToast] = useState<{ id: number; message: string } | null>(
+    null
+  );
 
   const activeKey = showCustom ? null : selectedKey ?? hoveredKey;
   const active = BUNDLES.find((b) => b.key === activeKey) || null;
@@ -110,13 +125,6 @@ export default function Services() {
     setSelectedKey(null);
   };
 
-  const toggleCustom = (key: Bundle["key"]) => {
-    const next = new Set(customSet);
-    if (next.has(key)) next.delete(key);
-    else next.add(key);
-    setCustomSet(next);
-  };
-
   const onEnterCircle = (key: Bundle["key"]) => {
     if (customLocked) return;
     setShowCustom(false);
@@ -129,6 +137,9 @@ export default function Services() {
     setSelectedKey(key);
   };
 
+  // ✅ route Discover Alignment -> /services/get-quote (no state needed for “already have a quote”)
+  const goToGetQuote = () => navigate("/services/get-quote");
+
   const goToQuote = (bundles: Bundle["key"][]) => {
     if (bundles.length === 0) return;
     navigate("/services/get-quote", { state: { bundles } });
@@ -136,7 +147,7 @@ export default function Services() {
 
   return (
     <section
-      className="relative min-h-screen overflow-hidden font-[Inter] text-white"
+      className="relative min-h-[120vh] overflow-hidden font-[Inter] text-white"
       style={{ backgroundColor: IKIGAI.black }}
     >
       {/* Global brand glow layer */}
@@ -154,14 +165,14 @@ export default function Services() {
         </div>
       )}
 
-      {/* Page header (responsive spacing + bigger on small laptops) */}
-      <header className="relative z-10 max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-10 sm:pt-12 md:pt-16">
+      {/* Page header */}
+      <header className="relative z-10 max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-12 sm:pt-14 md:pt-20">
         <h1 className="text-center font-[Space_Grotesk] uppercase tracking-widest text-3xl sm:text-4xl md:text-5xl mt-10 sm:mt-12 md:mt-10">
           Find Your Alignment
         </h1>
         <p className="mt-3 text-[18px] text-center text-white/70 text-sm">
-          Choose the services you need across brand, web, and growth. Build a system that works
-          together, not in silos.
+          Choose the services you need across brand, web, and growth. Build a
+          system that works together, not in silos.
         </p>
       </header>
 
@@ -173,11 +184,10 @@ export default function Services() {
       `}</style>
 
       {/* Main content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-8 pb-24 sm:py-10 md:py-14">
+      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-10 pb-32 sm:pt-12 sm:pb-36 md:pt-14 md:pb-44">
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-7 sm:gap-8 lg:gap-12">
           {/* Left: Venn */}
           <div className="relative w-full lg:w-[56%] max-w-[820px] mx-auto">
-            {/* Responsive sizing wrapper */}
             <div className="relative w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] flex items-center justify-center">
               {/* Breathing center halo */}
               <div
@@ -239,7 +249,6 @@ export default function Services() {
                 />
               </div>
 
-              {/* IMPORTANT: make the SVG fill the wrapper always */}
               <svg
                 viewBox="0 0 1000 750"
                 className="h-full w-full"
@@ -298,7 +307,7 @@ export default function Services() {
                   onClick={() => onClickCircle("growth")}
                 />
 
-                {/* Labels (outside circles) */}
+                {/* Labels */}
                 <text
                   x="500"
                   y="65"
@@ -356,7 +365,7 @@ export default function Services() {
                   GROWTH ARCHITECTURE
                 </text>
 
-                {/* Center CTA (SVG-only — works on mobile, no foreignObject) */}
+                {/* Center CTA */}
                 <g
                   role="button"
                   tabIndex={0}
@@ -379,7 +388,6 @@ export default function Services() {
                   }}
                   className="group"
                 >
-                  {/* clickable hit box */}
                   <rect
                     x="418"
                     y="360"
@@ -391,7 +399,6 @@ export default function Services() {
                     stroke="rgba(255,255,255,0.00)"
                   />
 
-                  {/* hover hue (desktop hover) */}
                   <rect
                     x="418"
                     y="350"
@@ -404,7 +411,6 @@ export default function Services() {
                     className="transition-opacity duration-300 group-hover:opacity-100"
                   />
 
-                  {/* subtle glass highlight on hover */}
                   <rect
                     x="418"
                     y="350"
@@ -418,24 +424,20 @@ export default function Services() {
                   />
 
                   {showCustom && (
-                    <>
-                      {/* desktop selected glow (behind the button) */}
-                      <rect
-                        x="410"
-                        y="352"
-                        width="180"
-                        height="120"
-                        rx="22"
-                        ry="22"
-                        fill="url(#ikigaiHue)"
-                        opacity="0.28"
-                        className="hidden sm:block"
-                        filter="url(#btnGlow)"
-                      />
-                    </>
+                    <rect
+                      x="410"
+                      y="352"
+                      width="180"
+                      height="120"
+                      rx="22"
+                      ry="22"
+                      fill="url(#ikigaiHue)"
+                      opacity="0.28"
+                      className="hidden sm:block"
+                      filter="url(#btnGlow)"
+                    />
                   )}
 
-                  {/* Text always visible */}
                   <text
                     x="500"
                     y="392"
@@ -460,7 +462,6 @@ export default function Services() {
                   </text>
                 </g>
 
-                {/* defs */}
                 <defs>
                   <linearGradient id="ikigaiHue" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stopColor="rgba(0,51,255,0.95)" />
@@ -475,7 +476,6 @@ export default function Services() {
                     </feMerge>
                   </filter>
 
-                  {/* glow for the selected desktop button */}
                   <filter id="btnGlow" x="-50%" y="-50%" width="200%" height="200%">
                     <feGaussianBlur stdDeviation="10" result="blur" />
                     <feColorMatrix
@@ -494,7 +494,6 @@ export default function Services() {
                     </feMerge>
                   </filter>
 
-                  {/* glow for selected text (mobile feedback) */}
                   <filter id="textGlow" x="-50%" y="-50%" width="200%" height="200%">
                     <feGaussianBlur stdDeviation="3.5" result="tBlur" />
                     <feMerge>
@@ -512,9 +511,10 @@ export default function Services() {
             <div
               className="relative overflow-hidden border border-white/10 rounded-2xl p-5 sm:p-6 md:p-7 backdrop-blur-sm
                          shadow-[0_20px_80px_rgba(0,0,0,0.35)]
-                         min-h-[320px] sm:min-h-[360px] md:min-h-[420px]"
+                         min-h-[330px] sm:min-h-[400px] md:min-h-[500px]"
               style={{
-                background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.04) 100%)",
               }}
             >
               <div
@@ -526,57 +526,45 @@ export default function Services() {
                 }}
               />
 
-              <div className="relative">
+              {/* ✅ Mobile centered only | Desktop unchanged */}
+              <div className="relative text-center lg:text-left">
                 {showCustom ? (
                   <div>
-                    <h2 className="text-xl sm:text-2xl font-semibold mb-1.5 font-[Space_Grotesk] uppercase tracking-widest">
-                      Custom Alignment
+                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 font-[Space_Grotesk] uppercase tracking-widest">
+                      What You’re About to Do
                     </h2>
-                    <p className="text-white/70 mb-5 text-sm">
-                      Mix &amp; match the areas you want. Items you added are already checked.
-                    </p>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      {BUNDLES.map((b) => (
-                        <label
-                          key={b.key}
-                          className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4 hover:border-white/30 transition-colors cursor-pointer"
-                        >
-                          <input
-                            aria-label={`Toggle ${b.title}`}
-                            type="checkbox"
-                            className="mt-1 h-4 w-4 accent-white"
-                            checked={customSet.has(b.key)}
-                            onChange={() => toggleCustom(b.key)}
-                          />
-                          <div>
-                            <div className="font-medium">{b.title}</div>
-                            <div className="text-s">{b.tagline}</div>
-                            <div className="text-xs">{b.short_description}</div>
-                          </div>
-                        </label>
-                      ))}
+                    <div className="text-white/75 text-sm sm:text-[15px] leading-6 space-y-3">
+                      <p>You’re about to create a custom alignment.</p>
+                      <p>A clear breakdown of what you’re building, what’s needed, and what isn’t.</p>
+                      <p>
+                        You’ll receive a defined scope, a tailored quote(and a recommended path
+                        forward).
+                      </p>
+                      <p>No commitment. Just clarity.</p>
                     </div>
 
-                    <div className="mt-6 flex flex-wrap gap-3">
+                    {/* ✅ Mobile: centered + stacked. Desktop: normal row */}
+                    <div className="mt-6 flex flex-col items-center gap-3 lg:flex-row lg:items-start lg:justify-start">
                       <button
-                        className="rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40"
+                        className="w-full max-w-[280px] lg:w-auto lg:max-w-none rounded-xl px-4 py-2 text-sm font-medium
+                                   text-white shadow-sm transition-all
+                                   bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
+                                   hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
+                                   focus:outline-none focus:ring-2 focus:ring-white/20"
+                        onClick={goToGetQuote}
+                      >
+                        Discover Alignment
+                      </button>
+
+                      <button
+                        className="w-full max-w-[280px] lg:w-auto lg:max-w-none rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40"
                         onClick={() => {
                           setShowCustom(false);
                           setCustomLocked(false);
                         }}
                       >
-                        Done
-                      </button>
-                      <button
-                        className="rounded-xl px-4 py-2 text-sm font-medium
-                                   text-white shadow-sm transition-all
-                                   bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
-                                   hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
-                                   focus:outline-none focus:ring-2 focus:ring-white/20"
-                        onClick={() => goToQuote(Array.from(customSet))}
-                      >
-                        Get Quote
+                        Already Discovered?
                       </button>
                     </div>
                   </div>
@@ -588,7 +576,9 @@ export default function Services() {
                     <p className="text-white/70 mb-4 text-[18px] ">{active.tagline}</p>
                     <p className="text-white/70 mb-4 text-[14px] ">{active.short_description}</p>
 
-                    <ul className="text-sm text-white/85 space-y-1.5 mb-5 leading-6">
+                    {/* ✅ Keep bullets left-aligned even on mobile (readability),
+                        but block stays centered because wrapper is text-center. */}
+                    <ul className="text-sm text-white/85 space-y-1.5 mb-5 leading-6 text-left mx-auto max-w-[34rem] lg:mx-0 lg:max-w-none">
                       {active.includes.map((item, idx) => (
                         <li key={idx}>• {item}</li>
                       ))}
@@ -596,24 +586,26 @@ export default function Services() {
 
                     <p className="font-medium text-white/90">{active.price}</p>
 
-                    <div className="mt-6 flex flex-wrap gap-3">
+                    {/* ✅ Mobile: centered + stacked. Desktop: normal row */}
+                    <div className="mt-6 flex flex-col items-center gap-3 lg:flex-row lg:items-start lg:justify-start">
                       <button
-                        className="rounded-xl px-4 py-2 text-sm font-medium
+                        className="w-full max-w-[280px] lg:w-auto lg:max-w-none rounded-xl px-4 py-2 text-sm font-medium
                                    text-white shadow-sm transition-all
                                    bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
                                    hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
                                    focus:outline-none focus:ring-2 focus:ring-white/20"
                         onClick={() => goToQuote([active.key])}
                       >
-                        {/* ✅ Dynamic label per tile */}
                         {PRIMARY_CTA[active.key]}
                       </button>
 
                       <button
-                        className="rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40"
+                        className="w-full max-w-[280px] lg:w-auto lg:max-w-none rounded-xl border border-white/20 px-4 py-2 text-white/90 hover:border-white/40"
                         onClick={() => handleAddOrViewCustom(active.key)}
                       >
-                        {customSet.has(active.key) ? "View Custom Alignment" : "Add to Custom Alignment"}
+                        {customSet.has(active.key)
+                          ? "View Custom Alignment"
+                          : "Add to Custom Alignment"}
                       </button>
                     </div>
                   </div>

@@ -1,7 +1,9 @@
 // src/sections/Hero.tsx
-import LightRays from '../components/LightRays'
-import { LogoCanvas } from '../components/LogoCanvas'
-import { Link } from 'react-router-dom'
+import LightRays from "../components/LightRays"
+import { LogoCanvas } from "../components/LogoCanvas"
+import Aurora from "../components/Aurora"
+import { Link } from "react-router-dom"
+import { ShinyButton } from "../components/shiny-button"
 
 export function Hero() {
   return (
@@ -13,8 +15,13 @@ export function Hero() {
       <div className="absolute inset-0 -z-20">
         <div className="absolute inset-0 bg-black" />
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-120px,rgba(255,255,255,0.07),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-120px,rgba(255,255,255,0.2),transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(900px_500px_at_50%_120%,rgba(0,0,0,0.55),transparent_60%)]" />
+      </div>
+
+      {/* Aurora background */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <Aurora colorStops={["#1b2d52", "#380a65", "#1b2d52"]} blend={0.5} amplitude={1.0} speed={0.5} />
       </div>
 
       {/* Rays behind the logo */}
@@ -35,7 +42,6 @@ export function Hero() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-4 text-center">
-        {/* Headline ABOVE logo (STATIC now) */}
         <h1 className="mt-22 font-[Space_Grotesk] uppercase tracking-widest text-xl sm:text-3xl md:text-3xl text-white/95">
           THE IKIGAI PROJECT
         </h1>
@@ -45,35 +51,49 @@ export function Hero() {
           <LogoCanvas modelPath="/models/ikigai-logo.glb" />
         </div>
 
-        {/* Sub ABOVE buttons */}
         <p className="max-w-3xl text-[18px] sm:text-[19px] leading-relaxed text-white/70 mb-3">
-          The Ikigai Project is a human first digital studio helping companies and individuals grow with intention,
-          scale with confidence, and win financially without losing themselves.
+          The Ikigai Project is a human first digital studio helping companies and individuals grow with intention, scale
+          with confidence, and win financially without losing themselves.
         </p>
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
-          <Link
-            to="/work"
-            className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium
-                       text-white shadow-sm transition-all
-                       bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
-                       hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
-                       focus:outline-none focus:ring-2 focus:ring-white/20"
-          >
-            Explore Our Work
+          {/* React Router internal nav: wrap button in Link */}
+          <Link to="/work" className="inline-flex">
+            <ShinyButton className="min-w-[220px]">
+              Explore Our Work
+            </ShinyButton>
           </Link>
 
+          {/* External link: keep <a> but button style */}
           <a
             href="https://calendly.com/theikigaiproject-ca/30min"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium
-                       border border-white/20 text-white/90 bg-white/5
-                       hover:border-white/40 hover:bg-white/10 hover:text-white
-                       transition focus:outline-none focus:ring-2 focus:ring-white/20"
+            className="inline-flex"
           >
-            Book a Free Strategy Call
+            <ShinyButton className="min-w-[260px]">
+              Book a Free Strategy Call
+            </ShinyButton>
+          </a>
+
+          {/* Secondary style: same component, just tweak className */}
+          <a
+            href="https://calendly.com/theikigaiproject-ca/30min"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex"
+          >
+            <ShinyButton
+              className="min-w-[170px]"
+              style={{
+                // quick “secondary” look without rebuilding the component
+                filter: "saturate(0.9)",
+                opacity: 0.92,
+              }}
+            >
+              Have a quote?
+            </ShinyButton>
           </a>
         </div>
       </div>

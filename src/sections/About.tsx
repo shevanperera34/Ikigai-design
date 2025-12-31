@@ -119,6 +119,7 @@ const XIcon = () => (
 const STEPS = [
   { title: 'Discovery Call', desc: 'Quick intro chat to understand goals.' },
   { title: 'Scope & Quote', desc: 'We map out deliverables and costs.' },
+  { title: 'Confirm Alignment', desc: 'Finalize Terms and payments' },
   { title: 'Draft Build', desc: 'First version delivered for review.' },
   { title: 'Revisions', desc: 'Feedback loop until it feels right.' },
   { title: 'Launch', desc: 'Project goes live with full support.' },
@@ -343,14 +344,14 @@ export default function About() {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="w-full h-full relative">
           <Particles
-            particleColors={['#8ab4ff', '#b388ff', '#ffffff']}
-            particleCount={220}
-            particleSpread={10}
-            speed={0.1}
-            particleBaseSize={300}
+            particleColors={['#1b2d52', '#000000', '#380a65']}
+            particleCount={700000}
+            particleSpread={100}
+            speed={0.05}
+            particleBaseSize={120}
             moveParticlesOnHover={true}
-            alphaParticles={false}
-            disableRotation={false}
+            alphaParticles={true}
+            disableRotation={true}
             className="pointer-events-none"
           />
         </div>
@@ -384,7 +385,7 @@ export default function About() {
         {/* OUR EXCEPTIONAL TEAM — tiles that open modal */}
         <section className="mt-16 md:mt-20">
           <header className="text-center mb-8 md:mb-10">
-            <h2 className="font-[Space_Grotesk] tracking-widest text-3xl md:text-5xl">Our Exceptional Team</h2>
+            <h1 className="font-[Space_Grotesk] tracking-widest text-3xl md:text-5xl">Our Exceptional Team</h1>
             <p className="mt-2 text-white/80">Three disciplines. One aligned system.</p>
           </header>
 

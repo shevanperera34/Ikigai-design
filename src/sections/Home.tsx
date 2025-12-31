@@ -158,7 +158,7 @@ useEffect(() => {
 
       {/* ABOUT */}
       <section id="about" className="mt-32 px-6 max-w-6xl mx-auto text-center">
-        <h2 className={HOME_TITLE}>Who We Are</h2>
+        <h1 className={HOME_TITLE}>Who We Are</h1>
         <p className="mt-4 text-slate-300 max-w-3xl mx-auto">
           We’re The Ikigai Project. We design systems that give brands clarity, confidence, and the power to move decisively
         </p>

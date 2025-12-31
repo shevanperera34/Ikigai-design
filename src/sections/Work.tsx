@@ -1,7 +1,7 @@
 // src/sections/Work.tsx
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import type { Variants, Transition } from 'framer-motion'
-import { Play, X, Expand, Minimize, Share2, Search, XCircle } from 'lucide-react'
+import { Play, X, Expand, Minimize, Share2, Search, XCircle, ArrowRight} from 'lucide-react'
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import blindthumb from '../assets/Blinds_thumbnail_2.png'
 import Autodetail from '../assets/AutoDetailing_thumbnail.png'
@@ -60,16 +60,16 @@ const projects: Project[] = [
   thumbnailUrl: blindthumb,
   videoUrl: 'https://drive.google.com/file/d/1t5OggLfiOiLSb5eiTWtp5qId_S8QJ27M/view?usp=sharing',
   description: 'A breathtaking visual narrative…',
-  client: 'Independent Film',
-  director: 'Alex Rodriguez',
-  year: '2024',
+  client: 'Privacy Protected',
+  director: 'Ikigai',
+  year: '2025',
   location: 'Los Angeles, CA',
   camera: 'RED Komodo 6K',
   lenses: 'Zeiss Supreme Primes',
   format: '6K RAW',
   aspectRatio: '2.39:1',
-  status: 'Live',
-  statusYear: '2024',
+  status: 'In Development',
+  statusYear: '2025',
   overview:
     'An interactive 3D blinds configurator designed to let users explore products in real time, customize options, and understand fit before purchase.',
   objective:
@@ -89,16 +89,16 @@ const projects: Project[] = [
   thumbnailUrl: Tailor,
   videoUrl: 'https://drive.google.com/file/d/1yMMFdQ3_oN6F5DCZN2MniruPasQ3t4Mp/view?usp=sharing',
   description: 'A dynamic commercial piece…',
-  client: 'TechCorp Inc.',
+  client: 'Project Template',
   director: 'Sarah Chen',
-  year: '2024',
+  year: '2025',
   location: 'New York, NY',
   camera: 'Sony FX9',
   lenses: 'Sony G Master',
   format: '4K XAVC',
   aspectRatio: '16:9',
   status: 'Concept',
-  statusYear: '2024',
+  statusYear: '2025',
   overview:
     'A boutique website concept focused on clarity, elegance, and a frictionless booking experience.',
   objective:
@@ -118,16 +118,16 @@ const projects: Project[] = [
   thumbnailUrl: mobil,
   videoUrl: 'https://drive.google.com/file/d/1sz0pV2tw4Tv65ClzH6dXwlKQd-AXIr__/view?usp=sharing',
   description: 'An intimate documentary…',
-  client: 'National Geographic',
+  client: 'Project Template',
   director: 'Michael Torres',
-  year: '2023',
+  year: '2025',
   location: 'Various',
   camera: 'Canon EOS C300 Mark III',
   lenses: 'Canon CN-E Primes',
   format: '4K Cinema RAW',
   aspectRatio: '16:9',
   status: 'Live',
-  statusYear: '2024',
+  statusYear: '2025',
   overview:
     'A mobile-first design system built to ensure consistency and performance across devices.',
   objective:
@@ -147,16 +147,16 @@ const projects: Project[] = [
   thumbnailUrl: Barber,
   videoUrl: 'https://drive.google.com/file/d/1Z8HWZHxHLMmYcDsb_R3DgR_nZMjeQMjq/view?usp=sharing',
   description: 'A vibrant music video…',
-  client: 'Universal Music',
+  client: 'Project Template',
   director: 'Emma Johnson',
-  year: '2024',
+  year: '2025',
   location: 'Nashville, TN',
   camera: 'ARRI Alexa Mini LF',
   lenses: 'ARRI Signature Primes',
   format: '4.5K ProRes',
   aspectRatio: '2.35:1',
   status: 'Concept',
-  statusYear: '2024',
+  statusYear: '2025',
   overview:
     'A high-contrast website concept designed to showcase brand personality while prioritizing usability.',
   objective:
@@ -176,16 +176,16 @@ const projects: Project[] = [
   thumbnailUrl: Autodetail,
   videoUrl: 'https://drive.google.com/file/d/172JGsgvwiGP7gL2Q0Ka9ZJ8YPXQdEJHB/view?usp=sharing',
   description: 'A cinematic trailer…',
-  client: 'Emma & James',
+  client: 'Project Template',
   director: 'Willow Tree Films',
-  year: '2022',
+  year: '2025',
   location: 'Tuscany, Italy',
   camera: 'Sony FX3 + DJI Ronin',
   lenses: 'Sigma 35mm, Sony 85mm',
   format: '4K',
   aspectRatio: '2.35:1',
   status: 'Concept',
-  statusYear: '2024',
+  statusYear: '2025',
   overview:
     'A bold landing page concept featuring a package selector and conversion-focused layout.',
   objective:
@@ -205,16 +205,16 @@ const projects: Project[] = [
   thumbnailUrl: Livemu,
   videoUrl: 'https://drive.google.com/file/d/1qPdb_gv5zOT1T7JzaQ6rZ6Wa7mks4wen/view?usp=sharing',
   description: 'A cinematic trailer…',
-  client: 'Emma & James',
+  client: 'Dylan Bradley',
   director: 'Willow Tree Films',
-  year: '2022',
+  year: '2025',
   location: 'Tuscany, Italy',
   camera: 'Sony FX3 + DJI Ronin',
   lenses: 'Sigma 35mm, Sony 85mm',
   format: '4K',
   aspectRatio: '2.35:1',
   status: 'Live',
-  statusYear: '2023',
+  statusYear: '2025',
   overview:
     'A high-energy event recap edit designed for social sharing and audience retention.',
   objective:
@@ -234,18 +234,18 @@ const projects: Project[] = [
   thumbnailUrl: clubpromo,
   videoUrl: 'https://drive.google.com/file/d/1RtaLQ_gOHZUqGhCNe-SXljzNCWaPk26I/view?usp=sharing',
   description: 'A cinematic trailer…',
-  client: 'Emma & James',
+  client: 'Privacy Protected',
   director: 'Willow Tree Films',
-  year: '2022',
+  year: '2025',
   location: 'Tuscany, Italy',
   camera: 'Sony FX3 + DJI Ronin',
   lenses: 'Sigma 35mm, Sony 85mm',
   format: '4K',
   aspectRatio: '2.35:1',
   status: 'Live',
-  statusYear: '2023',
+  statusYear: '2025',
   overview:
-    'A fast-paced promotional video built around typography, rhythm, and visual impact.',
+    'A fast-paced promotional video built around rhythm, and visual impact.',
   objective:
     'Drive RSVPs and awareness through a punchy, scroll-stopping creative format.',
   roles: ['Editing', 'Motion Graphics', 'Copy'],
@@ -263,16 +263,16 @@ const projects: Project[] = [
   thumbnailUrl: kind,
   videoUrl: flame, // GIF preview
   description: 'A cinematic trailer…',
-  client: 'Emma & James',
+  client: 'Kindrage',
   director: 'Willow Tree Films',
-  year: '2022',
+  year: '2025',
   location: 'Tuscany, Italy',
   camera: 'Sony FX3 + DJI Ronin',
   lenses: 'Sigma 35mm, Sony 85mm',
   format: '4K',
   aspectRatio: '2.35:1',
   status: 'In Development',
-  statusYear: '2024',
+  statusYear: '2025',
   overview:
     'Brand system and launch visuals developed for a purpose-driven clothing brand.',
   objective:
@@ -530,12 +530,12 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
           animate="visible"
           className="text-center mb-12 sm:mb-16"
         >
-          <motion.h2
+          <motion.h1
             variants={itemAnimation}
             className="font-[Space_Grotesk] uppercase tracking-widest text-4xl sm:text-5xl md:text-6xl mb-3 mt-7"
           >
             Our Work
-          </motion.h2>
+          </motion.h1>
           <motion.p variants={itemAnimation} className="text-white/80 max-w-3xl mx-auto text-lg md:text-xl leading-relaxed">
             Explore the range of work done by The Ikigai Project
             <span className="block text-xs md:text-sm text-white/60 mt-2">Press “/” to search or use arrow keys to navigate</span>
@@ -619,56 +619,124 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8"
         >
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project) => (
-              <motion.div
-                layout
-                key={project.id}
-                variants={itemAnimation}
-                className="relative group cursor-pointer rounded-2xl overflow-hidden h-72 sm:h-80 border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
-                onClick={() => openProject(project)}
-                whileHover={cardHoverAnimation}
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.85 }}
-                transition={{ duration: 0.35 }}
-                aria-label={`Open ${project.title}`}
-              >
-                {!imageError[project.id] ? (
-                  <img
-                    src={project.thumbnailUrl}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    onError={() => handleImageError(project.id)}
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-black/40 flex items-center justify-center">
-                    <span className="text-white/60 text-sm font-medium">Image unavailable</span>
-                  </div>
-                )}
+  {filteredProjects.map((project) => (
+    <motion.div
+      layout
+      key={project.id}
+      variants={itemAnimation}
+      className="relative group cursor-pointer rounded-2xl overflow-hidden h-72 sm:h-80 border border-white/15 bg-white/5 backdrop-blur-sm shadow-[0_20px_80px_rgba(0,0,0,0.35)]"
+      onClick={() => openProject(project)}
+      whileHover={cardHoverAnimation}
+      initial={{ opacity: 0, scale: 0.85 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.85 }}
+      transition={{ duration: 0.35 }}
+      aria-label={`Open ${project.title}`}
+    >
+      {!imageError[project.id] ? (
+        <img
+          src={project.thumbnailUrl}
+          alt={project.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          onError={() => handleImageError(project.id)}
+          loading="lazy"
+        />
+      ) : (
+        <div className="w-full h-full bg-black/40 flex items-center justify-center">
+          <span className="text-white/60 text-sm font-medium">Image unavailable</span>
+        </div>
+      )}
 
-                {/* Overlay visible by default on mobile */}
-                <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                  <h3 className="pointer-events-none text-lg sm:text-xl font-semibold text-white mb-1 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-2 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
-                    {project.title}
-                  </h3>
-                  <p className="pointer-events-none text-white/80 text-xs uppercase tracking-[0.2em] mb-3 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-3 sm:delay-75 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
-                    {project.category}
-                  </p>
-                  <div className="pointer-events-none flex items-center gap-3 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-3 sm:delay-150 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
-                    <div className="w-12 h-12 rounded bg-white flex items-center justify-center shadow">
-                      <Play className="text-black ml-1" size={16} />
-                    </div>
-                    <span className="text-white text-sm font-medium">View Project</span>
-                  </div>
-                </div>
+      {/* Overlay visible by default on mobile */}
+      <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+        <h3 className="pointer-events-none text-lg sm:text-xl font-semibold text-white mb-1 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-2 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
+          {project.title}
+        </h3>
+        <p className="pointer-events-none text-white/80 text-xs uppercase tracking-[0.2em] mb-3 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-3 sm:delay-75 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
+          {project.category}
+        </p>
+        <div className="pointer-events-none flex items-center gap-3 opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-3 sm:delay-150 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300">
+          <div className="w-12 h-12 rounded bg-white flex items-center justify-center shadow">
+            <Play className="text-black ml-1" size={16} />
+          </div>
+          <span className="text-white text-sm font-medium">View Project</span>
+        </div>
+      </div>
 
-                <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full text-[11px] uppercase tracking-widest font-semibold text-white/80 border border-white/20 bg-white/10">
-                  {project.category}
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+      <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full text-[11px] uppercase tracking-widest font-semibold text-white/80 border border-white/20 bg-white/10">
+        {project.category}
+      </div>
+    </motion.div>
+  ))}
+
+  {/* ✅ NEW CTA CARD */}
+  <motion.button
+    layout
+    key="custom-alignment-cta"
+    variants={itemAnimation}
+    type="button"
+    onClick={() => (window.location.href = '/Services')}
+    whileHover={cardHoverAnimation}
+    whileTap={{ scale: 0.98 }}
+    className={[
+      'relative group rounded-2xl overflow-hidden h-72 sm:h-80 text-left',
+      'border border-white/15 bg-white/5 backdrop-blur-sm',
+      // base shadow + subtle glow
+      'shadow-[0_20px_80px_rgba(0,0,0,0.35)]',
+      'hover:shadow-[0_25px_100px_rgba(0,0,0,0.45)]',
+      'transition-shadow duration-300',
+      'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30',
+    ].join(' ')}
+    aria-label="Build custom Alignment"
+  >
+    {/* glow wash */}
+    <div
+      aria-hidden
+      className="absolute inset-0"
+      style={{
+        background:
+          'radial-gradient(80% 60% at 20% 20%, rgba(0,51,255,0.18), transparent 60%), radial-gradient(80% 60% at 80% 20%, rgba(108,0,255,0.18), transparent 60%), linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))',
+      }}
+    />
+
+    {/* extra “edge glow” that ramps on hover */}
+    <div
+      aria-hidden
+      className="absolute -inset-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      style={{
+        background:
+          'radial-gradient(60% 40% at 50% 40%, rgba(108,0,255,0.25), transparent 70%)',
+      }}
+    />
+
+    <div className="relative z-10 h-full p-6 flex flex-col justify-between">
+      <div>
+        <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] uppercase tracking-widest font-semibold text-white/80">
+          Custom
+        </div>
+
+        <h3 className="mt-4 font-[Space_Grotesk] uppercase tracking-widest text-2xl sm:text-3xl text-white">
+          Build custom Alignment
+        </h3>
+
+        <p className="mt-3 text-white/75 text-sm leading-relaxed max-w-[28ch]">
+          Not seeing your exact vision here? We’ll architect a custom build tailored to your brand, systems, and growth.
+        </p>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <span className="text-white/85 text-sm font-medium">
+          Start a build
+        </span>
+
+        <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl border border-white/20 bg-white/10 text-white group-hover:bg-white group-hover:text-black transition-colors">
+          <ArrowRight size={18} />
+        </div>
+      </div>
+    </div>
+  </motion.button>
+</AnimatePresence>
+
         </motion.div>
 
         {/* empty state */}
