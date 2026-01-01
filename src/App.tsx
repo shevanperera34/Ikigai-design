@@ -14,6 +14,7 @@ import Privacy from "./sections/Privacy";
 import DataUse from "./sections/DataUse";
 import Security from "./sections/Security";
 import Footer from "./components/Footer";
+import PayQuote from "./sections/PayQuotes"
 //test
 
 export default function App() {
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/data-use" element={<DataUse />} />
           <Route path="/security" element={<Security />} />
+          <Route path="/pay" element={<PayQuote />} />
         </Routes>
       </div>
 

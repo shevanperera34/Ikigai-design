@@ -79,9 +79,7 @@ export function Hero() {
 
           {/* Secondary style: same component, just tweak className */}
           <a
-            href="https://calendly.com/theikigaiproject-ca/30min"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/pay"
             className="inline-flex"
           >
             <ShinyButton
