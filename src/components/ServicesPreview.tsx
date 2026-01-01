@@ -125,10 +125,22 @@ export default function ServicesPreview() {
       </header>
 
       <div className="max-w-6xl mx-auto px-6 md:px-10 pt-10 md:pt-14">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-stretch
+             touch-pan-y overscroll-y-contain"style={{
+    WebkitOverflowScrolling: "touch",
+    touchAction: "pan-y",
+  }}>
           {BUNDLES.map((b) => (
-            <GlowCard key={b.key} customSize className="w-full h-full min-h-[440px]" glowHex={glowHexByKey[b.key]}>
-              <div className="relative p-6 md:p-7 h-full flex flex-col">
+            <GlowCard
+  key={b.key}
+  customSize
+  glowHex={glowHexByKey[b.key]}
+  className="w-full h-full min-h-[440px] touch-pan-y overscroll-y-contain"
+>
+              <div
+  className="relative p-6 md:p-7 h-full flex flex-col touch-pan-y"
+  style={{ touchAction: "pan-y" }}
+>
                 <div>
                   <h5 className="text-xl md:text-2xl font-semibold mb-1.5 font-[Space_Grotesk] uppercase tracking-widest">
                     {b.title}

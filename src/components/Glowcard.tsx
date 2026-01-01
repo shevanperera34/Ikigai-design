@@ -113,7 +113,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
 
       border: '1px solid var(--backup-border)',
       position: 'relative',
-      touchAction: 'none',
+      touchAction: 'pan-y',
       overflow: 'hidden',
     }
 

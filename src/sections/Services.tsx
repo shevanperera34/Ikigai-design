@@ -448,7 +448,7 @@ export default function Services() {
                     style={{
                       fontFamily: "Space Grotesk",
                       fontSize: 26,
-                      letterSpacing: "0.08em",
+                      letterSpacing:  "0.08em",
                       textTransform: "uppercase",
                       fontWeight: 1500,
                     }}
