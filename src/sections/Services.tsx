@@ -447,10 +447,10 @@ export default function Services() {
                     filter={showCustom ? "url(#textGlow)" : undefined}
                     style={{
                       fontFamily: "Space Grotesk",
-                      fontSize: 22,
+                      fontSize: 26,
                       letterSpacing: "0.08em",
                       textTransform: "uppercase",
-                      fontWeight: 700,
+                      fontWeight: 1500,
                     }}
                   >
                     <tspan x="500" dy="10">
