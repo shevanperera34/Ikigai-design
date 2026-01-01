@@ -1,7 +1,7 @@
 // src/sections/Services-GetQuote.tsx
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { api } from "../lib/api";
+import { api, ApiError } from "../lib/api";
 
 type BundleTag = "brand" | "web" | "growth";
 
@@ -16,22 +16,22 @@ interface ServiceItem {
 
 const CATALOG: ServiceItem[] = [
   // Brand
-  { id: "logo", name: "Logo & Identity", bundle: "brand", desc: "Primary logo, marks, colors, typography.", basePrice: 900 },
-  { id: "voice", name: "Voice & Messaging Guide", bundle: "brand", desc: "Tone, taglines, brand statements.", basePrice: 600 },
-  { id: "copy", name: "Landing Copy", bundle: "brand", desc: "Hero, offer, proof, CTA copy.", basePrice: 450, addon: true },
+  { id: "logo", name: "Logo & Identity", bundle: "brand", desc: "Primary logo, marks, colors, typography.", basePrice: 200 },
+  { id: "voice", name: "Voice & Messaging Guide", bundle: "brand", desc: "Tone, taglines, brand statements.", basePrice: 150 },
+  { id: "copy", name: "Landing Copy", bundle: "brand", desc: "Hero, offer, proof, CTA copy.", basePrice: 250, addon: true },
 
   // Web
-  { id: "site1", name: "1-Page Website", bundle: "web", desc: "High-performance single page + form.", basePrice: 1200 },
-  { id: "site5", name: "3-5 Page Website", bundle: "web", desc: "Multi-page site with routing.", basePrice: 2600 },
-  { id: "crm", name: "Booking/CRM Setup", bundle: "web", desc: "Forms → CRM → notifications.", basePrice: 600, addon: true },
-  { id: "seo", name: "Speed & SEO Pass", bundle: "web", desc: "Performance, meta, basic schema.", basePrice: 400, addon: true },
-  { id: "three", name: "3D Component Hook", bundle: "web", desc: "Embed 3D viewer / model.", basePrice: 750, addon: true },
+  { id: "site1", name: "1-Page Website", bundle: "web", desc: "High-performance single page + form.", basePrice: 499 },
+  { id: "site5", name: "3-5 Page website", bundle: "web", desc: "Add 3-5 website pages", basePrice: 499, addon: true },
+  { id: "crm", name: "Booking/CRM Setup", bundle: "web", desc: "Forms → CRM → notifications.", basePrice: 200, addon: true },
+  { id: "seo", name: "Speed & SEO Pass", bundle: "web", desc: "Performance, meta, basic schema.", basePrice: 200, addon: true },
+  { id: "three", name: "3D Component Hook", bundle: "web", desc: "Embed 3D viewer / model.", basePrice: 250, addon: true },
 
   // Growth
-  { id: "adssetup", name: "Ad Account + Pixel Setup", bundle: "growth", desc: "Meta/Google accounts, events.", basePrice: 350 },
-  { id: "ugc", name: "UGC Ad Creative Pack (3)", bundle: "growth", desc: "Three short videos, captions.", basePrice: 800, addon: true },
-  { id: "retarget", name: "Retargeting Setup", bundle: "growth", desc: "Audiences + placements.", basePrice: 450, addon: true },
-  { id: "email", name: "Email/SMS Welcome Flow", bundle: "growth", desc: "Welcome + abandon cart/booking.", basePrice: 700 },
+  { id: "adssetup", name: "Ad Account + Pixel Setup", bundle: "growth", desc: "Meta/Google accounts, events.", basePrice: 250 },
+  { id: "ugc", name: "UGC Ad Creative Pack (3)", bundle: "growth", desc: "Three short videos, captions.", basePrice: 399, addon: true },
+  { id: "retarget", name: "Retargeting Setup", bundle: "growth", desc: "Audiences + placements.", basePrice: 150, addon: true },
+  { id: "email", name: "Email/SMS Welcome Flow", bundle: "growth", desc: "Welcome + abandon cart/booking.", basePrice: 299 },
 ];
 
 function currency(n: number) {
@@ -61,6 +61,10 @@ function toCents(amountCAD: number) {
   return Math.round(amountCAD * 100);
 }
 
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n));
+}
+
 export default function IkigaiQuoteFlowMockup() {
   const location = useLocation();
   const bundlesFromState = (location.state as { bundles?: BundleTag[] } | null)?.bundles ?? [];
@@ -77,6 +81,15 @@ export default function IkigaiQuoteFlowMockup() {
   });
   const [quoteId, setQuoteId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // ✅ manual discount code UI state
+  const [discountCode, setDiscountCode] = useState("");
+  const [discountApplying, setDiscountApplying] = useState(false);
+  const [discountError, setDiscountError] = useState<string | null>(null);
+  const [discountApplied, setDiscountApplied] = useState<{
+    code: string;
+    discount_percentage: number; // e.g. 10 for 10%
+  } | null>(null);
 
   // Optional: quick health check in console so you know env is correct
   useEffect(() => {
@@ -102,22 +115,43 @@ export default function IkigaiQuoteFlowMockup() {
     [selectedItems]
   );
 
+  /**
+   * ✅ pricing with:
+   * - bundle discount (auto)
+   * - manual discount code (stacks on top)
+   *
+   * IMPORTANT: apply discounts BEFORE tax; keep complexity fee as an add-on.
+   */
   const breakdown = useMemo(() => {
     const subtotal = selectedItems.reduce((s, i) => s + i.basePrice, 0);
-    let discount = 0;
-    let complexityFee = 0;
 
+    // --- compute auto bundle discount ---
     const counts: Record<BundleTag, number> = { brand: 0, web: 0, growth: 0 };
     selectedItems.forEach((i) => {
       counts[i.bundle]++;
     });
 
+    let bundleDiscount = 0;
     // pack discount (>=3 in any bundle)
-    if (Object.values(counts).some((c) => c >= 3)) discount += subtotal * 0.05;
-    // complexity fee (2+ bundles)
-    if (bundlesUsed.length >= 2) complexityFee += subtotal * 0.10;
+    if (Object.values(counts).some((c) => c >= 3)) {
+      bundleDiscount += subtotal * 0.05;
+    }
 
-    const adjusted = Math.max(0, subtotal - discount + complexityFee);
+    // --- compute complexity fee ---
+    let complexityFee = 0;
+    if (bundlesUsed.length >= 2) {
+      complexityFee += subtotal * 0.10;
+    }
+
+    // base before manual code
+    const preManual = Math.max(0, subtotal - bundleDiscount + complexityFee);
+
+    // --- compute manual code discount (stacks on top) ---
+    const pct = discountApplied?.discount_percentage ?? 0;
+    const pctClamped = clamp(pct, 0, 100);
+    const codeDiscount = preManual * (pctClamped / 100);
+
+    const adjusted = Math.max(0, preManual - codeDiscount);
     const tax = adjusted * 0.13;
     const total = adjusted + tax;
 
@@ -127,8 +161,20 @@ export default function IkigaiQuoteFlowMockup() {
     const baseWeeks = Math.ceil(selectedItems.length / 2) || 1;
     const etaWeeks = Math.min(12, baseWeeks + (bundlesUsed.length - 1));
 
-    return { subtotal, discount, complexityFee, adjusted, tax, total, tier, etaWeeks };
-  }, [selectedItems, bundlesUsed]);
+    return {
+      subtotal,
+      bundleDiscount,
+      complexityFee,
+      manualDiscount: codeDiscount,
+      adjusted,
+      tax,
+      total,
+      tier,
+      etaWeeks,
+      manualPct: pctClamped,
+      manualCode: discountApplied?.code ?? null,
+    };
+  }, [selectedItems, bundlesUsed, discountApplied]);
 
   function toggle(id: string) {
     setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -137,6 +183,9 @@ export default function IkigaiQuoteFlowMockup() {
   function allClear() {
     setSelected({});
     setQuoteId(null);
+    setDiscountCode("");
+    setDiscountApplied(null);
+    setDiscountError(null);
   }
 
   const calendlyUrl = useMemo(() => {
@@ -148,6 +197,44 @@ export default function IkigaiQuoteFlowMockup() {
     }).toString();
     return `${base}?${params}`;
   }, [quoteId, breakdown.total, breakdown.tier]);
+
+  async function applyDiscountCode() {
+    const code = discountCode.trim().toUpperCase();
+    setDiscountError(null);
+
+    if (!code) {
+      setDiscountApplied(null);
+      return;
+    }
+
+    setDiscountApplying(true);
+    try {
+      const res = await api.validateDiscount(code);
+
+      if (!("ok" in res) || res.ok !== true) {
+        setDiscountApplied(null);
+        setDiscountError("Invalid discount code.");
+        return;
+      }
+
+      setDiscountApplied({
+        code: res.code,
+        discount_percentage: res.discount_percentage,
+      });
+    } catch (e: any) {
+      setDiscountApplied(null);
+
+      // ApiError from api.ts includes status
+      const status = e instanceof ApiError ? e.status : undefined;
+      const msg = String(e?.message || "");
+
+      if (status === 404) setDiscountError("Invalid discount code.");
+      else if (status === 409) setDiscountError("This code is not active.");
+      else setDiscountError(msg || "Could not validate code.");
+    } finally {
+      setDiscountApplying(false);
+    }
+  }
 
   async function postQuoteToDb(id: string) {
     const dbPayload = {
@@ -165,16 +252,23 @@ export default function IkigaiQuoteFlowMockup() {
         desc: i.desc,
         addon: !!i.addon,
       })),
+
       subtotal_cents: toCents(breakdown.subtotal),
       complexity_fee_cents: toCents(breakdown.complexityFee),
       tax_cents: toCents(breakdown.tax),
       total_cents: toCents(breakdown.total),
+
       tier: breakdown.tier,
       eta_weeks: breakdown.etaWeeks,
       calendly_url: calendlyUrl,
+
+      // ✅ NEW: discount fields (save snapshots for audit/history)
+      bundle_discount_cents: toCents(breakdown.bundleDiscount),
+      discount_code: breakdown.manualCode,
+      discount_code_percentage: discountApplied?.discount_percentage ?? null,
+      discount_code_cents: toCents(breakdown.manualDiscount),
     };
 
-    // uses api.ts (base url + errors centralized)
     return api.createQuote(dbPayload);
   }
 
@@ -211,14 +305,23 @@ export default function IkigaiQuoteFlowMockup() {
         tier: breakdown.tier,
         eta_weeks: breakdown.etaWeeks,
         bundles: bundlesUsed,
+
+        // show services
         items: selectedItems.map((i) => ({
           name: i.name,
           bundle: i.bundle,
           desc: i.desc,
           amount: currency(i.basePrice),
         })),
+
+        // show price components
         subtotal: currency(breakdown.subtotal),
+        bundle_discount: breakdown.bundleDiscount > 0 ? `-${currency(breakdown.bundleDiscount)}` : "",
         complexity_fee: currency(breakdown.complexityFee),
+        manual_discount:
+          breakdown.manualDiscount > 0 && breakdown.manualCode
+            ? `-${currency(breakdown.manualDiscount)} (${breakdown.manualCode})`
+            : "",
         adjusted: currency(breakdown.adjusted),
         tax: currency(breakdown.tax),
         total: currency(breakdown.total),
@@ -352,23 +455,74 @@ export default function IkigaiQuoteFlowMockup() {
                 </ul>
               )}
 
+              {/* ✅ discount code input */}
+              <div className="mt-4">
+                <div className="flex gap-2">
+                  <input
+                    className="flex-1 rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm placeholder-white/60 focus:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
+                    placeholder="Discount code"
+                    value={discountCode}
+                    onChange={(e) => {
+                      setDiscountCode(e.target.value);
+                      setDiscountError(null);
+                      // If user edits code after applying, clear applied state so totals don’t lie
+                      setDiscountApplied(null);
+                    }}
+                    autoComplete="off"
+                    spellCheck={false}
+                  />
+                  <button
+                    type="button"
+                    className="rounded-lg border border-white/20 px-3 py-2 text-sm text-white/90 hover:border-white/40 transition disabled:opacity-50"
+                    onClick={applyDiscountCode}
+                    disabled={discountApplying || !discountCode.trim()}
+                  >
+                    {discountApplying ? "Checking…" : "Apply"}
+                  </button>
+                </div>
+
+                {discountApplied && (
+                  <div className="mt-2 text-xs text-emerald-300/90">
+                    Applied <span className="font-mono">{discountApplied.code}</span> — {discountApplied.discount_percentage}% off
+                  </div>
+                )}
+
+                {discountError && (
+                  <div className="mt-2 text-xs text-red-400">
+                    {discountError}
+                  </div>
+                )}
+              </div>
+
               <div className="mt-4 space-y-1 text-sm">
                 <div className="flex justify-between text-white/80">
                   <span>Subtotal</span>
                   <span>{currency(breakdown.subtotal)}</span>
                 </div>
-                {breakdown.discount > 0 && (
+
+                {breakdown.bundleDiscount > 0 && (
                   <div className="flex justify-between text-emerald-300/90">
-                    <span>Pack discount</span>
-                    <span>-{currency(breakdown.discount)}</span>
+                    <span>Bundle discount</span>
+                    <span>-{currency(breakdown.bundleDiscount)}</span>
                   </div>
                 )}
+
                 {breakdown.complexityFee > 0 && (
                   <div className="flex justify-between text-purple-300/90">
                     <span>Complexity fee</span>
                     <span>+{currency(breakdown.complexityFee)}</span>
                   </div>
                 )}
+
+                {breakdown.manualDiscount > 0 && breakdown.manualCode && (
+                  <div className="flex justify-between text-emerald-300/90">
+                    <span>
+                      Code discount <span className="font-mono text-white/70">({breakdown.manualCode})</span>
+                    </span>
+                    <span>-{currency(breakdown.manualDiscount)}</span>
+                  </div>
+                )}
+
                 <div className="flex justify-between text-white/80">
                   <span>Adjusted</span>
                   <span>{currency(breakdown.adjusted)}</span>

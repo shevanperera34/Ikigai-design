@@ -8,16 +8,25 @@ const RAW_BASE =
 // Normalize (remove trailing slash)
 const API_BASE = RAW_BASE.replace(/\/+$/, "");
 
-type ApiErrorShape =
-  | { detail?: any; message?: string; error?: string }
-  | any;
+type ApiErrorShape = { detail?: any; message?: string; error?: string } | any;
+
+/**
+ * Enhanced error so callers can read err.status (super useful for 404/409 etc).
+ */
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
 
 async function parseError(res: Response): Promise<string> {
   const contentType = res.headers.get("content-type") || "";
   try {
     if (contentType.includes("application/json")) {
       const data: ApiErrorShape = await res.json();
-      // FastAPI typically returns { detail: ... }
       if (typeof data?.detail === "string") return data.detail;
       if (Array.isArray(data?.detail)) return JSON.stringify(data.detail);
       return data?.message || data?.error || `Request failed (${res.status})`;
@@ -40,10 +49,10 @@ async function requestJSON<T>(path: string, options: RequestInit = {}): Promise<
   });
 
   if (!res.ok) {
-    throw new Error(await parseError(res));
+    const msg = await parseError(res);
+    throw new ApiError(msg, res.status);
   }
 
-  // Handle empty responses
   const text = await res.text();
   return text ? (JSON.parse(text) as T) : ({} as T);
 }
@@ -58,7 +67,8 @@ async function requestBlob(path: string, options: RequestInit = {}): Promise<Blo
   });
 
   if (!res.ok) {
-    throw new Error(await parseError(res));
+    const msg = await parseError(res);
+    throw new ApiError(msg, res.status);
   }
 
   return await res.blob();
@@ -81,6 +91,12 @@ export type IntakeQuotePayload = {
   tier?: string | null;
   eta_weeks?: number | null;
   calendly_url?: string | null;
+
+  // ✅ NEW: discounts (stored in DB)
+  bundle_discount_cents?: number;            // auto bundle discount amount in cents
+  discount_code?: string | null;             // manual code applied (if any)
+  discount_code_percentage?: number | null;  // snapshot at time of quote (10 for 10%)
+  discount_code_cents?: number;              // computed discount amount in cents
 };
 
 export type ContactPayload = {
@@ -95,9 +111,16 @@ export type ContactPayload = {
   message: string;
 };
 
+export type ValidateDiscountResponse =
+  | { ok: true; code: string; discount_percentage: number }
+  | { ok: false; reason?: string };
+
+/* -------------------- API -------------------- */
+
 export const api = {
-  // basic
   baseUrl: API_BASE,
+
+  // basic
   health: () => requestJSON<{ ok: boolean }>("/health"),
   whoami: () => requestJSON<{ ok: boolean; service: string; cors: string }>("/whoami"),
 
@@ -117,6 +140,13 @@ export const api = {
     }),
 
   listContacts: (limit = 50) => requestJSON<any[]>(`/api/contact?limit=${limit}`),
+
+  // ✅ NEW: validate discount code (your endpoint you tested)
+  validateDiscount: (code: string) =>
+    requestJSON<ValidateDiscountResponse>("/api/discounts/validate", {
+      method: "POST",
+      body: JSON.stringify({ code }),
+    }),
 
   // PDF endpoints (blob)
   quotePdf: (payload: any) =>
