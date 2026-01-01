@@ -4,6 +4,8 @@ import { LogoCanvas } from "../components/LogoCanvas"
 import Aurora from "../components/Aurora"
 import { Link } from "react-router-dom"
 import { ShinyButton } from "../components/shiny-button"
+import FirstClientPopup from "../components/FirstClientPopup"
+
 
 export function Hero() {
   return (
@@ -11,6 +13,7 @@ export function Hero() {
       id="home-hero"
       className="relative min-h-[92vh] flex items-center justify-center overflow-hidden font-[Inter] text-white"
     >
+      <FirstClientPopup />
       {/* Brand base + cinematic gradients */}
       <div className="absolute inset-0 -z-20">
         <div className="absolute inset-0 bg-black" />
