@@ -93,7 +93,7 @@ export default function FirstClientPopup({ storageKey = "ikigai_first_popup_clos
           </div>
 
           <div className="mt-4 text-xs text-white/50">
-            reopen website to reaccess this offer.
+            Discount code provided after meeting
           </div>
         </div>
       </div>
