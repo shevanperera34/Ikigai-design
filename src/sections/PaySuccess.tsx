@@ -159,11 +159,11 @@ export default function PaySuccess() {
               <div className="pt-4">
                 {q.paid ? (
                   <div className="text-sm text-green-500 text-center">
-                    ✅ Status: Paid
+                     Status: Paid
                   </div>
                 ) : (
                   <div className="text-sm text-yellow-500 text-center">
-                    ⏳ Payment received — confirming… (this can take a few seconds)
+                     Payment received — confirming… (this can take a few seconds)
                   </div>
                 )}
               </div>
