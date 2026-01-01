@@ -29,7 +29,7 @@ export default function FirstClientPopup({ storageKey = "ikigai_first_popup_clos
 
   const goExplore = () => {
     close()
-    navigate("/work")
+    navigate("/")
   }
 
   if (!open) return null
