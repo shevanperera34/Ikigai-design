@@ -15,6 +15,7 @@ import DataUse from "./sections/DataUse";
 import Security from "./sections/Security";
 import Footer from "./components/Footer";
 import PayQuote from "./sections/PayQuotes"
+import PaySuccess from "./sections/PaySuccess";
 //test
 
 export default function App() {
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/data-use" element={<DataUse />} />
           <Route path="/security" element={<Security />} />
           <Route path="/pay" element={<PayQuote />} />
+          <Route path="/pay/success" element={<PaySuccess />} />
         </Routes>
       </div>
 
