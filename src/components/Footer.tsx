@@ -153,7 +153,7 @@ export default function Footer() {
 
                 {/* X */}
                 <a
-                  href="https://x.com/ikigai_the9489"
+                  href="https://x.com/_ikigaiproject"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={chipBase}
