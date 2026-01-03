@@ -2,6 +2,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { api, ApiError } from "../lib/api";
+import { track } from "../lib/plausible";
+
 
 type BundleTag = "brand" | "web" | "growth";
 
@@ -97,6 +99,11 @@ export default function IkigaiQuoteFlowMockup() {
       .then((r) => console.log("✅ API health:", r))
       .catch((e) => console.error("❌ API health failed:", e));
   }, []);
+
+  useEffect(() => {
+  track("ViewContent", { page: "alignment_builder" })
+}, [])
+
 
   // Pre-select NON-add-on items for incoming bundles
   useEffect(() => {
