@@ -19,21 +19,21 @@ const BUNDLES: Bundle[] = [
     title: "Brand Systems Build",
     tagline: "Define who you are.Then make it unmistakable",
     includes: ["Logo & identity", "Brand messaging", "Copy systems", "Creative direction"],
-    price: "From $1,500",
+    price: "From $600",
   },
   {
     key: "web",
     title: "Intelligent Web Infrastructure",
     tagline: "Turn strategy into systems that actually perform",
     includes: ["Web design", "Automation setup", "3D integration", "Performance tracking"],
-    price: "From $2,000",
+    price: "From $999",
   },
   {
     key: "growth",
     title: "Growth Architecture",
     tagline: "Scale intentionally, without losing control",
     includes: ["Paid media setup", "Campaign management", "Content funnels", "Analytics & reporting"],
-    price: "From $1,200",
+    price: "From $949",
   },
 ]
 
