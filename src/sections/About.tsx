@@ -1,6 +1,7 @@
 // src/sections/About.tsx
 import React, { useEffect, useMemo, useState } from 'react'
 import Particles from '../components/Particles'
+import SEOText from "../components/SEOText";
 
 // team images (same assets used on /team)
 import sladeIntro from '../assets/slade_pic_intro_1.jpeg'
@@ -344,6 +345,7 @@ export default function About() {
               description="A human-first digital studio building brand systems, intelligent websites, and growth architecture for companies that want clarity, speed, and real results."
               path="/"
             />
+        <SEOText page="about" />
       {/* --- Hue background (match Services) --- */}
       <div className="pointer-events-none absolute inset-0 -z-30">
         <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0b1220 0%, #070a14 40%, #05070d 100%)' }} />

@@ -14,6 +14,7 @@ import kind from '../assets/Kindrage_Thumbnail.png'
 import flame from '../assets/flameReveal.gif'
 
 import SEO from "../components/SEO";
+import SEOText from "../components/SEOText";
 
 type Project = {
   id: number
@@ -522,6 +523,7 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
         description="A human-first digital studio building brand systems, intelligent websites, and growth architecture for companies that want clarity, speed, and real results."
         path="/"
       />
+      <SEOText page="work" />
       {/* Services-style global brand glow layer (this is the hue match) */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />

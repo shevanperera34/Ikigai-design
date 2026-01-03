@@ -4,6 +4,7 @@ import Aurora from "../components/Aurora"
 import { api } from "../lib/api"
 
 import SEO from "../components/SEO";
+import SEOText from "../components/SEOText";
 
 type Purpose = "call" | "quote" | "question"
 type ProjectType = "Brand" | "Web" | "Growth"
@@ -173,6 +174,8 @@ export default function Contact() {
         description="A human-first digital studio building brand systems, intelligent websites, and growth architecture for companies that want clarity, speed, and real results."
         path="/"
       />
+      <SEOText page="contact" />
+
       {/* Brand gradient layers */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />

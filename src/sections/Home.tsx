@@ -7,6 +7,7 @@ import ServicesPreview from "../components/ServicesPreview";
 import WorkPreview from "../components/WorkPreview";
 import ContactPreview from "../components/ContactPreview";
 import SEO from "../components/SEO";
+import SEOText from "../components/SEOText";
 
 /* =====================
    TYPES
@@ -230,6 +231,7 @@ export default function Home() {
         description="A human-first digital studio building brand systems, intelligent websites, and growth architecture for companies that want clarity, speed, and real results."
         path="/"
       />
+       <SEOText page="home" />
       <Hero />
 
       <section id="services" className="mt-32">
