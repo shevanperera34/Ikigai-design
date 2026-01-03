@@ -1,4 +1,10 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
-}
+  "routes": [
+    { "src": "/js/script.js", "dest": "https://plausible.io/js/script.js" },
+    { "src": "/api/event", "dest": "https://plausible.io/api/event" },
 
+    { "handle": "filesystem" },
+
+    { "src": "/(.*)", "dest": "/" }
+  ]
+}
