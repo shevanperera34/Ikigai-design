@@ -32,8 +32,8 @@ const TEAM: TeamMember[] = [
     bio:
       'Creative lead focused on brand systems, campaigns, and content that converts. Blends design thinking with strategy to make ideas land.',
     instagram: 'https://www.instagram.com/sh3van.n',
-    linkedin: '#',
-    x: '#',
+    x: 'https://x.com/PereraShevan',
+    linkedin: 'https://www.linkedin.com/in/shevan-p-b62922242/',
   },
   {
     key: 'Seni',
@@ -44,8 +44,8 @@ const TEAM: TeamMember[] = [
     bio:
       'Systems & infrastructure. Builds the backbone—automation, security, and performance—so products ship fast and scale cleanly.',
     instagram: 'https://www.instagram.com/seniii.r',
-    linkedin: '#',
-    x: '#',
+    x: 'https://x.com/seniii_r',
+    linkedin: 'https://www.linkedin.com/in/seni/',
   },
   {
     key: 'Slade',
@@ -56,8 +56,8 @@ const TEAM: TeamMember[] = [
     bio:
       'Frontline for client growth. Outreach, enablement, and operations—turning conversations into long-term partnerships and results.',
     instagram: 'https://www.instagram.com/slxde.xx',
-    linkedin: '#',
-    x: '#',
+    x: 'https://x.com/yourhandle',
+    linkedin: 'https://www.linkedin.com/in/afolabi-akinlolu-bb461735a/',
   },
 ]
 
@@ -103,15 +103,16 @@ const LinkedInIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 )
 
-const InstagramIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-    <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003Zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.282.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.231 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.843-.038 1.096-.047 3.232-.047h.001Zm4.905 1.882a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4ZM8 4.465a3.535 3.535 0 1 0 0 7.07 3.535 3.535 0 0 0 0-7.07ZM8 5.535a2.465 2.465 0 1 1 0 4.93 2.465 2.465 0 0 1 0-4.93Z" />
+const XIcon = ({ size = 16 }: { size?: number }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+    <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.31l5.74-6.57L0 .75h5.063l3.495 4.633L12.6.75ZM11.47 13.5h1.146L4.74 2.15H3.522l7.95 11.35Z" />
   </svg>
 )
 
-const XIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-    <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.31l5.74-6.57L0 .75h5.063l3.495 4.633L12.6.75ZM11.47 13.5h1.146L4.74 2.15H3.522l7.95 11.35Z" />
+// ✅ your big Instagram SVG, cleaned to use currentColor
+const InstagramIcon = ({ size = 16 }: { size?: number }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+    <path d="M127.999746,23.06353 C162.177385,23.06353 166.225393,23.1936027 179.722476,23.8094161 C192.20235,24.3789926 198.979853,26.4642218 203.490736,28.2166477 C209.464938,30.5386501 213.729395,33.3128586 218.208268,37.7917319 C222.687141,42.2706052 225.46135,46.5350617 227.782844,52.5092638 C229.535778,57.0201472 231.621007,63.7976504 232.190584,76.277016 C232.806397,89.7746075 232.93647,93.8226147 232.93647,128.000254 C232.93647,162.177893 232.806397,166.225901 232.190584,179.722984 C231.621007,192.202858 229.535778,198.980361 227.782844,203.491244 C225.46135,209.465446 222.687141,213.729903 218.208268,218.208776 C213.729395,222.687649 209.464938,225.461858 203.490736,227.783352 C198.979853,229.536286 192.20235,231.621516 179.722476,232.191092 C166.227425,232.806905 162.179418,232.936978 127.999746,232.936978 C93.8200742,232.936978 89.772067,232.806905 76.277016,232.191092 C63.7971424,231.621516 57.0196391,229.536286 52.5092638,227.783352 C46.5345536,225.461858 42.2700971,222.687649 37.7912238,218.208776 C33.3123505,213.729903 30.538142,209.465446 28.2166477,203.491244 C26.4637138,198.980361 24.3784845,192.202858 23.808908,179.723492 C23.1930946,166.225901 23.0630219,162.177893 23.0630219,128.000254 C23.0630219,93.8226147 23.1930946,89.7746075 23.808908,76.2775241 C24.3784845,63.7976504 26.4637138,57.0201472 28.2166477,52.5092638 C30.538142,46.5350617 33.3123505,42.2706052 37.7912238,37.7917319 C42.2700971,33.3128586 46.5345536,30.5386501 52.5092638,28.2166477 C57.0196391,26.4642218 63.7971424,24.3789926 76.2765079,23.8094161 C89.7740994,23.1936027 93.8221066,23.06353 127.999746,23.06353 M127.999746,0 C93.2367791,0 88.8783247,0.147348072 75.2257637,0.770274749 C61.601148,1.39218523 52.2968794,3.55566141 44.1546281,6.72008828 C35.7374966,9.99121548 28.5992446,14.3679613 21.4833489,21.483857 C14.3674532,28.5997527 9.99070739,35.7380046 6.71958019,44.1551362 C3.55515331,52.2973875 1.39167714,61.6016561 0.769766653,75.2262718 C0.146839975,88.8783247 0,93.2372872 0,128.000254 C0,162.763221 0.146839975,167.122183 0.769766653,180.774236 C1.39167714,194.398852 3.55515331,203.703121 6.71958019,211.845372 C9.99070739,220.261995 14.3674532,227.400755 21.4833489,234.516651 C28.5992446,241.632547 35.7374966,246.009293 44.1546281,249.28042 C52.2968794,252.444847 61.601148,254.608323 75.2257637,255.230233 C88.8783247,255.85316 93.2367791,256 127.999746,256 C162.762713,256 167.121675,255.85316 180.773728,255.230233 C194.398344,254.608323 203.702613,252.444847 211.844864,249.28042 C220.261995,246.009293 227.400247,241.632547 234.516143,234.516651 C241.632039,227.400755 246.008785,220.262503 249.279912,211.845372 C252.444339,203.703121 254.607815,194.398852 255.229725,180.774236 C255.852652,167.122183 256,162.763221 256,128.000254 C256,93.2372872 255.852652,88.8783247 255.229725,75.2262718 C254.607815,61.6016561 252.444339,52.2973875 249.279912,44.1551362 C246.008785,35.7380046 241.632039,28.5997527 234.516143,21.483857 C227.400247,14.3679613 220.261995,9.99121548 211.844864,6.72008828 C203.702613,3.55566141 194.398344,1.39218523 180.773728,0.770274749 C167.121675,0.147348072 162.762713,0 127.999746,0 Z M127.999746,62.2703115 C91.698262,62.2703115 62.2698034,91.69877 62.2698034,128.000254 C62.2698034,164.301738 91.698262,193.730197 127.999746,193.730197 C164.30123,193.730197 193.729689,164.301738 193.729689,128.000254 C193.729689,91.69877 164.30123,62.2703115 127.999746,62.2703115 Z M127.999746,170.667175 C104.435741,170.667175 85.3328252,151.564259 85.3328252,128.000254 C85.3328252,104.436249 104.435741,85.3333333 127.999746,85.3333333 C151.563751,85.3333333 170.666667,104.436249 170.666667,128.000254 C170.666667,151.564259 151.563751,170.667175 127.999746,170.667175 Z M211.686338,59.6734287 C211.686338,68.1566129 204.809755,75.0337031 196.326571,75.0337031 C187.843387,75.0337031 180.966297,68.1566129 180.966297,59.6734287 C180.966297,51.1902445 187.843387,44.3136624 196.326571,44.3136624 C204.809755,44.3136624 211.686338,51.1902445 211.686338,59.6734287 Z" />
   </svg>
 )
 
@@ -129,9 +130,45 @@ const STEPS = [
 /* -------------------- Team Card (click to open) -------------------- */
 function TeamTile({ member, onOpen }: { member: TeamMember; onOpen: () => void }) {
   const stopCardClick = (e: React.MouseEvent) => e.stopPropagation()
-  const igDisabled = !member.instagram
-  const liDisabled = !member.linkedin
-  const xDisabled = !member.x
+
+  const SocialBtn = ({
+    href,
+    label,
+    children,
+    variant = 'default',
+  }: {
+    href?: string
+    label: string
+    children: React.ReactNode
+    variant?: 'default' | 'instagram'
+  }) => {
+    const disabled = !href
+
+    return (
+      <a
+        href={disabled ? undefined : href}
+        target={disabled ? undefined : '_blank'}
+        rel={disabled ? undefined : 'noopener noreferrer'}
+        aria-label={`${member.name}'s ${label}`}
+        onClick={(e) => {
+          if (disabled) {
+            e.preventDefault()
+            return
+          }
+        }}
+        className={[
+          'p-2 rounded-full border transition hover:scale-105',
+          disabled
+            ? 'cursor-not-allowed text-white/40 bg-white/[0.04] border-white/10'
+            : variant === 'instagram'
+              ? 'text-white/80 bg-white/[0.06] border-white/15 hover:text-white hover:bg-gradient-to-br hover:from-purple-500/70 hover:to-pink-500/70'
+              : 'text-white/80 bg-white/[0.06] border-white/15 hover:text-white hover:bg-white/15',
+        ].join(' ')}
+      >
+        {children}
+      </a>
+    )
+  }
 
   return (
     <button
@@ -167,51 +204,19 @@ function TeamTile({ member, onOpen }: { member: TeamMember; onOpen: () => void }
           </div>
         </div>
 
-        {/* Socials (do not trigger modal) — LinkedIn, Instagram, X */}
+        {/* Socials (do not trigger modal) */}
         <div className="mt-3 mb-1 flex items-center justify-center gap-3" onClick={stopCardClick}>
-          {/* LinkedIn */}
-          <a
-            href={member.linkedin || '#'}
-            target={liDisabled ? undefined : '_blank'}
-            rel={liDisabled ? undefined : 'noopener noreferrer'}
-            className={[
-              'p-2 rounded-full border transition hover:scale-105',
-              liDisabled ? 'cursor-not-allowed text-white/40 bg-white/[0.04] border-white/10' : 'text-white/80 bg-white/[0.06] border-white/15 hover:text-white hover:bg-white/15',
-            ].join(' ')}
-            aria-label={`${member.name}'s LinkedIn profile`}
-          >
-            <LinkedInIcon />
-          </a>
+          <SocialBtn href={member.linkedin} label="LinkedIn">
+            <LinkedInIcon size={16} />
+          </SocialBtn>
 
-          {/* Instagram */}
-          <a
-            href={member.instagram || '#'}
-            target={igDisabled ? undefined : '_blank'}
-            rel={igDisabled ? undefined : 'noopener noreferrer'}
-            className={[
-              'p-2 rounded-full border transition hover:scale-105',
-              igDisabled
-                ? 'cursor-not-allowed text-white/40 bg-white/[0.04] border-white/10'
-                : 'text-white/80 bg-white/[0.06] border-white/15 hover:text-white hover:bg-gradient-to-br hover:from-purple-500/70 hover:to-pink-500/70',
-            ].join(' ')}
-            aria-label={`${member.name}'s Instagram profile`}
-          >
-            <InstagramIcon />
-          </a>
+          <SocialBtn href={member.instagram} label="Instagram" variant="instagram">
+            <InstagramIcon size={16} />
+          </SocialBtn>
 
-          {/* X */}
-          <a
-            href={member.x || '#'}
-            target={xDisabled ? undefined : '_blank'}
-            rel={xDisabled ? undefined : 'noopener noreferrer'}
-            className={[
-              'p-2 rounded-full border transition hover:scale-105',
-              xDisabled ? 'cursor-not-allowed text-white/40 bg-white/[0.04] border-white/10' : 'text-white/80 bg-white/[0.06] border-white/15 hover:text-white hover:bg-white/15',
-            ].join(' ')}
-            aria-label={`${member.name}'s X profile`}
-          >
-            <XIcon />
-          </a>
+          <SocialBtn href={member.x} label="X">
+            <XIcon size={16} />
+          </SocialBtn>
         </div>
       </div>
     </button>
@@ -375,14 +380,13 @@ export default function About() {
           </p>
         </div>
 
-        {/* 2nd heading*/}
         <h1 className="text-center font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-5xl mt-10">WHAT WE BELIEVE</h1>
         <div className="text-center mt-4 space-y-7 text-base md:text-lg leading-relaxed text-white/90 max-w-4xl mx-auto">
           <p>We don’t believe in bloated agency processes, endless buzzwords, or AI-for-the-sake-of-AI.</p>
           <p>We believe clarity creates confidence. Confidence creates decisive action. And decisive action is what builds real growth.</p>
         </div>
 
-        {/* OUR EXCEPTIONAL TEAM — tiles that open modal */}
+        {/* OUR EXCEPTIONAL TEAM */}
         <section className="mt-16 md:mt-20">
           <header className="text-center mb-8 md:mb-10">
             <h1 className="font-[Space_Grotesk] tracking-widest text-3xl md:text-5xl">Our Exceptional Team</h1>
@@ -403,7 +407,6 @@ export default function About() {
             <p className="mt-2 text-white/80">A clear, step-by-step flow. No hidden surprises.</p>
           </header>
 
-          {/* Vertical timeline */}
           <div className="relative max-w-3xl mx-auto">
             <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-white/15" />
 
@@ -446,15 +449,13 @@ export default function About() {
                 </li>
               ))}
 
-              {/* ✅ FINAL CENTER CARD (no number) */}
+              {/* FINAL CENTER CARD */}
               <li className="relative">
-                {/* connector from step 6 */}
                 <div className="absolute left-1/2 -translate-x-1/2 -top-2">
                   <div className="h-8 w-px bg-white/20 mx-auto" />
                   <div className="h-2 w-2 rotate-45 border-r border-b border-white/30 mx-auto -mt-1" />
                 </div>
 
-                {/* center card */}
                 <div className="mt-8 flex justify-center">
                   <div
                     className="relative w-full max-w-[520px] overflow-hidden rounded-2xl border border-white/15 backdrop-blur-md

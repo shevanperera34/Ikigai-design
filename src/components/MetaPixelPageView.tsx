@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+// src/components/MetaPixelPageView.tsx
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 declare global {
@@ -9,8 +10,13 @@ declare global {
 
 export default function MetaPixelPageView() {
   const location = useLocation();
+  const first = useRef(true);
 
   useEffect(() => {
+    if (first.current) {
+      first.current = false; // initial PageView already fired in index.html
+      return;
+    }
     if (typeof window.fbq === "function") {
       window.fbq("track", "PageView");
     }
