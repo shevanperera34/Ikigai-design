@@ -82,7 +82,7 @@ export default function ContactPreview() {
   return (
     <div className="max-w-6xl mx-auto px-6">
       <header className="text-center">
-        <h1 className="text-3xl tracking-widest uppercase font-[Space_Grotesk]">Let’s Build</h1>
+        <h2 className="text-3xl tracking-widest uppercase font-[Space_Grotesk]">Let’s Build</h2>
         <p className="mt-4 text-slate-300">Tell us what you’re building. We’ll help align it.</p>
       </header>
 

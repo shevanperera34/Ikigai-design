@@ -13,6 +13,8 @@ import mobil from '../assets/MobileWeb_Thumbnail.png'
 import kind from '../assets/Kindrage_Thumbnail.png'
 import flame from '../assets/flameReveal.gif'
 
+import SEO from "../components/SEO";
+
 type Project = {
   id: number
   title: string
@@ -515,6 +517,11 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
       className="relative min-h-screen overflow-x-hidden overflow-y-visible font-[Inter] text-white"
       style={{ backgroundColor: '#000000' }}
     >
+       <SEO
+        title="The Ikigai Project | Brand Systems, Web Infrastructure & Growth Architecture"
+        description="A human-first digital studio building brand systems, intelligent websites, and growth architecture for companies that want clarity, speed, and real results."
+        path="/"
+      />
       {/* Services-style global brand glow layer (this is the hue match) */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />

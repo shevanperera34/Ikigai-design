@@ -6,6 +6,7 @@ import { Hero } from "./Hero";
 import ServicesPreview from "../components/ServicesPreview";
 import WorkPreview from "../components/WorkPreview";
 import ContactPreview from "../components/ContactPreview";
+import SEO from "../components/SEO";
 
 /* =====================
    TYPES
@@ -221,15 +222,14 @@ function TeamTile({ member }: { member: TeamMember }) {
    PAGE
 ===================== */
 export default function Home() {
-  useEffect(() => {
-    api
-      .health()
-      .then((r) => console.log("API health:", r))
-      .catch((e) => console.error("API health failed:", e));
-  }, []);
 
   return (
     <main className="bg-[#050712] text-slate-100 overflow-x-hidden">
+       <SEO
+        title="The Ikigai Project | Brand Systems, Web Infrastructure & Growth Architecture"
+        description="A human-first digital studio building brand systems, intelligent websites, and growth architecture for companies that want clarity, speed, and real results."
+        path="/"
+      />
       <Hero />
 
       <section id="services" className="mt-32">
@@ -237,7 +237,7 @@ export default function Home() {
       </section>
 
       <section id="about" className="mt-32 px-6 max-w-6xl mx-auto text-center">
-        <h1 className={HOME_TITLE}>Who We Are</h1>
+        <h2 className={HOME_TITLE}>Who We Are</h2>
         <p className="mt-4 text-slate-300 max-w-3xl mx-auto">
           We’re The Ikigai Project. We design systems that give brands clarity,
           confidence, and the power to move decisively

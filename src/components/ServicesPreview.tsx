@@ -115,9 +115,9 @@ export default function ServicesPreview() {
       )}
 
       <header className="max-w-6xl mx-auto px-6 md:px-12">
-        <h1 className="text-center font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-4xl">
+        <h2 className="text-center font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-4xl">
           Services
-        </h1>
+        </h2>
         <p className="mt-3 text-center text-white/70">
           Three core systems designed to build clarity, confidence, and growth Or Combine services into a single, aligned
           system built around your goals

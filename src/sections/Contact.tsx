@@ -3,6 +3,8 @@ import React, { useMemo, useState, useEffect } from "react"
 import Aurora from "../components/Aurora"
 import { api } from "../lib/api"
 
+import SEO from "../components/SEO";
+
 type Purpose = "call" | "quote" | "question"
 type ProjectType = "Brand" | "Web" | "Growth"
 
@@ -166,6 +168,11 @@ export default function Contact() {
 
   return (
     <section className="relative min-h-screen overflow-hidden font-[Inter] text-white bg-black">
+       <SEO
+        title="The Ikigai Project | Brand Systems, Web Infrastructure & Growth Architecture"
+        description="A human-first digital studio building brand systems, intelligent websites, and growth architecture for companies that want clarity, speed, and real results."
+        path="/"
+      />
       {/* Brand gradient layers */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
