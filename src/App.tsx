@@ -16,12 +16,14 @@ import Security from "./sections/Security";
 import Footer from "./components/Footer";
 import PayQuote from "./sections/PayQuotes"
 import PaySuccess from "./sections/PaySuccess";
-//test
+import MetaPixelPageView from "./components/MetaPixelPageView";
+
 
 export default function App() {
   return (
     <div className="min-h-screen bg-base text-white antialiased flex flex-col">
       <ScrollToTop />
+      <MetaPixelPageView/>
       <Navbar />
 
       <div className="flex-1">
