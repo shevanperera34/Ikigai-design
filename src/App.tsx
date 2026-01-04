@@ -1,6 +1,8 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
+
 import { Navbar } from "./components/Navbar";
-import ScrollToTop from "./components/ScrollToTop"; 
+import ScrollToTop from "./components/ScrollToTop";
 
 import Work from "./sections/Work";
 import Services from "./sections/Services";
@@ -13,16 +15,40 @@ import Privacy from "./sections/Privacy";
 import DataUse from "./sections/DataUse";
 import Security from "./sections/Security";
 import Footer from "./components/Footer";
-import PayQuote from "./sections/PayQuotes"
+import PayQuote from "./sections/PayQuotes";
 import PaySuccess from "./sections/PaySuccess";
-import MetaPixelPageView from "./components/MetaPixelPageView";
 
+/**
+ * ✅ Meta Pixel SPA PageView tracker
+ * Fires PageView on route change (not on initial load to avoid double fire)
+ */
+function MetaPixelRouteTracker() {
+  const location = useLocation();
+  const didInit = useRef(false);
+
+  useEffect(() => {
+    // Skip first render to avoid double PageView (index.html already tracks it)
+    if (!didInit.current) {
+      didInit.current = true;
+      return;
+    }
+
+    if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
+      (window as any).fbq("track", "PageView");
+    }
+  }, [location.pathname, location.search]);
+
+  return null;
+}
 
 export default function App() {
   return (
     <div className="min-h-screen bg-base text-white antialiased flex flex-col">
       <ScrollToTop />
-      <MetaPixelPageView/>
+
+      {/* ✅ Track PageView on route changes */}
+      <MetaPixelRouteTracker />
+
       <Navbar />
 
       <div className="flex-1">
@@ -46,4 +72,3 @@ export default function App() {
     </div>
   );
 }
-
