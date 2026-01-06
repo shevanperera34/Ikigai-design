@@ -19,7 +19,7 @@ import PayQuote from "./sections/PayQuotes";
 import PaySuccess from "./sections/PaySuccess";
 
 /**
- * ✅ Meta Pixel SPA PageView tracker
+ *  Meta Pixel SPA PageView tracker
  * Fires PageView on route change (not on initial load to avoid double fire)
  */
 function MetaPixelRouteTracker() {
@@ -46,7 +46,7 @@ export default function App() {
     <div className="min-h-screen bg-base text-white antialiased flex flex-col">
       <ScrollToTop />
 
-      {/* ✅ Track PageView on route changes */}
+      {/*  Track PageView on route changes */}
       <MetaPixelRouteTracker />
 
       <Navbar />
