@@ -5,6 +5,7 @@ import Aurora from "../components/Aurora"
 import { Link } from "react-router-dom"
 import { ShinyButton } from "../components/shiny-button"
 import FirstClientPopup from "../components/FirstClientPopup"
+import { metaPixel } from "../lib/metaPixel"
 
 
 export function Hero() {
@@ -68,17 +69,28 @@ export function Hero() {
             </ShinyButton>
           </Link>
 
+
+
+
           {/* External link: keep <a> but button style */}
-          <a
-            href="https://calendly.com/theikigaiproject-ca/30min"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex"
-          >
-            <ShinyButton className="min-w-[260px]">
-              Book a Free Strategy Call
-            </ShinyButton>
-          </a>
+        <a
+  href="https://calendly.com/theikigaiproject-ca/30min"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex"
+  onClick={() => {
+    metaPixel.track("Schedule", {
+      content_name: "Free Strategy Call",
+      content_category: "Calendly",
+      placement: "Hero CTA",
+      url: typeof window !== "undefined" ? window.location.href : undefined,
+    })
+  }}
+>
+  <ShinyButton className="min-w-[260px]">
+    Book a Free Strategy Call
+  </ShinyButton>
+</a>
 
           {/* Secondary style: same component, just tweak className */}
           <a
