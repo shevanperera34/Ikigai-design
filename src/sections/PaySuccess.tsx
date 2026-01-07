@@ -1,3 +1,4 @@
+// src/sections/PaySuccess.tsx
 "use client"
 
 import React, { useEffect, useMemo, useState } from "react"
@@ -5,6 +6,7 @@ import { useSearchParams, Link } from "react-router-dom"
 import { BackgroundBeams } from "../components/background-beams"
 import Aurora from "../components/Aurora"
 import { resolveQuote } from "../lib/pay"
+import { metaPixel } from "../lib/metaPixel"
 
 type QuoteSummary = {
   quote_id: string
@@ -28,6 +30,9 @@ export default function PaySuccess() {
   const [polling, setPolling] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [q, setQ] = useState<QuoteSummary | null>(null)
+
+  // ✅ Prevent Lead from firing multiple times due to re-renders/polling
+  const leadFiredRef = React.useRef(false)
 
   async function loadOnce() {
     setError(null)
@@ -89,6 +94,22 @@ export default function PaySuccess() {
 
     return () => clearInterval(t)
   }, [polling, quoteId])
+
+  // ✅ Meta Lead event (fires ONLY when paid === true, and ONLY once)
+  useEffect(() => {
+    if (!q || !q.paid) return
+    if (leadFiredRef.current) return
+    leadFiredRef.current = true
+
+    metaPixel.track("Lead", {
+      content_name: "Alignment Quote Paid",
+      content_category: "Quote",
+      quote_id: q.quote_id,
+      value: (q.total_cents || 0) / 100,
+      currency: "CAD",
+      url: typeof window !== "undefined" ? window.location.href : undefined,
+    })
+  }, [q])
 
   return (
     <div className="h-[40rem] w-full rounded-md bg-background relative flex flex-col items-center justify-center antialiased">
@@ -158,12 +179,10 @@ export default function PaySuccess() {
 
               <div className="pt-4">
                 {q.paid ? (
-                  <div className="text-sm text-green-500 text-center">
-                     Status: Paid
-                  </div>
+                  <div className="text-sm text-green-500 text-center">Status: Paid</div>
                 ) : (
                   <div className="text-sm text-yellow-500 text-center">
-                     Payment received — confirming… (this can take a few seconds)
+                    Payment received — confirming… (this can take a few seconds)
                   </div>
                 )}
               </div>

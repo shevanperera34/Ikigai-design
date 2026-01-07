@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { api, ApiError } from "../lib/api";
 import { track } from "../lib/plausible";
+import { metaPixel } from "../lib/metaPixel";
 
 
 type BundleTag = "brand" | "web" | "growth";
@@ -101,8 +102,17 @@ export default function IkigaiQuoteFlowMockup() {
   }, []);
 
   useEffect(() => {
-  track("ViewContent", { page: "alignment_builder" })
-}, [])
+  // Plausible (your existing analytics)
+  track("ViewContent", { page: "alignment_builder" });
+
+  // Meta Pixel (standard event)
+  metaPixel.track("ViewContent", {
+    content_name: "Alignment Builder",
+    content_category: "Quote Builder",
+    page: "services/get-quote",
+  });
+}, []);
+
 
 
   // Pre-select NON-add-on items for incoming bundles
