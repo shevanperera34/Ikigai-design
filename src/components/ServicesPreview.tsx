@@ -17,7 +17,7 @@ const BUNDLES: Bundle[] = [
   {
     key: "brand",
     title: "Brand Systems Build",
-    tagline: "Define who you are.Then make it unmistakable",
+    tagline: "Define who you are. Then make it unmistakable",
     includes: ["Logo & identity", "Brand messaging", "Copy systems", "Creative direction"],
     price: "From $600",
   },

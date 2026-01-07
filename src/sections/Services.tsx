@@ -39,7 +39,7 @@ const BUNDLES: Bundle[] = [
       "Conversion-focused copy systems",
       "Creative direction",
     ],
-    price: "From $1,500",
+    price: "From $600",
   },
   {
     key: "web",
@@ -53,7 +53,7 @@ const BUNDLES: Bundle[] = [
       "3D & interactive integration",
       "Performance & analytics tracking",
     ],
-    price: "From $2,000",
+    price: "From $999",
   },
   {
     key: "growth",
@@ -67,7 +67,7 @@ const BUNDLES: Bundle[] = [
       "Content & funnel systems",
       "Analytics & reporting",
     ],
-    price: "From $1,200",
+    price: "From $949",
   },
 ];
 
