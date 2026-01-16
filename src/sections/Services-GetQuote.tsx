@@ -5,7 +5,6 @@ import { api, ApiError } from "../lib/api";
 import { track } from "../lib/plausible";
 import { metaPixel } from "../lib/metaPixel";
 
-
 type BundleTag = "brand" | "web" | "growth";
 
 interface ServiceItem {
@@ -15,6 +14,9 @@ interface ServiceItem {
   desc: string;
   basePrice: number;
   addon?: boolean;
+
+  // ✅ NEW: items that should NEVER be discounted
+  nonDiscountable?: boolean;
 }
 
 const CATALOG: ServiceItem[] = [
@@ -29,6 +31,17 @@ const CATALOG: ServiceItem[] = [
   { id: "crm", name: "Booking/CRM Setup", bundle: "web", desc: "Forms → CRM → notifications.", basePrice: 200, addon: true },
   { id: "seo", name: "Speed & SEO Pass", bundle: "web", desc: "Performance, meta, basic schema.", basePrice: 200, addon: true },
   { id: "three", name: "3D Component Hook", bundle: "web", desc: "Embed 3D viewer / model.", basePrice: 250, addon: true },
+
+  // ✅ NEW: Domain setup (non-discountable)
+  {
+    id: "domain_setup",
+    name: "Domain Setup (est.)",
+    bundle: "web",
+    desc: "Estimated domain setup cost. Final domain pricing may vary.",
+    basePrice: 25,
+    addon: true,
+    nonDiscountable: true,
+  },
 
   // Growth
   { id: "adssetup", name: "Ad Account + Pixel Setup", bundle: "growth", desc: "Meta/Google accounts, events.", basePrice: 250 },
@@ -102,18 +115,16 @@ export default function IkigaiQuoteFlowMockup() {
   }, []);
 
   useEffect(() => {
-  // Plausible (your existing analytics)
-  track("ViewContent", { page: "alignment_builder" });
+    // Plausible
+    track("ViewContent", { page: "alignment_builder" });
 
-  // Meta Pixel (standard event)
-  metaPixel.track("ViewContent", {
-    content_name: "Alignment Builder",
-    content_category: "Quote Builder",
-    page: "services/get-quote",
-  });
-}, []);
-
-
+    // Meta Pixel
+    metaPixel.track("ViewContent", {
+      content_name: "Alignment Builder",
+      content_category: "Quote Builder",
+      page: "services/get-quote",
+    });
+  }, []);
 
   // Pre-select NON-add-on items for incoming bundles
   useEffect(() => {
@@ -134,41 +145,51 @@ export default function IkigaiQuoteFlowMockup() {
 
   /**
    * ✅ pricing with:
-   * - bundle discount (auto)
-   * - manual discount code (stacks on top)
+   * - auto bundle discount (discountable items only)
+   * - manual discount code (discountable items only)
+   * - non-discountable items (domain setup) never discounted
    *
-   * IMPORTANT: apply discounts BEFORE tax; keep complexity fee as an add-on.
+   * IMPORTANT: discounts BEFORE tax.
    */
   const breakdown = useMemo(() => {
-    const subtotal = selectedItems.reduce((s, i) => s + i.basePrice, 0);
+    const discountableItems = selectedItems.filter((i) => !i.nonDiscountable);
+    const nonDiscountableItems = selectedItems.filter((i) => i.nonDiscountable);
 
-    // --- compute auto bundle discount ---
+    const subtotalDiscountable = discountableItems.reduce((s, i) => s + i.basePrice, 0);
+    const subtotalNonDiscountable = nonDiscountableItems.reduce((s, i) => s + i.basePrice, 0);
+
+    const subtotal = subtotalDiscountable + subtotalNonDiscountable;
+
+    // bundle counts should be based on discountable items (domain setup shouldn’t “earn” bundle discount)
     const counts: Record<BundleTag, number> = { brand: 0, web: 0, growth: 0 };
-    selectedItems.forEach((i) => {
+    discountableItems.forEach((i) => {
       counts[i.bundle]++;
     });
 
+    // --- auto bundle discount (only discountable subtotal) ---
     let bundleDiscount = 0;
-    // pack discount (>=3 in any bundle)
     if (Object.values(counts).some((c) => c >= 3)) {
-      bundleDiscount += subtotal * 0.05;
+      bundleDiscount += subtotalDiscountable * 0.05;
     }
 
-    // --- compute complexity fee ---
+    // --- complexity fee (apply to discountable work only) ---
     let complexityFee = 0;
     if (bundlesUsed.length >= 2) {
-      complexityFee += subtotal * 0.10;
+      complexityFee += subtotalDiscountable * 0.10;
     }
 
-    // base before manual code
-    const preManual = Math.max(0, subtotal - bundleDiscount + complexityFee);
+    // subtotal after bundle discount + complexity (discountable side)
+    const discountablePreManual = Math.max(0, subtotalDiscountable - bundleDiscount + complexityFee);
 
-    // --- compute manual code discount (stacks on top) ---
+    // --- manual code discount (only on discountable side) ---
     const pct = discountApplied?.discount_percentage ?? 0;
     const pctClamped = clamp(pct, 0, 100);
-    const codeDiscount = preManual * (pctClamped / 100);
+    const codeDiscount = discountablePreManual * (pctClamped / 100);
 
-    const adjusted = Math.max(0, preManual - codeDiscount);
+    // final adjusted = (discountable after all discounts) + (non-discountable untouched)
+    const discountableAdjusted = Math.max(0, discountablePreManual - codeDiscount);
+    const adjusted = discountableAdjusted + subtotalNonDiscountable;
+
     const tax = adjusted * 0.13;
     const total = adjusted + tax;
 
@@ -180,6 +201,8 @@ export default function IkigaiQuoteFlowMockup() {
 
     return {
       subtotal,
+      subtotalDiscountable,
+      subtotalNonDiscountable,
       bundleDiscount,
       complexityFee,
       manualDiscount: codeDiscount,
@@ -241,7 +264,6 @@ export default function IkigaiQuoteFlowMockup() {
     } catch (e: any) {
       setDiscountApplied(null);
 
-      // ApiError from api.ts includes status
       const status = e instanceof ApiError ? e.status : undefined;
       const msg = String(e?.message || "");
 
@@ -268,6 +290,7 @@ export default function IkigaiQuoteFlowMockup() {
         basePrice: i.basePrice,
         desc: i.desc,
         addon: !!i.addon,
+        nonDiscountable: !!i.nonDiscountable,
       })),
 
       subtotal_cents: toCents(breakdown.subtotal),
@@ -279,14 +302,17 @@ export default function IkigaiQuoteFlowMockup() {
       eta_weeks: breakdown.etaWeeks,
       calendly_url: calendlyUrl,
 
-      // ✅ NEW: discount fields (save snapshots for audit/history)
+      // discount snapshots
       bundle_discount_cents: toCents(breakdown.bundleDiscount),
       discount_code: breakdown.manualCode,
       discount_code_percentage: discountApplied?.discount_percentage ?? null,
       discount_code_cents: toCents(breakdown.manualDiscount),
+
+      // ✅ extra visibility (optional, but useful)
+      nondiscountable_subtotal_cents: toCents(breakdown.subtotalNonDiscountable),
     };
 
-    return api.createQuote(dbPayload);
+    return api.createQuote(dbPayload as any);
   }
 
   async function generateQuote() {
@@ -323,7 +349,6 @@ export default function IkigaiQuoteFlowMockup() {
         eta_weeks: breakdown.etaWeeks,
         bundles: bundlesUsed,
 
-        // show services
         items: selectedItems.map((i) => ({
           name: i.name,
           bundle: i.bundle,
@@ -331,14 +356,22 @@ export default function IkigaiQuoteFlowMockup() {
           amount: currency(i.basePrice),
         })),
 
-        // show price components
         subtotal: currency(breakdown.subtotal),
+
         bundle_discount: breakdown.bundleDiscount > 0 ? `-${currency(breakdown.bundleDiscount)}` : "",
         complexity_fee: currency(breakdown.complexityFee),
+
         manual_discount:
           breakdown.manualDiscount > 0 && breakdown.manualCode
             ? `-${currency(breakdown.manualDiscount)} (${breakdown.manualCode})`
             : "",
+
+        // ✅ show nondiscountable subtotal line if present
+        nondiscountable_note:
+          breakdown.subtotalNonDiscountable > 0
+            ? `Non-discountable items included: ${currency(breakdown.subtotalNonDiscountable)}`
+            : "",
+
         adjusted: currency(breakdown.adjusted),
         tax: currency(breakdown.tax),
         total: currency(breakdown.total),
@@ -347,14 +380,12 @@ export default function IkigaiQuoteFlowMockup() {
     };
 
     try {
-      // 1) Save to DB (non-blocking)
       try {
         await postQuoteToDb(id);
       } catch (dbErr) {
         console.warn("Quote DB save failed (continuing to PDF):", dbErr);
       }
 
-      // 2) Generate PDF via api client
       const blob = await api.quotePdf(pdfPayload);
 
       const url = URL.createObjectURL(blob);
@@ -375,7 +406,6 @@ export default function IkigaiQuoteFlowMockup() {
 
   return (
     <section className="relative min-h-screen font-[Inter] text-white">
-      {/* Brand cinematic layers */}
       <div className="pointer-events-none absolute inset-0 -z-20">
         <div className="absolute inset-0 bg-black" />
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
@@ -390,7 +420,6 @@ export default function IkigaiQuoteFlowMockup() {
           </header>
 
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Services list */}
             <div className="lg:col-span-2 space-y-6">
               {(["brand", "web", "growth"] as BundleTag[]).map((group) => (
                 <section
@@ -435,11 +464,14 @@ export default function IkigaiQuoteFlowMockup() {
                               <span className="text-sm text-white/80">{currency(item.basePrice)}</span>
                             </div>
                             <div className="text-sm text-white/70">{item.desc}</div>
-                            {item.addon && (
-                              <span className="mt-1 inline-block rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-white/80">
-                                Add-on
-                              </span>
-                            )}
+
+                            <div className="mt-1 flex gap-2">
+                              {item.addon && (
+                                <span className="inline-block rounded-full border border-white/20 px-2 py-0.5 text-[11px] text-white/80">
+                                  Add-on
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </label>
                       ))}
@@ -449,7 +481,6 @@ export default function IkigaiQuoteFlowMockup() {
               ))}
             </div>
 
-            {/* Summary + form */}
             <aside
               className="lg:sticky lg:top-24 h-fit rounded-2xl border border-white/15 backdrop-blur-sm
                          shadow-[0_20px_80px_rgba(0,0,0,0.35)] p-4 sm:p-5"
@@ -465,14 +496,16 @@ export default function IkigaiQuoteFlowMockup() {
                 <ul className="mt-3 space-y-2 text-sm text-white/85">
                   {selectedItems.map((i) => (
                     <li key={i.id} className="flex items-center justify-between border-b border-white/10 pb-1">
-                      <span>{i.name}</span>
+                      <span className="flex items-center gap-2">
+                        {i.name}
+                        {i.nonDiscountable && <span className="text-[11px] text-white/50">(not discounted)</span>}
+                      </span>
                       <span className="text-white/70">{currency(i.basePrice)}</span>
                     </li>
                   ))}
                 </ul>
               )}
 
-              {/* ✅ discount code input */}
               <div className="mt-4">
                 <div className="flex gap-2">
                   <input
@@ -482,7 +515,6 @@ export default function IkigaiQuoteFlowMockup() {
                     onChange={(e) => {
                       setDiscountCode(e.target.value);
                       setDiscountError(null);
-                      // If user edits code after applying, clear applied state so totals don’t lie
                       setDiscountApplied(null);
                     }}
                     autoComplete="off"
@@ -500,15 +532,11 @@ export default function IkigaiQuoteFlowMockup() {
 
                 {discountApplied && (
                   <div className="mt-2 text-xs text-emerald-300/90">
-                    Applied <span className="font-mono">{discountApplied.code}</span> — {discountApplied.discount_percentage}% off
+                    Applied <span className="font-mono">{discountApplied.code}</span> — {discountApplied.discount_percentage}% off (discountable items only)
                   </div>
                 )}
 
-                {discountError && (
-                  <div className="mt-2 text-xs text-red-400">
-                    {discountError}
-                  </div>
-                )}
+                {discountError && <div className="mt-2 text-xs text-red-400">{discountError}</div>}
               </div>
 
               <div className="mt-4 space-y-1 text-sm">
@@ -537,6 +565,13 @@ export default function IkigaiQuoteFlowMockup() {
                       Code discount <span className="font-mono text-white/70">({breakdown.manualCode})</span>
                     </span>
                     <span>-{currency(breakdown.manualDiscount)}</span>
+                  </div>
+                )}
+
+                {breakdown.subtotalNonDiscountable > 0 && (
+                  <div className="flex justify-between text-white/60">
+                    <span>Non-discountable</span>
+                    <span>{currency(breakdown.subtotalNonDiscountable)}</span>
                   </div>
                 )}
 
