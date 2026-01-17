@@ -38,7 +38,7 @@ const CATALOG: ServiceItem[] = [
     name: "Domain Setup (est.)",
     bundle: "web",
     desc: "Estimated domain setup cost. Final domain pricing may vary.",
-    basePrice: 25,
+    basePrice: 20,
     addon: true,
     nonDiscountable: true,
   },
