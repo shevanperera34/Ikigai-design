@@ -23,12 +23,12 @@ const CATALOG: ServiceItem[] = [
   // Brand
   { id: "logo", name: "Logo & Identity", bundle: "brand", desc: "Primary logo, marks, colors, typography.", basePrice: 220 },
   { id: "voice", name: "Voice & Messaging Guide", bundle: "brand", desc: "Tone, taglines, brand statements.", basePrice: 150 },
-  { id: "copy", name: "Landing Copy", bundle: "brand", desc: "Hero, offer, proof, CTA copy.", basePrice: 299.84, addon: true },
+  { id: "copy", name: "Landing Copy", bundle: "brand", desc: "Hero, offer, proof, CTA copy.", basePrice: 300, addon: true },
 
   // Web
   { id: "site1", name: "1-Page Website", bundle: "web", desc: "High-performance single page + form.", basePrice: 499 },
   { id: "site5", name: "3-5 Page website", bundle: "web", desc: "Add 3-5 website pages", basePrice: 499, addon: true },
-  { id: "crm", name: "Booking/CRM Setup", bundle: "web", desc: "Forms → CRM → notifications.", basePrice: 205.48, addon: true },
+  { id: "crm", name: "Booking/CRM Setup", bundle: "web", desc: "Forms → CRM → notifications.", basePrice: 205, addon: true },
   { id: "seo", name: "Speed & SEO Pass", bundle: "web", desc: "Performance, meta, basic schema.", basePrice: 200, addon: true },
   { id: "three", name: "3D Component Hook", bundle: "web", desc: "Embed 3D viewer / model.", basePrice: 250, addon: true },
 
@@ -44,9 +44,9 @@ const CATALOG: ServiceItem[] = [
   },
 
   // Growth
-  { id: "adssetup", name: "Ad Account + Pixel Setup", bundle: "growth", desc: "Meta/Google accounts, events.", basePrice: 302 },
+  { id: "adssetup", name: "Ad Account + Pixel Setup", bundle: "growth", desc: "Meta/Google accounts, events.", basePrice: 300 },
   { id: "ugc", name: "UGC Ad Creative Pack (3)", bundle: "growth", desc: "Three short videos, captions.", basePrice: 399, addon: true },
-  { id: "retarget", name: "Retargeting Setup", bundle: "growth", desc: "Audiences + placements.", basePrice: 295, addon: true },
+  { id: "retarget", name: "Retargeting Setup", bundle: "growth", desc: "Audiences + placements.", basePrice: 275, addon: true },
   { id: "email", name: "Email/SMS Welcome Flow", bundle: "growth", desc: "Welcome + abandon cart/booking.", basePrice: 299 },
 ];
 
