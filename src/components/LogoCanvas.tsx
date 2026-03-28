@@ -3,10 +3,14 @@ import { Canvas, useThree } from '@react-three/fiber'
 import { Environment, ContactShadows, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
-function FitLogo({ url }: { url: string }) {
+function FitLogo({ url, onLoad }: { url: string; onLoad?: () => void }) {
   const { scene } = useGLTF(url)
   const group = useRef<THREE.Group>(null)
   const { camera } = useThree()
+
+  useEffect(() => {
+    onLoad?.()
+  }, [onLoad])
 
   const { centered, scale } = useMemo(() => {
     const s = scene.clone(true)
@@ -42,7 +46,13 @@ function FitLogo({ url }: { url: string }) {
 
 useGLTF.preload('/models/ikigai-logo.glb')
 
-export function LogoCanvas({ modelPath = '/models/ikigai-logo.glb' }: { modelPath?: string }) {
+export function LogoCanvas({
+  modelPath = '/models/ikigai-logo.glb',
+  onLoad,
+}: {
+  modelPath?: string
+  onLoad?: () => void
+}) {
   return (
     // Visually invisible container: only sets a size and keeps clicks for elements below
     <div className="pointer-events-none mx-auto w-[clamp(240px,36vw,560px)] h-[clamp(200px,28vw,420px)]">
@@ -62,7 +72,7 @@ export function LogoCanvas({ modelPath = '/models/ikigai-logo.glb' }: { modelPat
         />
 
         <Suspense fallback={null}>
-          <FitLogo url={modelPath} />
+          <FitLogo url={modelPath} onLoad={onLoad} />
           <Environment preset="city" />
           {/* soft pool under the logo so it sits in the scene */}
           <ContactShadows

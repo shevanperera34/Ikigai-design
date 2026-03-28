@@ -16,6 +16,7 @@ interface GlowCardProps {
   width?: string | number
   height?: string | number
   customSize?: boolean // When true, ignores size prop and uses width/height or className
+  touchAction?: React.CSSProperties['touchAction']
 }
 
 const presetHexMap: Record<NonNullable<GlowCardProps['glowColor']>, string> = {
@@ -52,11 +53,18 @@ const GlowCard: React.FC<GlowCardProps> = ({
   width,
   height,
   customSize = false,
+  touchAction = 'pan-y',
 }) => {
   const cardRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    // Skip pointer-tracking effects on touch devices (no true hover state).
+    if (typeof window !== 'undefined') {
+      const noHover = window.matchMedia('(hover: none), (pointer: coarse)').matches
+      if (noHover) return
+    }
+
     const syncPointer = (e: PointerEvent) => {
       const { clientX: x, clientY: y } = e
       if (!cardRef.current) return
@@ -113,7 +121,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
 
       border: '1px solid var(--backup-border)',
       position: 'relative',
-      touchAction: 'pan-y',
+      touchAction,
       overflow: 'hidden',
     }
 
@@ -184,6 +192,18 @@ const GlowCard: React.FC<GlowCardProps> = ({
     [data-glow] > [data-glow]::before {
       inset: -8px;
       border-width: 8px;
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      [data-glow]::before,
+      [data-glow]::after,
+      [data-glow] [data-glow] {
+        display: none;
+      }
+
+      [data-glow] {
+        background-image: none !important;
+      }
     }
   `
 

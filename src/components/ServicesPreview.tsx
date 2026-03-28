@@ -1,188 +1,310 @@
 // src/components/ServicesPreview.tsx
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { GlowCard } from "./Glowcard.tsx"
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 
-type BundleKey = "brand" | "web" | "growth"
+const CARESAFE_SPLINE_URL =
+  "https://prod.spline.design/CeXiSwuOLmXBsv98/scene.splinecode";
+const CARESAFE_SPLINE_URL_MOBILE =
+  "https://prod.spline.design/CeXiSwuOLmXBsv98/scene.splinecode";
 
-interface Bundle {
-  key: BundleKey
-  title: string
-  tagline: string
-  includes: string[]
-  price: string
+function SplineViewer(props: {
+  url: string;
+  className?: string;
+  loading?: string;
+  style?: React.CSSProperties;
+}) {
+  return React.createElement("spline-viewer", { ...props } as any);
 }
 
-const BUNDLES: Bundle[] = [
-  {
-    key: "brand",
-    title: "Brand Systems Build",
-    tagline: "Define who you are. Then make it unmistakable",
-    includes: ["Logo & identity", "Brand messaging", "Copy systems", "Creative direction"],
-    price: "From $600",
-  },
-  {
-    key: "web",
-    title: "Intelligent Web Infrastructure",
-    tagline: "Turn strategy into systems that actually perform",
-    includes: ["Web design", "Automation setup", "3D integration", "Performance tracking"],
-    price: "From $999",
-  },
-  {
-    key: "growth",
-    title: "Growth Architecture",
-    tagline: "Scale intentionally, without losing control",
-    includes: ["Paid media setup", "Campaign management", "Content funnels", "Analytics & reporting"],
-    price: "From $949",
-  },
-]
+function CustomAlignmentAnimation() {
+  const coords = useMemo(
+    () => ({
+      brand: { cx: 500, cy: 290 },
+      web: { cx: 370, cy: 460 },
+      growth: { cx: 630, cy: 460 },
+    }),
+    []
+  );
 
-// ✅ Exact glow colors (left → right): #1b2d52, #380a65, #1b2d52
-const glowHexByKey: Record<BundleKey, string> = {
-  brand: "#1b2d52",
-  web: "#380a65",
-  growth: "#1b2d52",
+  return (
+    <div className="relative mx-auto w-full max-w-[430px]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(108,0,255,0.28) 0%, rgba(0,51,255,0.22) 38%, rgba(0,0,0,0) 75%)",
+          animation: "preview-breathe 6s ease-in-out infinite",
+        }}
+      />
+
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 h-px w-px -translate-x-1/2 -translate-y-1/2"
+        style={{ animation: "preview-rotate 18s linear infinite" }}
+      >
+        <div className="absolute left-[112px] top-0 h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]" />
+      </div>
+
+      <svg
+        viewBox="0 0 1000 750"
+        className="h-full w-full"
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label="Custom Alignment animation"
+      >
+        <g
+          style={{
+            transformOrigin: "500px 375px",
+            animation: "preview-rotate 40s linear infinite",
+          }}
+        >
+          <circle
+            cx={500}
+            cy={375}
+            r={240}
+            fill="none"
+            stroke="rgba(255,255,255,0.20)"
+            strokeWidth={1}
+            strokeDasharray="6 10"
+          />
+        </g>
+
+        <circle cx={coords.brand.cx} cy={coords.brand.cy} r={210} fill="white" opacity={0.16} />
+        <circle cx={coords.web.cx} cy={coords.web.cy} r={210} fill="white" opacity={0.16} />
+        <circle cx={coords.growth.cx} cy={coords.growth.cy} r={210} fill="white" opacity={0.16} />
+
+        <text
+          x="500"
+          y="65"
+          textAnchor="middle"
+          fontSize="18"
+          fill="white"
+          opacity="0.9"
+          className="font-[Space_Grotesk] uppercase tracking-[0.25em] select-none pointer-events-none"
+          style={{ fontWeight: 800, paintOrder: "stroke", stroke: "rgba(0,0,0,0.6)", strokeWidth: 2 }}
+        >
+          BRAND SYSTEMS
+        </text>
+
+        <text
+          x="270"
+          y="700"
+          textAnchor="middle"
+          fontSize="18"
+          fill="white"
+          opacity="0.9"
+          className="font-[Space_Grotesk] uppercase tracking-[0.25em] select-none pointer-events-none"
+          style={{ fontWeight: 800, paintOrder: "stroke", stroke: "rgba(0,0,0,0.6)", strokeWidth: 2 }}
+        >
+          WEB INFRASTRUCTURE
+        </text>
+
+        <text
+          x="730"
+          y="700"
+          textAnchor="middle"
+          fontSize="18"
+          fill="white"
+          opacity="0.9"
+          className="font-[Space_Grotesk] uppercase tracking-[0.25em] select-none pointer-events-none"
+          style={{ fontWeight: 800, paintOrder: "stroke", stroke: "rgba(0,0,0,0.6)", strokeWidth: 2 }}
+        >
+          GROWTH ARCHITECTURE
+        </text>
+
+        <rect x="410" y="350" width="180" height="120" rx="22" ry="22" fill="url(#previewHue)" opacity="0.28" />
+        <text
+          x="500"
+          y="392"
+          textAnchor="middle"
+          fill="white"
+          className="select-none"
+          style={{
+            fontFamily: "Space Grotesk",
+            fontSize: 26,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            fontWeight: 900,
+          }}
+        >
+          <tspan x="500" dy="10">
+            Custom
+          </tspan>
+          <tspan x="500" dy="30">
+            Alignment
+          </tspan>
+        </text>
+
+        <defs>
+          <linearGradient id="previewHue" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(0,51,255,0.95)" />
+            <stop offset="100%" stopColor="rgba(108,0,255,0.95)" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  );
 }
 
 export default function ServicesPreview() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
 
-  const [customSet, setCustomSet] = useState<Set<BundleKey>>(new Set())
-  const [toast, setToast] = useState<{ id: number; message: string } | null>(null)
+  useEffect(() => {
+    const id = "spline-viewer-script";
+    if (document.getElementById(id)) return;
 
-  const showToast = (message: string) => {
-    const id = Date.now()
-    setToast({ id, message })
-    window.setTimeout(() => {
-      setToast((t) => (t && t.id === id ? null : t))
-    }, 2000)
-  }
+    const script = document.createElement("script");
+    script.id = id;
+    script.type = "module";
+    script.src =
+      "https://unpkg.com/@splinetool/viewer@1.12.61/build/spline-viewer.js";
+    document.body.appendChild(script);
+  }, []);
 
-  const addToCustom = (key: BundleKey) => {
-    if (!customSet.has(key)) {
-      const next = new Set(customSet)
-      next.add(key)
-      setCustomSet(next)
-      showToast("Added to Custom Alignment")
-    } else {
-      showToast("Already in Custom Alignment")
-    }
-  }
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const media = window.matchMedia("(max-width: 767px)");
 
-  const goToQuote = (bundles: BundleKey[]) => {
-    if (!bundles.length) return
-    navigate("/services/get-quote", { state: { bundles } })
-  }
+    const syncViewport = () => setIsMobileViewport(media.matches);
+    syncViewport();
 
-  const quoteLabel: Record<BundleKey, string> = {
-    brand: "Build the Brand",
-    web: "Build the system",
-    growth: "Plan growth",
-  }
+    media.addEventListener("change", syncViewport);
+    return () => media.removeEventListener("change", syncViewport);
+  }, []);
 
-  // ✅ Primary CTA gradient (blue -> purple), hover (purple -> black)
-  const btnPrimary =
-    "inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium text-white shadow-sm " +
-    "transition-all focus:outline-none focus:ring-2 focus:ring-white/20 " +
-    "bg-gradient-to-r from-[#1d2d52] to-[#380A65] " +
-    "hover:from-[#380A65] hover:to-black " +
-    "hover:-translate-y-[1px] active:translate-y-0"
+  const activeSplineUrl = isMobileViewport
+    ? CARESAFE_SPLINE_URL_MOBILE
+    : CARESAFE_SPLINE_URL;
 
-  // ✅ Secondary button: glass base, but on hover it “joins the brand”
-  const btnSecondary =
-    "inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium " +
-    "border border-white/20 bg-white/5 text-white/90 " +
-    "transition-all focus:outline-none focus:ring-2 focus:ring-white/20 " +
-    "hover:border-white/35 hover:text-white hover:bg-gradient-to-r hover:from-[#380A65] hover:to-black " +
-    "hover:-translate-y-[1px] active:translate-y-0"
+  const primaryButtonClass =
+    "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium text-black " +
+    "bg-white transition-all hover:-translate-y-[1px] hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white/30";
 
-  // ✅ Footer-style round button at bottom
-  const btnPill =
-    "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium " +
-    "border border-white/20 bg-white/5 text-white/90 " +
-    "transition-all focus:outline-none focus:ring-2 focus:ring-white/20 " +
-    "hover:border-white/35 hover:text-white hover:bg-gradient-to-r hover:from-[#380A65] hover:to-black " +
-    "hover:-translate-y-[1px] active:translate-y-0"
+  const secondaryButtonClass =
+    "inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium text-white/90 " +
+    "border border-white/20 bg-white/5 transition-all hover:-translate-y-[1px] hover:border-white/35 hover:text-white";
 
   return (
     <section className="relative overflow-hidden font-[Inter] text-white">
-      {toast && (
-        <div className="fixed top-6 left-6 z-[120]">
-          <div className="rounded-xl border border-white/15 bg-white/10 backdrop-blur-md px-4 py-2 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
-            <span className="text-sm text-white/95">{toast.message}</span>
-          </div>
-        </div>
-      )}
+      <style>{`
+        @keyframes preview-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes preview-breathe { 0% { opacity: .12; } 50% { opacity: .24; } 100% { opacity: .12; } }
+      `}</style>
 
-      <header className="max-w-6xl mx-auto px-6 md:px-12">
-        <h2 className="text-center font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-4xl">
-          Services
-        </h2>
-        <p className="mt-3 text-center text-white/70">
-          Three core systems designed to build clarity, confidence, and growth Or Combine services into a single, aligned
-          system built around your goals
-        </p>
-      </header>
+      <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(to_right,rgba(255,255,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.07)_1px,transparent_1px)] [background-size:28px_28px]" />
 
-      <div className="max-w-6xl mx-auto px-6 md:px-10 pt-10 md:pt-14">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-stretch
-             touch-pan-y overscroll-y-contain"style={{
-    WebkitOverflowScrolling: "touch",
-    touchAction: "pan-y",
-  }}>
-          {BUNDLES.map((b) => (
-            <GlowCard
-  key={b.key}
-  customSize
-  glowHex={glowHexByKey[b.key]}
-  className="w-full h-full min-h-[440px] touch-pan-y overscroll-y-contain"
->
-              <div
-  className="relative p-6 md:p-7 h-full flex flex-col touch-pan-y"
-  style={{ touchAction: "pan-y" }}
->
-                <div>
-                  <h5 className="text-xl md:text-2xl font-semibold mb-1.5 font-[Space_Grotesk] uppercase tracking-widest">
-                    {b.title}
-                  </h5>
+      <div className="relative mx-auto max-w-6xl px-6 md:px-10">
+        <header className="mx-auto max-w-4xl text-center">
+          <h2 className="font-[Space_Grotesk] text-4xl sm:text-5xl md:text-6xl font-semibold leading-[0.95] tracking-tight">
+            Two core solutions. One connected system.
+          </h2>
+          <p className="mt-5 text-white/70 text-base sm:text-lg leading-8">
+            Ikigai helps businesses move forward in two ways: Custom Alignment
+            brings clarity to what should be built across brand, web, and
+            growth, while InfraCare supports, stabilizes, and improves the
+            infrastructure behind day-to-day operations.
+          </p>
+        </header>
 
-                  <p className="text-white/70 mb-4">{b.tagline}</p>
-
-                  <ul className="text-sm text-white/85 space-y-1.5 mb-5 leading-6">
-                    {b.includes.map((item, idx) => (
-                      <li key={idx}>• {item}</li>
-                    ))}
-                  </ul>
-
-                  <p className="font-medium text-white/90">{b.price}</p>
-                </div>
-
-                <div className="mt-auto pt-6 flex flex-wrap gap-3">
-                  {/* ✅ Primary buttons updated */}
-                  <button className={btnPrimary} onClick={() => goToQuote([b.key])}>
-                    {quoteLabel[b.key]}
-                  </button>
-
-                  {/* ✅ Secondary buttons updated */}
-                  <button className={btnSecondary} onClick={() => addToCustom(b.key)}>
-                    Add to Custom Alignment
-                  </button>
-
-                  <button className={btnSecondary} onClick={() => navigate("/services")}>
-                    View full Services →
+        <div className="mt-10 space-y-6 sm:space-y-8">
+          <article className="relative overflow-hidden rounded-[28px] border border-white/15 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.03)_100%)] p-6 sm:p-8 md:p-10 shadow-[0_20px_80px_rgba(0,0,0,0.35)]">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_20%_-10%,rgba(0,51,255,0.14),transparent_60%),radial-gradient(80%_60%_at_120%_-10%,rgba(108,0,255,0.14),transparent_60%)]" />
+            <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-8 lg:gap-10">
+              <div>
+                <span className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/5 p-3 text-white/85">
+                  <Sparkles size={16} />
+                </span>
+                <p className="mt-5 text-[11px] font-[Space_Grotesk] uppercase tracking-[0.25em] text-white/60">
+                  Core Solution
+                </p>
+                <h3 className="mt-2 font-[Space_Grotesk] text-4xl sm:text-5xl font-semibold tracking-tight">
+                  Custom Alignment
+                </h3>
+                <p className="mt-4 max-w-2xl text-white/75 text-[15px] leading-8">
+                  Find the right build path for your business before resources
+                  get spread across the wrong priorities. Custom Alignment helps
+                  identify what should happen across brand, web, and growth, then
+                  turns that into a clearer sequence and scope.
+                </p>
+                <ul className="mt-5 space-y-2.5 text-white/85 text-[15px]">
+                  <li>• Strategic clarity before implementation</li>
+                  <li>• Connects brand, web, and growth decisions</li>
+                  <li>• Leads into the right next build path</li>
+                </ul>
+                <div className="mt-7 flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={() => navigate("/services/alignment")}
+                    className={primaryButtonClass}
+                  >
+                    Explore Custom Alignment <ArrowRight size={15} />
                   </button>
                 </div>
               </div>
-            </GlowCard>
-          ))}
-        </div>
 
-        <div className="mt-10 flex justify-center">
-          <button onClick={() => navigate("/services")} className={btnPill}>
-            Explore Services in depth →
-          </button>
+              <div className="px-1 sm:px-4 lg:px-0">
+                <CustomAlignmentAnimation />
+              </div>
+            </div>
+          </article>
+
+          <article className="relative overflow-hidden rounded-[28px] border border-white/15 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.03)_100%)] p-6 sm:p-8 md:p-10 shadow-[0_20px_80px_rgba(0,0,0,0.35)]">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_20%_-10%,rgba(0,51,255,0.14),transparent_60%),radial-gradient(80%_60%_at_120%_-10%,rgba(108,0,255,0.14),transparent_60%)]" />
+            <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] items-center gap-8 lg:gap-10">
+              <div>
+                <span className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/5 p-3 text-white/85">
+                  <ShieldCheck size={16} />
+                </span>
+                <p className="mt-5 text-[11px] font-[Space_Grotesk] uppercase tracking-[0.25em] text-white/60">
+                  Core Solution
+                </p>
+                <h3 className="mt-2 font-[Space_Grotesk] text-4xl sm:text-5xl font-semibold tracking-tight">
+                  InfraCare
+                </h3>
+                <p className="mt-4 max-w-2xl text-white/75 text-[15px] leading-8">
+                  Stabilize, support, and improve the systems your business
+                  depends on. InfraCare is a remote-first support model built for
+                  stronger technical reliability, clearer ownership, healthier
+                  security foundations, and more structured improvement over time.
+                </p>
+                <ul className="mt-5 space-y-2.5 text-white/85 text-[15px]">
+                  <li>• Remote-first support with on-site when needed</li>
+                  <li>• Documentation, security, and operational clarity</li>
+                  <li>• Built for reliability now and stronger infrastructure later</li>
+                </ul>
+                <div className="mt-7 flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={() => navigate("/services/caresafe")}
+                    className={primaryButtonClass}
+                  >
+                    Explore InfraCare <ArrowRight size={15} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="mx-auto w-full max-w-[420px]">
+                <div
+                  className="relative h-[240px] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/25 sm:h-[300px]"
+                  style={{ touchAction: "pan-y" }}
+                >
+                  <SplineViewer
+                    url={activeSplineUrl}
+                    className="absolute inset-0 block h-full w-full pointer-events-none"
+                    style={{
+                      transform: isMobileViewport
+                        ? "translateY(8%) scale(1.28)"
+                        : "translateY(6%) scale(1.08)",
+                      transformOrigin: "center center",
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </section>
-  )
+  );
 }

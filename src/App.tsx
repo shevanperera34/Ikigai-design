@@ -17,6 +17,8 @@ import Security from "./sections/Security";
 import Footer from "./components/Footer";
 import PayQuote from "./sections/PayQuotes";
 import PaySuccess from "./sections/PaySuccess";
+import Alignment from "./sections/alignment";
+import CareSafe from "./sections/caresafe";
 
 /**
  *  Meta Pixel SPA PageView tracker
@@ -59,12 +61,14 @@ export default function App() {
           <Route path="/services/get-quote" element={<IkigaiQuoteFlow />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
+          <Route path="/services/alignment" element={<Alignment />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/data-use" element={<DataUse />} />
           <Route path="/security" element={<Security />} />
           <Route path="/pay" element={<PayQuote />} />
           <Route path="/pay/success" element={<PaySuccess />} />
+          <Route path="/services/caresafe" element={<CareSafe />} />
         </Routes>
       </div>
 

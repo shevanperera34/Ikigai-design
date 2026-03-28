@@ -1,5 +1,5 @@
 // src/sections/Home.tsx
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Hero } from "./Hero";
 import ServicesPreview from "../components/ServicesPreview";
@@ -272,21 +272,34 @@ function TeamTile({ member }: { member: TeamMember }) {
    PAGE
 ===================== */
 export default function Home() {
-  return (
-    <main className="bg-[#050712] text-slate-100 overflow-x-hidden">
-      <SEO
-        title="The Ikigai Project | Brand Systems, Web Infrastructure & Growth Architecture"
-        description="A human-first digital studio building brand systems, intelligent websites, and growth architecture for companies that want clarity, speed, and real results."
-        path="/"
-      />
-      <SEOText page="home" />
-      <Hero />
+  const [isLogoLoaded, setIsLogoLoaded] = useState(false);
 
-      <section id="services" className="mt-32">
+  return (
+    <>
+      {!isLogoLoaded && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#050712]"
+          aria-hidden
+        >
+          <div className="h-10 w-10 rounded-full border-2 border-white/20 border-t-white/80 animate-spin" />
+        </div>
+      )}
+      <main
+        className={`bg-[#050712] text-slate-100 overflow-x-hidden [transform:translateZ(0)] [backface-visibility:hidden] transition-opacity duration-300 ${!isLogoLoaded ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+      >
+        <SEO
+          title="The Ikigai Project | Brand Systems, Web Infrastructure & Growth Architecture"
+          description="A human-first digital studio building brand systems, intelligent websites, and growth architecture for companies that want clarity, speed, and real results."
+          path="/"
+        />
+        <SEOText page="home" />
+        <Hero onLogoLoad={() => setIsLogoLoaded(true)} />
+
+      <section id="services" className="mt-32 bg-[#050712]">
         <ServicesPreview />
       </section>
 
-      <section id="about" className="mt-32 px-6 max-w-6xl mx-auto text-center">
+      <section id="about" className="mt-32 px-6 max-w-6xl mx-auto text-center bg-[#050712]">
         <h2 className={HOME_TITLE}>Who We Are</h2>
         <p className="mt-4 text-slate-300 max-w-3xl mx-auto">
           We’re The Ikigai Project. We design systems that give brands clarity,
@@ -300,13 +313,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="work" className="mt-32">
+      <section id="work" className="mt-32 bg-[#050712]">
         <WorkPreview />
       </section>
 
-      <section id="contact" className="mt-32 pb-32">
+      <section id="contact" className="mt-32 pb-32 bg-[#050712]">
         <ContactPreview />
       </section>
     </main>
+    </>
   );
 }

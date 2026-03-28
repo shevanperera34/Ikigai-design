@@ -36,6 +36,12 @@ body,
   height: 100%;
 }
 
+/* Prevent white flash when scrolling: match app dark background */
+html,
+body {
+  background-color: #050712;
+}
+
 :root {
   color-scheme: dark;
 }

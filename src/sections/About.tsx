@@ -1,9 +1,10 @@
 // src/sections/About.tsx
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo } from "react"
 import { useLocation } from "react-router-dom"
 import Particles from "../components/Particles"
 import SEOText from "../components/SEOText"
 import SEO from "../components/SEO"
+import ExceptionalTeamCluster from "../components/ExceptionalTeamCluster"
 
 // team images
 import sladeIntro from "../assets/slade_pic_intro_1.jpeg"
@@ -486,16 +487,7 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
 /* -------------------- Page -------------------- */
 export default function About() {
   const location = useLocation()
-  const [openKey, setOpenKey] = useState<TeamKey | null>(null)
-
-  // ✅ auto-open from navigation state: navigate("/about", { state: { memberKey: "Shevan" }})
-  useEffect(() => {
-    const state = location.state as any
-    const fromNavKey = state?.memberKey as TeamKey | undefined
-    if (fromNavKey) setOpenKey(fromNavKey)
-  }, [location.state])
-
-  const active = TEAM.find((m) => m.key === openKey) || null
+  const initialTeamKey = (location.state as { memberKey?: string } | null)?.memberKey
 
   const FINAL_CARD = { title: "Continuous support", desc: "We're here for you!" }
 
@@ -538,7 +530,7 @@ export default function About() {
 
       {/* Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10 py-24 md:py-32">
-        <h2 className="text-center font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-5xl">Who We Are</h2>
+        <h2 className="text-center font-bold font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-5xl">Who We Are</h2>
         <p className="mt-4 text-center text-lg md:text-2xl text-white/90">We build power through clarity</p>
 
         <div className="text-center mt-4 space-y-7 text-base md:text-lg leading-relaxed text-white/90 max-w-4xl mx-auto">
@@ -552,30 +544,18 @@ export default function About() {
           </p>
         </div>
 
-        <h2 className="text-center font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-5xl mt-10">WHAT WE BELIEVE</h2>
+        <h2 className="text-center font-bold font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-5xl mt-10">WHAT WE BELIEVE</h2>
         <div className="text-center mt-4 space-y-7 text-base md:text-lg leading-relaxed text-white/90 max-w-4xl mx-auto">
           <p>We don’t believe in bloated agency processes, endless buzzwords, or AI-for-the-sake-of-AI.</p>
           <p>We believe clarity creates confidence. Confidence creates decisive action. And decisive action is what builds real growth.</p>
         </div>
 
-        {/* OUR EXCEPTIONAL TEAM */}
-        <section className="mt-16 md:mt-20">
-          <header className="text-center mb-8 md:mb-10">
-            <h2 className="font-[Space_Grotesk] tracking-widest text-3xl md:text-5xl">Our Exceptional Team</h2>
-            <p className="mt-2 text-white/80">Three disciplines. One aligned system.</p>
-          </header>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 justify-items-center">
-            {TEAM.map((m) => (
-              <TeamTile key={m.key} member={m} onOpen={() => setOpenKey(m.key)} />
-            ))}
-          </div>
-        </section>
+        <ExceptionalTeamCluster initialOpenKey={initialTeamKey} />
 
         {/* PROCESS */}
         <div className="mt-20 md:mt-28">
           <header className="text-center mb-8 md:mb-10">
-            <h2 className="font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-4xl">The Process</h2>
+            <h2 className="font-bold font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-4xl">The Process</h2>
             <p className="mt-2 text-white/80">A clear, step-by-step flow. No hidden surprises.</p>
           </header>
 
@@ -653,9 +633,6 @@ export default function About() {
           </div>
         </div>
       </div>
-
-      {/* Modal */}
-      {active && <ProfileModal member={active} onClose={() => setOpenKey(null)} />}
     </section>
   )
 }

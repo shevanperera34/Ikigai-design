@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 export function Navbar() {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [showBrand, setShowBrand] = useState(true)
 
@@ -11,6 +12,18 @@ export function Navbar() {
 
   const location = useLocation()
   const isHome = location.pathname === '/'
+  const isCareSafePath = location.pathname === '/services/caresafe'
+  const isAlignmentPath = location.pathname.startsWith('/services/alignment')
+  const isServiceDetailWithBack = isCareSafePath || isAlignmentPath
+  const isServiceDetailWithBackMobile = isServiceDetailWithBack && isMobile
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1)
+      return
+    }
+    navigate('/services')
+  }
 
   // close the mobile menu on route change
   useEffect(() => {
@@ -115,16 +128,23 @@ useEffect(() => {
   }, [isHome])
 
   const base =
-    'px-3 py-1 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition ' +
+    'px-3 py-1 rounded-full whitespace-nowrap text-white/90 hover:text-white hover:bg-white/10 transition ' +
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30'
   const active = 'bg-white/15 text-white'
 
   const containerAlign = useMemo(() => {
+    if (isServiceDetailWithBackMobile) return 'justify-between'
     if (isHome && !showBrand) return 'justify-center'
     return 'justify-between'
-  }, [isHome, showBrand])
+  }, [isServiceDetailWithBackMobile, isHome, showBrand])
 
   const brandWrapClass = useMemo(() => {
+    if (isServiceDetailWithBackMobile) {
+      return (
+        'absolute left-1/2 -translate-x-1/2 flex items-center gap-2 text-white/95 ' +
+        'min-w-0 max-w-[68%]'
+      )
+    }
     if (!isHome) return 'flex items-center gap-2 text-white'
     return (
       'flex items-center gap-2 text-white transition-all duration-500 ease-out ' +
@@ -132,11 +152,12 @@ useEffect(() => {
         ? 'opacity-90 translate-x-0 max-w-[220px]'
         : 'opacity-0 translate-x-6 max-w-0 overflow-hidden pointer-events-none')
     )
-  }, [isHome, showBrand])
+  }, [isServiceDetailWithBackMobile, isHome, showBrand])
 
   const desktopNavClass = useMemo(() => {
-    return 'hidden md:flex items-center gap-2 text-sm ' + (isHome && !showBrand ? '' : 'ml-1')
-  }, [isHome, showBrand])
+    const gapClass = isServiceDetailWithBack ? 'gap-1.5 lg:gap-2' : 'gap-2'
+    return 'hidden md:flex items-center text-sm ' + gapClass + ' ' + (isHome && !showBrand ? '' : 'ml-1')
+  }, [isHome, showBrand, isServiceDetailWithBack])
 
   // ✅ instead of returning null (safer), just hide the navbar container
   const hideOnHomeMobileHero = isHome && isMobile && !showNavMobileHome
@@ -152,7 +173,7 @@ useEffect(() => {
       <div
         className={[
           'relative flex items-center rounded-2xl border border-white/10',
-          'bg-white/5 backdrop-blur-xl shadow-lg shadow-black/20',
+          'bg-black/40 backdrop-blur-xl shadow-lg shadow-black/20',
           'px-4 sm:px-5 py-3',
           (isHome ? 'w-[720px]' : 'w-[720px]') + ' max-w-full',
           'gap-3 sm:gap-4',
@@ -168,7 +189,26 @@ useEffect(() => {
           }}
         />
 
-        <div className={brandWrapClass + ' min-w-0'}>
+        {isServiceDetailWithBack && (
+          <button
+            type="button"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full
+                       border border-white/20 text-white/90 hover:bg-white/10 transition
+                       focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            aria-label="Go back"
+            onClick={handleBack}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+        )}
+
+        <NavLink
+          to="/"
+          aria-label="Go to homepage"
+          className={brandWrapClass + ' min-w-0 transition-opacity hover:opacity-100'}
+        >
           <svg viewBox="0 0 1024 1024" width="20" height="20" aria-hidden="true" className="opacity-90 shrink-0">
             <path
               fill="currentColor"
@@ -179,7 +219,7 @@ useEffect(() => {
           <span className="font-[Space_Grotesk] uppercase tracking-widest text-sm whitespace-nowrap overflow-hidden text-ellipsis">
             The Ikigai Project
           </span>
-        </div>
+        </NavLink>
 
         <nav className={desktopNavClass}>
           <NavLink to="/" end className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Home</NavLink>
@@ -191,9 +231,9 @@ useEffect(() => {
 
         <button
           type="button"
-          className="md:hidden ml-auto inline-flex h-9 w-9 items-center justify-center rounded-full
+          className={`md:hidden ${isServiceDetailWithBackMobile ? '' : 'ml-auto'} inline-flex h-9 w-9 items-center justify-center rounded-full
                      border border-white/20 text-white/90 hover:bg-white/10 transition
-                     focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                     focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30`}
           aria-label="Toggle menu"
           aria-expanded={open}
           aria-controls="ikigai-mobile-nav"
@@ -216,7 +256,7 @@ useEffect(() => {
           open ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
         }`}
       >
-        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/20 px-3 py-3 text-sm">
+        <div className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-lg shadow-black/20 px-3 py-3 text-sm">
           <div className="grid grid-cols-2 gap-2">
             <NavLink to="/" end className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Home</NavLink>
             <NavLink to="/About" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>About</NavLink>

@@ -6,12 +6,11 @@ import { Link } from "react-router-dom"
 import { ShinyButton } from "../components/shiny-button"
 import { metaPixel } from "../lib/metaPixel"
 
-
-export function Hero() {
+export function Hero({ onLogoLoad }: { onLogoLoad?: () => void }) {
   return (
     <section
       id="home-hero"
-      className="relative min-h-[92vh] flex items-center justify-center overflow-hidden font-[Inter] text-white"
+      className="relative min-h-[92vh] flex items-center justify-center overflow-hidden font-[Inter] text-white bg-[#050712]"
     >
       {/* Brand base + cinematic gradients */}
       <div className="absolute inset-0 -z-20">
@@ -44,13 +43,13 @@ export function Hero() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-4 text-center">
-        <h1 className="mt-22 font-[Space_Grotesk] uppercase tracking-widest text-xl sm:text-3xl md:text-3xl text-white/95">
+        <h1 className="mt-6 sm:mt-22 font-bold font-[Space_Grotesk] uppercase tracking-widest text-xl sm:text-3xl md:text-3xl text-white/95">
           THE IKIGAI PROJECT
         </h1>
 
         {/* Logo */}
         <div>
-          <LogoCanvas modelPath="/models/ikigai-logo.glb" />
+          <LogoCanvas modelPath="/models/ikigai-logo.glb" onLoad={onLogoLoad} />
         </div>
 
         <p className="max-w-3xl text-[18px] sm:text-[19px] leading-relaxed text-white/70 mb-3">

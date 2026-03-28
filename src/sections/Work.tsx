@@ -22,6 +22,7 @@ type Project = {
   category: string
   thumbnailUrl: string
   videoUrl: string
+  siteUrl?: string
   description: string
   client: string
   director: string
@@ -36,6 +37,7 @@ type Project = {
   overview?: string
   objective?: string
   roles?: string[]
+  workIncluded?: string[]
   tools?: string[]
   outcomes?: string[]
   ctaLabel?: string
@@ -56,6 +58,50 @@ const categories: Category[] = [
 ]
 
 const projects: Project[] = [
+  {
+  id: 9,
+  title: 'Sewitt.Fitness Website',
+  category: 'Digital Systems',
+  thumbnailUrl: mobil,
+  videoUrl: 'https://drive.google.com/file/d/1sz0pV2tw4Tv65ClzH6dXwlKQd-AXIr__/view?usp=sharing',
+  siteUrl: 'https://www.sewittfitness.ca',
+  description: 'A cinematic trailer…',
+  client: 'Sewitt.Fitness',
+  director: 'The Ikigai Project',
+  year: '2026',
+  location: 'Toronto, ON',
+  camera: 'Sony FX3 + DJI Ronin',
+  lenses: 'Sigma 35mm, Sony 85mm',
+  format: '4K',
+  aspectRatio: '16:9',
+  status: 'In Development',
+  statusYear: '2026',
+  overview:
+    'Phase 1 focused on building the core digital foundation for Sewitt Fitness. We designed and developed a conversion-focused website concept that clearly communicates the offer, establishes trust with new visitors, and guides users toward booking an intro session. The structure prioritized clarity, credibility, and a frictionless path to booking, ensuring first-time visitors quickly understand the service and take action.',
+  objective:
+    'Create a clear and trustworthy online presence that supports Sewitt’s growth as a personal training brand.',
+  roles: ['UI / UX Design', 'Front-End Development', 'Conversion Copywriting', 'Conversion Flow Strategy'],
+  workIncluded: [
+    'Communicate Sewitt’s coaching philosophy and approach',
+    'Establish credibility through testimonials and structured messaging',
+    'Guide visitors toward booking a free intro assessment',
+    'Create a scalable digital foundation for future marketing campaigns',
+    'Designing the site structure and user flow',
+    'Writing conversion-focused website copy',
+    'Developing responsive front-end layouts',
+    'Structuring testimonial placement and trust signals',
+    'Designing the intro session booking pathway',
+  ],
+  tools: ['React', 'TypeScript', 'TailwindCSS', 'Framer Motion'],
+  outcomes: [
+    'Clear website structure designed around lead generation',
+    'Strong mobile-first user experience for social media traffic',
+    'Defined booking pathway for intro assessments',
+    'Reusable layout system prepared for future content and service expansion',
+    'A scalable digital foundation ready to support Phase 2 marketing campaigns',
+  ],
+  ctaLabel: 'View Case Study',
+},
   {
   id: 1,
   title: 'Blinds 3D Website',
@@ -643,13 +689,26 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
       aria-label={`Open ${project.title}`}
     >
       {!imageError[project.id] ? (
-        <img
-          src={project.thumbnailUrl}
-          alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          onError={() => handleImageError(project.id)}
-          loading="lazy"
-        />
+        project.siteUrl ? (
+          <div className="relative w-full h-full bg-black overflow-hidden">
+            <iframe
+              src={project.siteUrl}
+              title={`${project.title} preview`}
+              scrolling="no"
+              className="absolute left-0 -top-[20%] h-[128%] w-[calc(100%+16px)] border-0 pointer-events-none transition-transform duration-700 group-hover:scale-105"
+              style={{ transformOrigin: "top left" }}
+              loading="lazy"
+            />
+          </div>
+        ) : (
+          <img
+            src={project.thumbnailUrl}
+            alt={project.title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            onError={() => handleImageError(project.id)}
+            loading="lazy"
+          />
+        )
       ) : (
         <div className="w-full h-full bg-black/40 flex items-center justify-center">
           <span className="text-white/60 text-sm font-medium">Image unavailable</span>
@@ -675,6 +734,18 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
       <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full text-[11px] uppercase tracking-widest font-semibold text-white/80 border border-white/20 bg-white/10">
         {project.category}
       </div>
+
+      {project.siteUrl && (
+        <a
+          href={project.siteUrl}
+          target="_blank"
+          rel="noreferrer noopener"
+          onClick={(e) => e.stopPropagation()}
+          className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full text-[11px] uppercase tracking-widest font-semibold text-white border border-white/25 bg-black/45 hover:bg-white hover:text-black transition-colors"
+        >
+          View Site
+        </a>
+      )}
     </motion.div>
   ))}
 
@@ -884,7 +955,21 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
 	{/* keep content centered */}
   <div className="absolute inset-0 grid place-items-center p-0 sm:p-4">
     {isPlaying ? (
-      isImageLike(selectedProject.videoUrl) ? (
+      selectedProject.siteUrl ? (
+        <div className="w-full h-full grid place-items-center">
+          <div className="w-full h-full max-w-[1280px] px-0 sm:px-4">
+            <div className="relative w-full h-full overflow-hidden rounded-xl">
+              <iframe
+                src={selectedProject.siteUrl}
+                title={`${selectedProject.title} site preview`}
+                frameBorder={0}
+                className="absolute inset-0 w-full h-full"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      ) : isImageLike(selectedProject.videoUrl) ? (
         <img
           src={selectedProject.videoUrl}
           alt={selectedProject.title}
@@ -1001,6 +1086,17 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
                       ) : null}
                     </div>
 
+                    {selectedProject.workIncluded?.length ? (
+                      <div className="mt-6">
+                        <h3 className="text-sm font-semibold mb-2">Work Included</h3>
+                        <ul className="list-disc pl-5 space-y-1 text-sm text-white/90">
+                          {selectedProject.workIncluded.map((item, i) => (
+                            <li key={i}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
+
                     {selectedProject.outcomes?.length ? (
                       <div className="mt-6">
                         <h3 className="text-sm font-semibold mb-2">Outcome / Impact</h3>
@@ -1016,6 +1112,16 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
                       <div className="text-sm text-white/85">
                         <span className="text-white/70">Client:</span> {selectedProject.client || '—'}
                       </div>
+                      {selectedProject.siteUrl ? (
+                        <a
+                          href={selectedProject.siteUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium text-white shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-white/20 bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)] hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]"
+                        >
+                          View Site
+                        </a>
+                      ) : null}
                     </div>
                   </div>
                 </motion.div>
@@ -1027,4 +1133,3 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
     </section>
   )
 }
-

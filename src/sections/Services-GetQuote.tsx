@@ -415,7 +415,7 @@ export default function IkigaiQuoteFlowMockup() {
       <div className="px-4 sm:px-6 lg:px-8 py-16 pt-28 md:pt-28">
         <div className="mx-auto max-w-6xl">
           <header className="text-center">
-            <h1 className={`${headerCls} text-3xl sm:text-4xl md:text-5xl`}>Custom Alignment Quote Builder</h1>
+            <h1 className={`${headerCls} text-3xl sm:text-4xl md:text-5xl`}>Build Your Scope</h1>
             <p className="mt-3 text-white/70">Select the services you want, then generate a quote and book a call.</p>
           </header>
 
