@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import SEO from "../components/SEO";
 import SEOText from "../components/SEOText";
+import ActServiceCard from "../components/services/ActServiceCard";
 
 /** ─────────────────────────────────────────────────────────────────────────────
  *  Ikigai Brand Tokens (local to this file; swap to a shared brand config later)
@@ -233,7 +234,7 @@ export default function Services() {
       `}</style>
 
       {/* ───────────────────────── SECTION 1: ALIGNMENT (Glassy Canvas) ───────────────────────── */}
-      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-12 sm:pt-14 md:pt-20 pb-20 sm:pb-24 md:pb-28">
+      <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-12 sm:pt-14 md:pt-20 pb-0">
         {/* ✅ Header OUTSIDE glass border */}
         
 
@@ -640,7 +641,7 @@ export default function Services() {
       <section className="relative z-10 max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pb-28 sm:pb-32 md:pb-36">
        
 
-        <div className="relative mt-6 sm:mt-10 mx-auto w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 bg-black/70 px-5 sm:px-8 md:px-12 py-8 sm:py-10 md:py-12 shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
+        <div className="relative mt-8 sm:mt-10 mx-auto w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 bg-black/70 px-5 sm:px-8 md:px-12 py-8 sm:py-10 md:py-12 shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
           <h3 className="mb-6 text-center text-5xl font-semibold font-[Space_Grotesk] uppercase tracking-[0.12em] leading-tight sm:hidden">
             InfraCare
           </h3>
@@ -699,6 +700,11 @@ export default function Services() {
             </div>
           </div>
         </div>
+
+        <ActServiceCard
+          sectionTitleClass={sectionTitleClass}
+          onActivate={() => navigate("/services/act")}
+        />
       </section>
     </section>
   );

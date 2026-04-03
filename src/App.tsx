@@ -19,6 +19,11 @@ import PayQuote from "./sections/PayQuotes";
 import PaySuccess from "./sections/PaySuccess";
 import Alignment from "./sections/alignment";
 import CareSafe from "./sections/caresafe";
+import ActService from "./sections/act";
+import ActFit from "./sections/act-fit";
+import ActIntake from "./sections/act-intake";
+import ActReportDemo from "./sections/act-report-demo";
+import ActThankYou from "./sections/act-thank-you";
 
 /**
  *  Meta Pixel SPA PageView tracker
@@ -69,6 +74,11 @@ export default function App() {
           <Route path="/pay" element={<PayQuote />} />
           <Route path="/pay/success" element={<PaySuccess />} />
           <Route path="/services/caresafe" element={<CareSafe />} />
+          <Route path="/services/act" element={<ActService />} />
+          <Route path="/services/act/fit" element={<ActFit />} />
+          <Route path="/services/act/intake" element={<ActIntake />} />
+          <Route path="/services/act/report-demo" element={<ActReportDemo />} />
+          <Route path="/services/act/thank-you" element={<ActThankYou />} />
         </Routes>
       </div>
 
