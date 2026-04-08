@@ -13,7 +13,9 @@ export function Navbar() {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const isCareSafePath = location.pathname === '/services/caresafe'
-  const isAlignmentPath = location.pathname.startsWith('/services/alignment')
+  const isAlignmentPath =
+    location.pathname.startsWith('/services/alignment') ||
+    location.pathname.startsWith('/services/custom-alignment')
   const isActPath = location.pathname.startsWith('/services/act')
   const isServiceDetailWithBack = isCareSafePath || isAlignmentPath || isActPath
   const isServiceDetailWithBackMobile = isServiceDetailWithBack && isMobile

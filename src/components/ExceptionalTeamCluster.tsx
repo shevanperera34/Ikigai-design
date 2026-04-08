@@ -88,6 +88,7 @@ export default function ExceptionalTeamCluster({ initialOpenKey }: ExceptionalTe
           {ACTION_FIGURE_TEAM.map((member, idx) => {
             const isActive = activeFigure === member.key
             const isLastMobile = idx === ACTION_FIGURE_TEAM.length - 1
+            const imageSrc = typeof member.imageUrl === "string" ? member.imageUrl : member.imageUrl.src
 
             return (
               <article
@@ -125,7 +126,7 @@ export default function ExceptionalTeamCluster({ initialOpenKey }: ExceptionalTe
 
                   <div className="relative">
                     <img
-                      src={member.imageUrl}
+                      src={imageSrc}
                       alt={`${member.name} action figure`}
                       className={`${member.heightClass} w-auto object-contain`}
                       style={{

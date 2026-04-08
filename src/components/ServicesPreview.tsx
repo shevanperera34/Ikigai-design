@@ -236,7 +236,7 @@ export default function ServicesPreview() {
                 </ul>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <button
-                    onClick={() => navigate("/services/alignment")}
+                    onClick={() => navigate("/services/custom-alignment")}
                     className={primaryButtonClass}
                   >
                     Explore Custom Alignment <ArrowRight size={15} />

@@ -83,7 +83,19 @@ function clamp(n: number, min: number, max: number) {
 
 export default function IkigaiQuoteFlowMockup() {
   const location = useLocation();
-  const bundlesFromState = (location.state as { bundles?: BundleTag[] } | null)?.bundles ?? [];
+  const routeState =
+    (location.state as
+      | {
+          bundles?: BundleTag[];
+          serviceIds?: string[];
+          lead?: { name?: string; email?: string; company?: string; website?: string };
+          source?: string;
+        }
+      | null) ?? null;
+
+  const bundlesFromState = routeState?.bundles ?? [];
+  const serviceIdsFromState = routeState?.serviceIds ?? [];
+  const leadFromState = routeState?.lead ?? null;
 
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [lead, setLead] = useState({
@@ -126,15 +138,39 @@ export default function IkigaiQuoteFlowMockup() {
     });
   }, []);
 
-  // Pre-select NON-add-on items for incoming bundles
+  // Prefill lead details if passed from upstream flow
   useEffect(() => {
+    if (!leadFromState) return;
+
+    setLead((prev) => ({
+      ...prev,
+      name: prev.name || leadFromState.name || "",
+      email: prev.email || leadFromState.email || "",
+      company: prev.company || leadFromState.company || "",
+      website: prev.website || leadFromState.website || "",
+    }));
+  }, [leadFromState]);
+
+  // Pre-select items from upstream recommendations (exact IDs preferred, bundles fallback)
+  useEffect(() => {
+    if (serviceIdsFromState.length > 0) {
+      const next: Record<string, boolean> = {};
+      CATALOG.forEach((item) => {
+        if (serviceIdsFromState.includes(item.id)) {
+          next[item.id] = true;
+        }
+      });
+      setSelected(next);
+      return;
+    }
+
     if (!bundlesFromState.length) return;
     const next: Record<string, boolean> = {};
     CATALOG.forEach((item) => {
       if (!item.addon && bundlesFromState.includes(item.bundle)) next[item.id] = true;
     });
     setSelected(next);
-  }, [bundlesFromState]);
+  }, [bundlesFromState, serviceIdsFromState]);
 
   const selectedItems = useMemo(() => CATALOG.filter((i) => selected[i.id]), [selected]);
 

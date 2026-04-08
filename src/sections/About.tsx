@@ -1,6 +1,7 @@
 // src/sections/About.tsx
 import React, { useEffect, useMemo } from "react"
 import { useLocation } from "react-router-dom"
+import type { StaticImageData } from "next/image"
 import Particles from "../components/Particles"
 import SEOText from "../components/SEOText"
 import SEO from "../components/SEO"
@@ -20,7 +21,7 @@ type TeamMember = {
   key: TeamKey
   name: string
   role: string
-  imageUrl: string
+  imageUrl: string | StaticImageData
   imgClass?: string
 
   // short card bio
@@ -243,6 +244,7 @@ const STEPS = [
 /* -------------------- Team Card -------------------- */
 function TeamTile({ member, onOpen }: { member: TeamMember; onOpen: () => void }) {
   const stopCardClick = (e: React.MouseEvent) => e.stopPropagation()
+  const imageSrc = typeof member.imageUrl === "string" ? member.imageUrl : member.imageUrl.src
 
   const SocialBtn = ({
     href,
@@ -302,7 +304,7 @@ function TeamTile({ member, onOpen }: { member: TeamMember; onOpen: () => void }
         <div className="rounded-xl overflow-hidden ring-1 ring-white/20 bg-white/[0.06]">
           <div className="aspect-[3/4] w-full">
             <img
-              src={member.imageUrl}
+              src={imageSrc}
               alt={member.name}
               className={`h-full w-full object-cover ${member.imgClass ?? ""}`}
             />
@@ -346,6 +348,7 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
   }, [onClose])
 
   const aboutParagraphs = useMemo(() => member.about.split("\n\n").filter(Boolean), [member.about])
+  const imageSrc = typeof member.imageUrl === "string" ? member.imageUrl : member.imageUrl.src
 
   return (
     <div className="fixed inset-0 z-[100]" role="dialog" aria-modal="true" onClick={onClose}>
@@ -379,7 +382,7 @@ function ProfileModal({ member, onClose }: { member: TeamMember; onClose: () => 
             <div className="relative lg:sticky lg:top-0 p-5 md:p-8 self-start">
               <div className="relative w-full h-[480px] lg:h-[calc(100vh-10rem)] rounded-2xl overflow-hidden ring-1 ring-white/20 bg-black/30">
                 <img
-                  src={member.imageUrl}
+                  src={imageSrc}
                   alt={member.name}
                   className={`absolute inset-0 w-full h-full object-cover ${member.imgClass ?? ""}`}
                 />

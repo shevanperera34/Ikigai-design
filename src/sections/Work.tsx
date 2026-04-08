@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion'
 import type { Variants, Transition } from 'framer-motion'
 import { Play, X, Expand, Minimize, Share2, Search, XCircle, ArrowRight} from 'lucide-react'
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import type { StaticImageData } from 'next/image'
 import blindthumb from '../assets/Blinds_thumbnail_2.png'
 import Autodetail from '../assets/AutoDetailing_thumbnail.png'
 import clubpromo from '../assets/ClubPromo_Thumbnail.png'
@@ -16,12 +17,14 @@ import flame from '../assets/flameReveal.gif'
 import SEO from "../components/SEO";
 import SEOText from "../components/SEOText";
 
+type AssetSource = string | StaticImageData
+
 type Project = {
   id: number
   title: string
   category: string
-  thumbnailUrl: string
-  videoUrl: string
+  thumbnailUrl: AssetSource
+  videoUrl: AssetSource
   siteUrl?: string
   description: string
   client: string
@@ -49,6 +52,8 @@ interface AnimationVariants extends Variants {
   hidden: { opacity: number; y?: number; scale?: number; width?: number | string }
   visible: { opacity: number; y?: number; scale?: number; width?: number | string; transition: Transition }
 }
+
+const toSrc = (asset: AssetSource): string => (typeof asset === 'string' ? asset : asset.src)
 
 /* ---------- data ---------- */
 const categories: Category[] = [
@@ -702,7 +707,7 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
           </div>
         ) : (
           <img
-            src={project.thumbnailUrl}
+            src={toSrc(project.thumbnailUrl)}
             alt={project.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             onError={() => handleImageError(project.id)}
@@ -969,9 +974,9 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
             </div>
           </div>
         </div>
-      ) : isImageLike(selectedProject.videoUrl) ? (
+      ) : isImageLike(toSrc(selectedProject.videoUrl)) ? (
         <img
-          src={selectedProject.videoUrl}
+          src={toSrc(selectedProject.videoUrl)}
           alt={selectedProject.title}
           className="block w-full h-full object-contain"
         />
@@ -981,7 +986,7 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
           <div className="w-full max-w-[1280px] px-0 sm:px-4">
             <div className="relative w-full aspect-video overflow-hidden rounded-xl">
               <iframe
-                src={getEmbedUrl(selectedProject.videoUrl)}
+                src={getEmbedUrl(toSrc(selectedProject.videoUrl))}
                 title={selectedProject.title}
                 frameBorder={0}
                 allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -996,7 +1001,7 @@ const onTouchMoveMedia = (e: React.TouchEvent) => {
     ) : (
       <div className="relative w-full h-full">
         <img
-          src={selectedProject.thumbnailUrl}
+          src={toSrc(selectedProject.thumbnailUrl)}
           alt={selectedProject.title}
           className="block w-full h-full object-cover"
         />

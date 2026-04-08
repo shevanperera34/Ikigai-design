@@ -459,7 +459,7 @@ export default function Services() {
                         setSelectedKey(null);
                         setShowCustom(true);
                         setCustomLocked(true);
-                        navigate("/services/alignment");
+                        navigate("/services/custom-alignment");
                       }}
                       onKeyDown={(e: any) => {
                         if (e.key === "Enter" || e.key === " ") {
@@ -625,7 +625,7 @@ export default function Services() {
                                bg-gradient-to-r from-[rgba(0,51,255,0.9)] to-[rgba(108,0,255,0.9)]
                                hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
                                focus:outline-none focus:ring-2 focus:ring-white/20"
-                    onClick={() => navigate("/services/alignment")}
+                    onClick={() => navigate("/services/custom-alignment")}
                   >
                     More
                   </button>

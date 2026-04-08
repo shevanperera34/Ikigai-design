@@ -17,7 +17,8 @@ import Security from "./sections/Security";
 import Footer from "./components/Footer";
 import PayQuote from "./sections/PayQuotes";
 import PaySuccess from "./sections/PaySuccess";
-import Alignment from "./sections/alignment";
+import CustomAlignmentOverview from "./sections/custom-alignment";
+import CustomAlignmentBuilder from "./sections/custom-alignment-builder";
 import CareSafe from "./sections/caresafe";
 import ActService from "./sections/act";
 import ActFit from "./sections/act-fit";
@@ -66,7 +67,10 @@ export default function App() {
           <Route path="/services/get-quote" element={<IkigaiQuoteFlow />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
-          <Route path="/services/alignment" element={<Alignment />} />
+          <Route path="/services/custom-alignment" element={<CustomAlignmentOverview />} />
+          <Route path="/services/custom-alignment/builder" element={<CustomAlignmentBuilder />} />
+          <Route path="/services/alignment" element={<CustomAlignmentOverview />} />
+          <Route path="/services/alignment/builder" element={<CustomAlignmentBuilder />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/data-use" element={<DataUse />} />

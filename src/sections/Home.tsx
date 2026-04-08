@@ -1,6 +1,7 @@
 // src/sections/Home.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { StaticImageData } from "next/image";
 import { Hero } from "./Hero";
 import ServicesPreview from "../components/ServicesPreview";
 import WorkPreview from "../components/WorkPreview";
@@ -23,7 +24,7 @@ type TeamMember = {
   key: TeamKey;
   name: string;
   role: string;
-  imageUrl: string;
+  imageUrl: string | StaticImageData;
   imgClass?: string;
 
   // short card bio
@@ -167,6 +168,7 @@ function IconInstagram(props: React.SVGProps<SVGSVGElement>) {
 ===================== */
 function TeamTile({ member }: { member: TeamMember }) {
   const navigate = useNavigate();
+  const imageSrc = typeof member.imageUrl === "string" ? member.imageUrl : member.imageUrl.src;
 
   const SocialLink = ({
     href,
@@ -224,7 +226,7 @@ function TeamTile({ member }: { member: TeamMember }) {
         <div className="rounded-xl overflow-hidden ring-1 ring-white/20 bg-white/[0.06]">
           <div className="aspect-[3/4] w-full">
             <img
-              src={member.imageUrl}
+              src={imageSrc}
               alt={member.name}
               className={`h-full w-full object-cover ${member.imgClass ?? ""}`}
             />

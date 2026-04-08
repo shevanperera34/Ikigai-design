@@ -8,7 +8,7 @@ export type QuoteSummary = {
 }
 
 const API_BASE =
-  import.meta.env.VITE_API_BASE?.replace(/\/+$/, "") ||
+  process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, "") ||
   "https://api.theikigaiproject.com"
 
 async function postJSON<T>(path: string, body: unknown): Promise<T> {

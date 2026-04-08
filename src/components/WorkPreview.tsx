@@ -3,6 +3,7 @@ import { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play } from "lucide-react";
+import type { StaticImageData } from "next/image";
 
 import blindthumb from "../assets/Blinds_thumbnail_2.png";
 import clubpromo from "../assets/ClubPromo_Thumbnail.png";
@@ -12,7 +13,7 @@ type PreviewProject = {
   id: number;
   title: string;
   category: string;
-  thumbnailUrl: string;
+  thumbnailUrl: string | StaticImageData;
   blurb: string;
 };
 
@@ -194,6 +195,8 @@ function PreviewCard({
   active: PreviewProject;
   onOpen: () => void;
 }) {
+  const thumbnailSrc = typeof active.thumbnailUrl === "string" ? active.thumbnailUrl : active.thumbnailUrl.src;
+
   return (
     <div
       className="relative overflow-hidden border border-white/10 rounded-2xl backdrop-blur-sm
@@ -223,7 +226,7 @@ function PreviewCard({
             <div className="rounded-xl overflow-hidden border border-white/10 bg-white/[0.04]">
               <div className="aspect-[16/9] w-full">
                 <img
-                  src={active.thumbnailUrl}
+                  src={thumbnailSrc}
                   alt={active.title}
                   className="h-full w-full object-cover"
                   loading="lazy"
