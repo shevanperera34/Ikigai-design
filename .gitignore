@@ -11,8 +11,10 @@ node_modules
 dist
 dist-ssr
 .next
+out
 .turbo
 *.local
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*

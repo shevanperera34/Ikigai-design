@@ -36,7 +36,12 @@ export default function Document() {
           .seo-fallback ul { margin: 0 0 12px; padding-left: 18px; }
         `}</style>
 
-        <script defer data-domain="theikigaiproject.com" data-api="/api/event" src="/js/script.js" />
+        <script
+          defer
+          data-domain="theikigaiproject.com"
+          data-api="https://plausible.io/api/event"
+          src="https://plausible.io/js/script.js"
+        />
 
         <script
           dangerouslySetInnerHTML={{
