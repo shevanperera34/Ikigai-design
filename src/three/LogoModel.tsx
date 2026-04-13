@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import type { ThreeElements } from "@react-three/fiber";
 import * as THREE from "three";
+import { withBasePath } from "../lib/basePath";
 
 type Props = { url: string } & ThreeElements["group"];
 
@@ -35,4 +36,4 @@ export function LogoModel({ url, ...props }: Props) {
   return <primitive object={scene} {...props} />;
 }
 
-useGLTF.preload("/models/ikigai-logo.glb");
+useGLTF.preload(withBasePath("/models/ikigai-logo.glb"));

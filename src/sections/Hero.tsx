@@ -49,7 +49,7 @@ export function Hero({ onLogoLoad }: { onLogoLoad?: () => void }) {
 
         {/* Logo */}
         <div>
-          <LogoCanvas modelPath="/models/ikigai-logo.glb" onLoad={onLogoLoad} />
+          <LogoCanvas onLoad={onLogoLoad} />
         </div>
 
         <p className="max-w-3xl text-[18px] sm:text-[19px] leading-relaxed text-white/70 mb-3">

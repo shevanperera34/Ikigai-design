@@ -2,6 +2,7 @@ import React, { Suspense, useEffect, useMemo, useRef } from 'react'
 import { Canvas, useThree } from '@react-three/fiber'
 import { Environment, ContactShadows, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
+import { withBasePath } from '../lib/basePath'
 
 function FitLogo({ url, onLoad }: { url: string; onLoad?: () => void }) {
   const { scene } = useGLTF(url)
@@ -44,10 +45,10 @@ function FitLogo({ url, onLoad }: { url: string; onLoad?: () => void }) {
 }
 
 
-useGLTF.preload('/models/ikigai-logo.glb')
+useGLTF.preload(withBasePath('/models/ikigai-logo.glb'))
 
 export function LogoCanvas({
-  modelPath = '/models/ikigai-logo.glb',
+  modelPath = withBasePath('/models/ikigai-logo.glb'),
   onLoad,
 }: {
   modelPath?: string
@@ -87,4 +88,3 @@ export function LogoCanvas({
     </div>
   )
 }
-
