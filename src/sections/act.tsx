@@ -30,7 +30,7 @@ export default function ActService() {
             <h1 className="font-[Space_Grotesk] text-4xl sm:text-5xl md:text-6xl font-semibold uppercase tracking-[0.1em] leading-tight text-white/95">
               {ACT_SERVICE_PAGE.name}
             </h1>
-            <h2 className="whitespace-nowrap font-[Space_Grotesk] text-3xl sm:text-4xl md:text-5xl font-semibold uppercase tracking-[0.08em] leading-tight lg:text-right">
+            <h2 className="whitespace-normal break-words font-[Space_Grotesk] text-2xl sm:text-4xl md:text-5xl font-semibold uppercase tracking-[0.08em] leading-tight text-left lg:whitespace-nowrap lg:text-right">
               Activate <span className="text-[#3D4DFF]">Consistent</span>{" "}
               <span className="text-[#6C00FF]">Traction</span>
             </h2>
