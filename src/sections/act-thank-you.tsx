@@ -1,9 +1,19 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import SEO from "../components/SEO";
 
 export default function ActThankYou() {
-  const navigate = useNavigate();
+  useEffect(() => {
+    const id = "calendly-widget-script";
+    if (document.getElementById(id)) return;
+
+    const script = document.createElement("script");
+    script.id = id;
+    script.type = "text/javascript";
+    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
 
   return (
     <section className="relative overflow-hidden bg-black font-[Inter] text-white">
@@ -17,42 +27,42 @@ export default function ActThankYou() {
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 via-purple-700/5 to-transparent" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-3xl px-5 sm:px-6 md:px-10 pt-20 sm:pt-24 md:pt-28 pb-20 sm:pb-24">
-        <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 sm:p-10 text-center">
+      <div className="relative z-10 mx-auto max-w-5xl px-5 sm:px-6 md:px-10 pt-20 sm:pt-24 md:pt-28 pb-20 sm:pb-24 space-y-6">
+        <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
           <p className="text-[11px] tracking-[0.22em] text-white/70 font-[Space_Grotesk] uppercase">
             A.C.T.
           </p>
-
-          <h1 className="mt-4 font-[Space_Grotesk] text-4xl sm:text-5xl font-semibold uppercase tracking-[0.08em] leading-tight">
+          <h1 className="mt-3 font-[Space_Grotesk] text-3xl sm:text-4xl md:text-5xl font-semibold uppercase tracking-[0.08em] leading-tight">
             Thank You
           </h1>
-
-          <p className="mt-5 text-white/82 text-sm sm:text-[15px] leading-7">
-            Your intake has been received. Next step is a quick review call to
-            confirm scope, timeline, and your first activation month.
+          <p className="mt-4 text-white/85 text-sm sm:text-[15px] leading-7 max-w-3xl">
+            Your intake is in. We have what we need to make the intro call actually useful.
           </p>
-
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <button
-              type="button"
-              onClick={() => navigate("/contact")}
-              className="rounded-xl px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all
-                         bg-gradient-to-r from-[rgba(0,51,255,0.92)] to-[rgba(108,0,255,0.92)]
-                         hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]"
-            >
-              Book Intro Call
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate("/services/act")}
-              className="rounded-xl px-5 py-2.5 text-sm font-medium border border-white/20 bg-white/5 text-white/90
-                         transition-all hover:border-white/35 hover:text-white"
-            >
-              Back To A.C.T.
-            </button>
-          </div>
         </article>
+
+        <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+          <h2 className="font-[Space_Grotesk] text-2xl sm:text-3xl font-semibold uppercase tracking-[0.08em]">
+            What your intro call covers
+          </h2>
+
+          <ul className="mt-4 space-y-2 text-white/80 text-sm sm:text-[15px] leading-7">
+            <li>• Review your Instant Presence Check result and key gaps.</li>
+            <li>• Walk through the right A.C.T. starting package for your stage.</li>
+            <li>• Confirm practical next steps and timeline.</li>
+          </ul>
+        </article>
+
+        <article>
+          <div
+            className="calendly-inline-widget w-full"
+            data-url="https://calendly.com/theikigaiproject-ca/30min"
+            style={{ minWidth: "320px", height: "700px" }}
+          />
+        </article>
+
+        <p className="text-center text-white/62 text-sm sm:text-[15px]">
+          Not ready to book yet? We&apos;ll follow up within 24 hours.
+        </p>
       </div>
     </section>
   );

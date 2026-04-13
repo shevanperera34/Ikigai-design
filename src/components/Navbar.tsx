@@ -16,6 +16,11 @@ export function Navbar() {
   const isAlignmentPath =
     location.pathname.startsWith('/services/alignment') ||
     location.pathname.startsWith('/services/custom-alignment')
+  const isAlignmentOverviewPath =
+    location.pathname === '/services/alignment' ||
+    location.pathname === '/services/custom-alignment'
+  const isActOverviewPath = location.pathname === '/services/act'
+  const showTopRightBookCall = isAlignmentOverviewPath || isActOverviewPath
   const isActPath = location.pathname.startsWith('/services/act')
   const isServiceDetailWithBack = isCareSafePath || isAlignmentPath || isActPath
   const isServiceDetailWithBackMobile = isServiceDetailWithBack && isMobile
@@ -166,23 +171,24 @@ useEffect(() => {
   const hideOnHomeMobileHero = isHome && isMobile && !showNavMobileHome
 
   return (
-    <div
-      className={[
-        'fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-20 w-[calc(100%-1.5rem)] sm:w-auto',
-        'transition-all duration-300',
-        hideOnHomeMobileHero ? 'opacity-0 -translate-y-2 pointer-events-none' : 'opacity-100 translate-y-0',
-      ].join(' ')}
-    >
+    <>
       <div
         className={[
-          'relative flex items-center rounded-2xl border border-white/10',
-          'bg-black/40 backdrop-blur-xl shadow-lg shadow-black/20',
-          'px-4 sm:px-5 py-3',
-          (isHome ? 'w-[720px]' : 'w-[720px]') + ' max-w-full',
-          'gap-3 sm:gap-4',
-          containerAlign,
+          'fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-20 w-[calc(100%-1.5rem)] sm:w-auto',
+          'transition-all duration-300',
+          hideOnHomeMobileHero ? 'opacity-0 -translate-y-2 pointer-events-none' : 'opacity-100 translate-y-0',
         ].join(' ')}
       >
+        <div
+          className={[
+            'relative flex items-center rounded-2xl border border-white/10',
+            'bg-black/40 backdrop-blur-xl shadow-lg shadow-black/20',
+            'px-4 sm:px-5 py-3',
+            (isHome ? 'w-[720px]' : 'w-[720px]') + ' max-w-full',
+            'gap-3 sm:gap-4',
+            containerAlign,
+          ].join(' ')}
+        >
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-2xl -z-10"
@@ -232,43 +238,54 @@ useEffect(() => {
           <NavLink to="/Contact" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Contact</NavLink>
         </nav>
 
-        <button
-          type="button"
-          className={`md:hidden ${isServiceDetailWithBackMobile ? '' : 'ml-auto'} inline-flex h-9 w-9 items-center justify-center rounded-full
+          <button
+            type="button"
+            className={`md:hidden ${isServiceDetailWithBackMobile ? '' : 'ml-auto'} inline-flex h-9 w-9 items-center justify-center rounded-full
                      border border-white/20 text-white/90 hover:bg-white/10 transition
                      focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30`}
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          aria-controls="ikigai-mobile-nav"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className="sr-only">Open menu</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            {open ? (
-              <path strokeWidth="2" strokeLinecap="round" d="M18 6L6 18M6 6l12 12" />
-            ) : (
-              <path strokeWidth="2" strokeLinecap="round" d="M3 6h18M3 12h18M3 18h18" />
-            )}
-          </svg>
-        </button>
-      </div>
+            aria-label="Toggle menu"
+            aria-expanded={open}
+            aria-controls="ikigai-mobile-nav"
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span className="sr-only">Open menu</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              {open ? (
+                <path strokeWidth="2" strokeLinecap="round" d="M18 6L6 18M6 6l12 12" />
+              ) : (
+                <path strokeWidth="2" strokeLinecap="round" d="M3 6h18M3 12h18M3 18h18" />
+              )}
+            </svg>
+          </button>
+        </div>
 
-      <div
-        id="ikigai-mobile-nav"
-        className={`md:hidden mt-2 origin-top transition-all ${
-          open ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
-        }`}
-      >
-        <div className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-lg shadow-black/20 px-3 py-3 text-sm">
-          <div className="grid grid-cols-2 gap-2">
-            <NavLink to="/" end className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Home</NavLink>
-            <NavLink to="/About" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>About</NavLink>
-            <NavLink to="/Services" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Services</NavLink>
-            <NavLink to="/work" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Our Work</NavLink>
-            <NavLink to="/Contact" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Contact</NavLink>
+        <div
+          id="ikigai-mobile-nav"
+          className={`md:hidden mt-2 origin-top transition-all ${
+            open ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-lg shadow-black/20 px-3 py-3 text-sm">
+            <div className="grid grid-cols-2 gap-2">
+              <NavLink to="/" end className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Home</NavLink>
+              <NavLink to="/About" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>About</NavLink>
+              <NavLink to="/Services" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Services</NavLink>
+              <NavLink to="/work" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Our Work</NavLink>
+              <NavLink to="/Contact" className={({ isActive }) => `${base} ${isActive ? active : ''}`}>Contact</NavLink>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      {showTopRightBookCall && (
+        <a
+          href="https://calendly.com/theikigaiproject-ca/30min"
+          target="_blank"
+          rel="noreferrer"
+          className="hidden md:inline-flex fixed right-4 lg:right-8 top-4 sm:top-6 z-20 rounded-xl border border-white/20 px-4 py-2 text-sm font-medium text-white/90 transition-all duration-200 hover:border-transparent hover:text-white hover:bg-gradient-to-r hover:from-[rgba(0,51,255,0.95)] hover:to-[rgba(108,0,255,0.95)]"
+        >
+          Book Call Now
+        </a>
+      )}
+    </>
   )
 }

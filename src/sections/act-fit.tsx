@@ -1,13 +1,13 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import SEO from "../components/SEO";
 import {
-  ISSUE_PRIORITY_MAP,
   PRESENCE_QUESTIONS,
   PRESENCE_RESULTS,
   type PresenceRecommendation,
   type PresenceResultKey,
+  ISSUE_PRIORITY_MAP,
   getOption,
 } from "../content/actPresenceCheck";
 
@@ -19,6 +19,17 @@ const RESULT_ORDER: PresenceResultKey[] = [
   "active_but_unclear",
   "barely_showing_up",
 ];
+
+const RESULT_BRIDGE_COPY: Record<PresenceResultKey, string> = {
+  visible_inconsistent:
+    "Your business is showing up, but the gaps in consistency are costing you. The intake will help us map a content rhythm that runs without depending on your availability every week.",
+  good_business_weak_signal:
+    "Your real-world reputation isn't coming through online yet. The intake will help us understand what proof points are missing and how to reflect your actual quality accurately.",
+  active_but_unclear:
+    "You're posting but the message isn't landing clearly. The intake will help us identify what your content should be communicating and to who.",
+  barely_showing_up:
+    "Low visibility is the starting point, not the permanent state. The intake gives us everything we need to build a consistent baseline from the ground up.",
+};
 
 function evaluateResult(answers: Answers): PresenceResultKey {
   const scores: Record<PresenceResultKey, number> = {
@@ -126,8 +137,7 @@ export default function ActFit() {
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [showResult, setShowResult] = useState(false);
-  const [email, setEmail] = useState("");
-  const [emailSaved, setEmailSaved] = useState(false);
+  const lastTouchTapRef = useRef<{ value: string; ts: number }>({ value: "", ts: 0 });
 
   const totalSteps = PRESENCE_QUESTIONS.length;
   const currentQuestion = PRESENCE_QUESTIONS[stepIndex];
@@ -137,7 +147,7 @@ export default function ActFit() {
     ? 100
     : Math.round(((stepIndex + 1) / totalSteps) * 100);
 
-  const canContinue = currentQuestion.optional || Boolean(selectedValue);
+  const canContinue = Boolean(selectedValue);
 
   const resultKey = useMemo(() => evaluateResult(answers), [answers]);
   const result = PRESENCE_RESULTS[resultKey];
@@ -146,13 +156,19 @@ export default function ActFit() {
     [resultKey, answers]
   );
 
-  const businessCategoryLabel = getOption(
-    "businessCategory",
-    answers.businessCategory
-  )?.label;
-
   const onSelect = (value: string) => {
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }));
+  };
+
+  const onDoubleSelect = (value: string) => {
+    setAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }));
+
+    if (stepIndex === totalSteps - 1) {
+      setShowResult(true);
+      return;
+    }
+
+    setStepIndex((prev) => Math.min(prev + 1, totalSteps - 1));
   };
 
   const onNext = () => {
@@ -174,29 +190,10 @@ export default function ActFit() {
     setStepIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  const onSkipOptional = () => {
-    if (!currentQuestion.optional) return;
-
-    if (stepIndex === totalSteps - 1) {
-      setShowResult(true);
-      return;
-    }
-
-    setStepIndex((prev) => Math.min(prev + 1, totalSteps - 1));
-  };
-
-  const onSaveEmail = () => {
-    const valid = email.includes("@") && email.includes(".");
-    if (!valid) return;
-    setEmailSaved(true);
-  };
-
   const restart = () => {
     setAnswers({});
     setStepIndex(0);
     setShowResult(false);
-    setEmail("");
-    setEmailSaved(false);
   };
 
   return (
@@ -272,6 +269,25 @@ export default function ActFit() {
                     key={option.value}
                     type="button"
                     onClick={() => onSelect(option.value)}
+                    onDoubleClick={() => onDoubleSelect(option.value)}
+                    onTouchEnd={(event) => {
+                      // Prevent synthetic click so touch logic controls tap behavior.
+                      event.preventDefault();
+
+                      const now = Date.now();
+                      const last = lastTouchTapRef.current;
+                      const isDoubleTap =
+                        last.value === option.value && now - last.ts <= 350;
+
+                      if (isDoubleTap) {
+                        onDoubleSelect(option.value);
+                        lastTouchTapRef.current = { value: "", ts: 0 };
+                        return;
+                      }
+
+                      onSelect(option.value);
+                      lastTouchTapRef.current = { value: option.value, ts: now };
+                    }}
                     className={
                       "text-left rounded-2xl border px-4 py-4 transition-all duration-200 " +
                       (active
@@ -310,17 +326,6 @@ export default function ActFit() {
                 Back
               </button>
 
-              {currentQuestion.optional && !selectedValue && (
-                <button
-                  type="button"
-                  onClick={onSkipOptional}
-                  className="rounded-xl px-5 py-2.5 text-sm font-medium border border-white/20 bg-white/5 text-white/90
-                             transition-all hover:border-white/35 hover:text-white"
-                >
-                  Skip This Step
-                </button>
-              )}
-
               <button
                 type="button"
                 onClick={onNext}
@@ -348,71 +353,22 @@ export default function ActFit() {
               <h2 className="mt-3 font-[Space_Grotesk] text-4xl sm:text-5xl font-semibold uppercase tracking-[0.08em] leading-tight">
                 {result.title}
               </h2>
-              <p className="mt-4 text-white/82 text-sm sm:text-[15px] leading-7 max-w-3xl">
-                {result.diagnosis}
-              </p>
-              {businessCategoryLabel && (
-                <p className="mt-4 inline-flex rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-xs text-white/75">
-                  Category context: {businessCategoryLabel}
-                </p>
-              )}
-            </div>
-
-            <div className="rounded-2xl border border-white/15 bg-black/30 p-5 sm:p-6">
-              <h3 className="font-[Space_Grotesk] text-xl sm:text-2xl font-semibold uppercase tracking-[0.08em]">
-                3 Priority Fixes
-              </h3>
-              <ul className="mt-4 space-y-2 text-white/82 text-sm sm:text-[15px] leading-7">
-                {result.fixes.map((fix) => (
-                  <li key={fix}>• {fix}</li>
-                ))}
-              </ul>
             </div>
 
             <div className="rounded-2xl border border-white/15 bg-black/30 p-5 sm:p-6">
               <p className="text-[11px] tracking-[0.16em] uppercase text-white/60 font-[Space_Grotesk]">
-                Suggested Next Step
+                Recommended Starting Package
               </p>
               <p className="mt-2 text-white text-2xl sm:text-3xl font-semibold">
                 {recommendation.label}
               </p>
-              <p className="mt-3 text-white/76 text-sm sm:text-[15px] leading-7 max-w-3xl">
-                {recommendation.rationale}
-              </p>
-              <p className="mt-2 text-white/58 text-xs sm:text-sm">
-                Guidance based on your answers, not a hard sales filter.
-              </p>
             </div>
 
-            <div className="rounded-2xl border border-white/15 bg-black/30 p-5 sm:p-6">
-              <p className="text-sm text-white/82">Optional: send this result to your email</p>
-              <div className="mt-3 flex flex-col sm:flex-row gap-2">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setEmailSaved(false);
-                  }}
-                  placeholder="you@business.com"
-                  className="w-full rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/25"
-                />
-                <button
-                  type="button"
-                  onClick={onSaveEmail}
-                  className="rounded-xl px-4 py-2 text-sm font-medium border border-white/20 bg-white/5 text-white/90 transition-all hover:border-white/35 hover:text-white"
-                >
-                  Save Result
-                </button>
-              </div>
-              {emailSaved && (
-                <p className="mt-2 text-xs text-white/70">
-                  Saved locally for now. Your developer can connect this to email automation.
-                </p>
-              )}
-            </div>
+            <p className="text-white/72 text-sm sm:text-[15px] leading-7 max-w-3xl">
+              {RESULT_BRIDGE_COPY[resultKey]}
+            </p>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col items-start gap-3">
               <button
                 type="button"
                 onClick={() => navigate("/services/act/intake")}
@@ -425,18 +381,8 @@ export default function ActFit() {
 
               <button
                 type="button"
-                onClick={() => navigate("/contact")}
-                className="rounded-xl px-5 py-2.5 text-sm font-medium border border-white/20 bg-white/5 text-white/90
-                           transition-all hover:border-white/35 hover:text-white"
-              >
-                Book Intro Call
-              </button>
-
-              <button
-                type="button"
                 onClick={restart}
-                className="rounded-xl px-5 py-2.5 text-sm font-medium border border-white/20 bg-transparent text-white/70
-                           transition-all hover:border-white/30 hover:text-white"
+                className="text-xs sm:text-sm text-white/62 underline-offset-4 transition-colors hover:text-white hover:underline focus:outline-none"
               >
                 Retake Check
               </button>

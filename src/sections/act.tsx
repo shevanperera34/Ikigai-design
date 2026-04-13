@@ -25,87 +25,59 @@ export default function ActService() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-6 md:px-10 pt-14 sm:pt-16 md:pt-20 pb-20 sm:pb-24 md:pb-28 space-y-8 sm:space-y-10">
-        <header className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 md:p-10">
-          <p className="text-[11px] tracking-[0.22em] text-white/70 font-[Space_Grotesk] uppercase">
-            Core Solution
-          </p>
-
-          <h1 className="mt-3 font-[Space_Grotesk] text-4xl sm:text-5xl md:text-6xl font-semibold uppercase tracking-[0.08em] leading-tight">
-            {ACT_SERVICE_PAGE.name} - {ACT_SERVICE_PAGE.longName}
-          </h1>
-
-          <p className="mt-5 text-white/85 text-base sm:text-lg leading-8 max-w-4xl">
-            {ACT_SERVICE_PAGE.summary}
-          </p>
-
-          <p className="mt-4 text-white/75 text-sm sm:text-[15px] leading-7 max-w-3xl">
-            Start with the Instant Presence Check to quickly diagnose how your
-            business is signaling online before moving into intake.
-          </p>
-
-          <p className="mt-4 text-white/75 text-sm sm:text-base leading-7 max-w-4xl">
-            <span className="font-semibold text-white">Signature line: </span>
-            {ACT_SERVICE_PAGE.signatureLine}
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={() => navigate("/services/act/fit")}
-              className="rounded-xl px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all
-                         bg-gradient-to-r from-[rgba(0,51,255,0.92)] to-[rgba(108,0,255,0.92)]
-                         hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
-                         focus:outline-none focus:ring-2 focus:ring-white/25"
-            >
-              Run Instant Presence Check
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate("/contact")}
-              className="rounded-xl px-5 py-2.5 text-sm font-medium border border-white/20 bg-white/5 text-white/90
-                         transition-all hover:border-white/35 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/25"
-            >
-              Book Intro Call
-            </button>
+        <header className="space-y-6">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
+            <h1 className="font-[Space_Grotesk] text-4xl sm:text-5xl md:text-6xl font-semibold uppercase tracking-[0.1em] leading-tight text-white/95">
+              {ACT_SERVICE_PAGE.name}
+            </h1>
+            <h2 className="whitespace-nowrap font-[Space_Grotesk] text-3xl sm:text-4xl md:text-5xl font-semibold uppercase tracking-[0.08em] leading-tight lg:text-right">
+              Activate <span className="text-[#3D4DFF]">Consistent</span>{" "}
+              <span className="text-[#6C00FF]">Traction</span>
+            </h2>
           </div>
 
-          <div className="mt-4">
-            <button
-              type="button"
-              onClick={() => navigate("/services/act/report-demo")}
-              className="rounded-xl px-4 py-2 text-xs sm:text-sm font-medium border border-white/20 bg-white/5 text-white/80
-                         transition-all hover:border-white/35 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/25"
-            >
-              Preview the Reporting View
-            </button>
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_30rem] lg:gap-8">
+            <div className="max-w-3xl">
+              <p className="text-[11px] tracking-[0.22em] text-white/60 font-[Space_Grotesk] uppercase">
+                About
+              </p>
+              <p className="mt-3 text-white/82 text-sm sm:text-[15px] leading-7">
+                {ACT_SERVICE_PAGE.summary}
+              </p>
+              <p className="mt-3 text-white/72 text-sm sm:text-[15px] leading-7">
+                {ACT_SERVICE_PAGE.valueProposition}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/15 bg-white/[0.03] p-5 sm:p-6 lg:border-l lg:border-white/18">
+              <p className="text-white/72 text-sm sm:text-[15px] leading-7">
+                Start with the Instant Presence Check to quickly diagnose how your business is signaling online before
+                moving into intake.
+              </p>
+
+              <p className="mt-3 text-white/68 text-sm sm:text-[15px] leading-7">
+                {ACT_SERVICE_PAGE.signatureLine}
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => navigate("/services/act/fit")}
+                  className="rounded-xl px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all
+                             bg-gradient-to-r from-[rgba(0,51,255,0.92)] to-[rgba(108,0,255,0.92)]
+                             hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]
+                             focus:outline-none focus:ring-2 focus:ring-white/25"
+                >
+                  Run Instant Presence Check
+                </button>
+              </div>
+            </div>
           </div>
+
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
         </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
-          <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-            <h2 className="font-[Space_Grotesk] text-2xl sm:text-3xl font-semibold uppercase tracking-[0.08em]">
-              Value Proposition
-            </h2>
-            <p className="mt-4 text-white/82 text-sm sm:text-[15px] leading-7">
-              {ACT_SERVICE_PAGE.valueProposition}
-            </p>
-            <p className="mt-4 text-white/68 text-sm sm:text-[15px] leading-7">
-              Philosophy: {ACT_SERVICE_PAGE.philosophy}
-            </p>
-          </article>
-
-          <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-            <h2 className="font-[Space_Grotesk] text-2xl sm:text-3xl font-semibold uppercase tracking-[0.08em]">
-              Ideal Client
-            </h2>
-            <ul className="mt-4 space-y-2 text-white/82 text-sm sm:text-[15px] leading-7">
-              {ACT_SERVICE_PAGE.idealClient.map((item) => (
-                <li key={item}>• {item}</li>
-              ))}
-            </ul>
-          </article>
-        </div>
 
         <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 md:p-10">
           <h2 className="font-[Space_Grotesk] text-3xl sm:text-4xl font-semibold uppercase tracking-[0.08em]">
@@ -121,8 +93,8 @@ export default function ActService() {
           </div>
         </article>
 
-        <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 md:p-10">
-          <h2 className="font-[Space_Grotesk] text-3xl sm:text-4xl font-semibold uppercase tracking-[0.08em]">
+        <article className="p-1 sm:p-2 md:p-3">
+          <h2 className="text-center font-[Space_Grotesk] text-3xl sm:text-4xl font-semibold uppercase tracking-[0.08em]">
             Packages
           </h2>
 
@@ -152,14 +124,47 @@ export default function ActService() {
         </article>
 
         <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+          <div className="grid grid-cols-1 gap-4">
+            <div className="rounded-2xl border border-white/15 bg-black/30 p-3">
+              <p className="text-[11px] tracking-[0.18em] text-white/60 font-[Space_Grotesk] uppercase">
+                Calendar Booking Preview
+              </p>
+              <iframe
+                title="Book Intro Call"
+                src="https://calendly.com/theikigaiproject-ca/30min?hide_event_type_details=1&hide_gdpr_banner=1"
+                className="mt-2 h-[30rem] w-full rounded-xl border border-white/10 bg-black/20"
+              />
+            </div>
+          </div>
+        </article>
+
+        <article className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
           <h2 className="font-[Space_Grotesk] text-2xl sm:text-3xl font-semibold uppercase tracking-[0.08em]">
-            Not A Fit
+            Fit Profile
           </h2>
-          <ul className="mt-4 space-y-2 text-white/80 text-sm sm:text-[15px] leading-7">
-            {ACT_SERVICE_PAGE.notFor.map((item) => (
-              <li key={item}>• {item}</li>
-            ))}
-          </ul>
+          <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div>
+              <p className="text-[11px] tracking-[0.22em] text-white/65 font-[Space_Grotesk] uppercase">
+                Ideal Client
+              </p>
+              <ul className="mt-3 space-y-2 text-white/82 text-sm sm:text-[15px] leading-7">
+                {ACT_SERVICE_PAGE.idealClient.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-[11px] tracking-[0.22em] text-white/65 font-[Space_Grotesk] uppercase">
+                Not A Fit
+              </p>
+              <ul className="mt-3 space-y-2 text-white/80 text-sm sm:text-[15px] leading-7">
+                {ACT_SERVICE_PAGE.notFor.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
           <div className="mt-7 flex flex-wrap gap-3">
             <button

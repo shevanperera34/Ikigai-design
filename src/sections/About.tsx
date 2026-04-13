@@ -11,6 +11,7 @@ import ExceptionalTeamCluster from "../components/ExceptionalTeamCluster"
 import sladeIntro from "../assets/slade_pic_intro_1.jpeg"
 import shevanprofile from "../assets/ProfilePic_Shevan.png"
 import seniprofile from "../assets/Seni_picintro.jpeg"
+import teamHero from "../assets/Team.png"
 
 /* -------------------- Types -------------------- */
 type TeamKey = "Shevan" | "Seni" | "Slade"
@@ -493,6 +494,7 @@ export default function About() {
   const initialTeamKey = (location.state as { memberKey?: string } | null)?.memberKey
 
   const FINAL_CARD = { title: "Continuous support", desc: "We're here for you!" }
+  const teamHeroSrc = typeof teamHero === "string" ? teamHero : teamHero.src
 
   return (
     <section className="relative min-h-[110vh] overflow-hidden text-white font-[Inter] bg-[#060a18]">
@@ -503,6 +505,18 @@ export default function About() {
       />
       <SEOText page="about" />
 
+      {/* Top hero background image */}
+      <div className="pointer-events-none relative z-[1] mt-[78px] w-full aspect-[16/9] overflow-hidden md:absolute md:inset-x-0 md:top-0 md:mt-0 md:h-[74vh] md:min-h-[500px] md:aspect-auto">
+        <img
+          src={teamHeroSrc}
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-contain object-top opacity-[0.97] md:object-cover md:object-center"
+        />
+        <div className="absolute inset-0 bg-black/8 md:bg-black/10" />
+        <div className="absolute inset-x-0 bottom-0 h-20 md:h-44 bg-gradient-to-b from-transparent via-[#060a18]/75 to-[#060a18]" />
+      </div>
+
       {/* --- Hue background (match Services) --- */}
       <div className="pointer-events-none absolute inset-0 -z-30">
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #0b1220 0%, #070a14 40%, #05070d 100%)" }} />
@@ -512,7 +526,7 @@ export default function About() {
       </div>
 
       {/* Particles background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0 z-[2] pointer-events-none opacity-50 md:opacity-70">
         <div className="w-full h-full relative">
           <Particles
             particleColors={["#1b2d52", "#000000", "#380a65"]}
@@ -529,12 +543,13 @@ export default function About() {
       </div>
 
       {/* Soft vignette */}
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(60%_40%_at_50%_-10%,rgba(0,0,0,0.18),rgba(0,0,0,0))]" />
+      <div className="pointer-events-none absolute inset-0 z-[3] bg-[radial-gradient(60%_40%_at_50%_-10%,rgba(0,0,0,0.18),rgba(0,0,0,0))]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-24 md:h-32 bg-gradient-to-b from-transparent to-[#05070d]" />
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10 py-24 md:py-32">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10 pt-6 md:pt-[64vh] pb-24 md:pb-32">
         <h2 className="text-center font-bold font-[Space_Grotesk] uppercase tracking-widest text-3xl md:text-5xl">Who We Are</h2>
-        <p className="mt-4 text-center text-lg md:text-2xl text-white/90">We build power through clarity</p>
+        <p className="mt-4  font-[Space_Grotesk] font-bold text-center text-lg md:text-2xl text-white/90">We build power through clarity</p>
 
         <div className="text-center mt-4 space-y-7 text-base md:text-lg leading-relaxed text-white/90 max-w-4xl mx-auto">
           <p>

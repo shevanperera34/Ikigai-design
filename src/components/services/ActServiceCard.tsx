@@ -57,19 +57,14 @@ export default function ActServiceCard({
             {ACT_SERVICE_CARD.title}
           </h3>
 
-          <div className="relative w-full max-w-[420px] sm:max-w-[480px] md:max-w-[520px] h-[200px] sm:h-[240px] overflow-hidden rounded-2xl border border-white/15 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.02)_100%)] mx-auto lg:mx-0 mt-4 sm:mt-6 flex items-center justify-center">
-            <div
-              aria-hidden
-              className="absolute inset-0 opacity-20"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to right, rgba(255,255,255,0.22) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.22) 1px, transparent 1px)",
-                backgroundSize: "24px 24px",
-              }}
+          <div className="relative w-full max-w-[420px] sm:max-w-[480px] md:max-w-[520px] h-[200px] sm:h-[240px] overflow-hidden rounded-2xl border border-white/15 bg-black/40 mx-auto lg:mx-0 mt-4 sm:mt-6">
+            <iframe
+              title={ACT_SERVICE_CARD.visualLabel}
+              src="https://my.spline.design/untitled-qUEVLzvTd5CHHPt2lNBff9oM-0P6/"
+              frameBorder="0"
+              className="absolute inset-0 h-full w-full"
+              loading="lazy"
             />
-            <span className="relative text-[11px] sm:text-xs tracking-[0.22em] text-white/60 font-[Space_Grotesk] uppercase">
-              {ACT_SERVICE_CARD.visualLabel}
-            </span>
           </div>
         </div>
       </div>

@@ -139,7 +139,19 @@ export default function CustomAlignmentBuilder() {
 
     const isLast = questionIndex === ALIGNMENT_ASSESSMENT_QUESTIONS.length - 1;
     if (isLast) {
-      setStep("optional");
+      setStep("preview");
+      return;
+    }
+
+    setQuestionIndex((prev) => prev + 1);
+  }
+
+  function onDoubleSelectSingle(value: string) {
+    onSelectSingle(value);
+
+    const isLast = questionIndex === ALIGNMENT_ASSESSMENT_QUESTIONS.length - 1;
+    if (isLast) {
+      setStep("preview");
       return;
     }
 
@@ -182,7 +194,7 @@ export default function CustomAlignmentBuilder() {
           name: lead.name,
           email: lead.email,
           company: lead.company,
-          website: lead.website || optionalContext.websiteUrl,
+          website: lead.website,
         },
         source: "custom_alignment_builder",
       },
@@ -214,8 +226,8 @@ export default function CustomAlignmentBuilder() {
         <div className="absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
       </div>
 
-      <div className="mx-auto w-full max-w-6xl px-5 pb-20 pt-28 sm:px-6 md:px-10">
-        <div className="mb-6">
+      <div className="mx-auto w-full max-w-6xl px-4 pb-14 pt-24 sm:px-6 sm:pb-20 sm:pt-28 md:px-10">
+        <div className="mb-4 sm:mb-6">
           <div className="h-2 w-full overflow-hidden rounded-full border border-white/15 bg-white/[0.04]">
             <div
               className="h-full rounded-full bg-gradient-to-r from-[rgba(0,51,255,0.95)] to-[rgba(108,0,255,0.95)] transition-all duration-300"
@@ -243,7 +255,7 @@ export default function CustomAlignmentBuilder() {
 
             <div className="relative text-center">
               <p className="font-[Space_Grotesk] text-[11px] uppercase tracking-[0.25em] text-white/60">Guided Flow</p>
-              <h1 className="mt-3 font-[Space_Grotesk] text-4xl uppercase tracking-widest sm:text-5xl">
+              <h1 className="mt-3 font-[Space_Grotesk] text-3xl leading-tight uppercase tracking-[0.12em] sm:text-5xl sm:tracking-widest">
                 Custom Alignment Builder
               </h1>
               <p className="mx-auto mt-4 max-w-3xl text-white/75 text-[15px] leading-8 sm:text-lg">
@@ -251,10 +263,10 @@ export default function CustomAlignmentBuilder() {
                 right now, in the right order.
               </p>
 
-              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
                 <button
                   type="button"
-                  className="rounded-xl px-5 py-2.5 text-sm font-medium text-white transition-all focus:outline-none focus:ring-2 focus:ring-white/20
+                  className="w-full sm:w-auto rounded-xl px-5 py-2.5 text-sm font-medium text-white transition-all focus:outline-none focus:ring-2 focus:ring-white/20
                              bg-gradient-to-r from-[rgba(0,51,255,0.95)] to-[rgba(108,0,255,0.95)] hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]"
                   onClick={() => setStep("assessment")}
                 >
@@ -263,7 +275,7 @@ export default function CustomAlignmentBuilder() {
 
                 <button
                   type="button"
-                  className="rounded-xl border border-white/20 px-5 py-2.5 text-sm text-white/90 transition hover:border-white/40"
+                  className="w-full sm:w-auto rounded-xl border border-white/20 px-5 py-2.5 text-sm text-white/90 transition hover:border-white/40"
                   onClick={() => navigate("/services/custom-alignment")}
                 >
                   Back
@@ -288,36 +300,39 @@ export default function CustomAlignmentBuilder() {
                   value={currentQuestionValue as string | null | string[]}
                   onSelectSingle={onSelectSingle}
                   onToggleMultiple={onToggleMultiple}
+                  onDoubleSelectSingle={onDoubleSelectSingle}
                 />
               </motion.div>
             </AnimatePresence>
 
-            <div className="mt-5 flex items-center justify-between">
-              <button
-                type="button"
-                className="rounded-xl border border-white/20 px-4 py-2 text-sm text-white/85 transition hover:border-white/40"
-                onClick={movePrevQuestion}
-              >
-                Back
-              </button>
-
-              <div className="text-xs text-white/60">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="order-2 text-center text-xs text-white/60 sm:order-1 sm:text-left">
                 Question {questionIndex + 1} of {ALIGNMENT_ASSESSMENT_QUESTIONS.length}
               </div>
 
-              <button
-                type="button"
-                className={[
-                  "rounded-xl px-4 py-2 text-sm font-medium text-white transition-all focus:outline-none focus:ring-2 focus:ring-white/20",
-                  singleAnswered
-                    ? "bg-gradient-to-r from-[rgba(0,51,255,0.95)] to-[rgba(108,0,255,0.95)] hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]"
-                    : "cursor-not-allowed bg-white/15 text-white/45",
-                ].join(" ")}
-                onClick={moveNextQuestion}
-                disabled={!singleAnswered}
-              >
-                Continue
-              </button>
+              <div className="order-1 grid grid-cols-2 gap-3 sm:order-2 sm:flex sm:items-center">
+                <button
+                  type="button"
+                  className="w-full sm:w-auto rounded-xl border border-white/20 px-4 py-2.5 text-sm text-white/85 transition hover:border-white/40"
+                  onClick={movePrevQuestion}
+                >
+                  Back
+                </button>
+
+                <button
+                  type="button"
+                  className={[
+                    "w-full sm:w-auto rounded-xl px-4 py-2.5 text-sm font-medium text-white transition-all focus:outline-none focus:ring-2 focus:ring-white/20",
+                    singleAnswered
+                      ? "bg-gradient-to-r from-[rgba(0,51,255,0.95)] to-[rgba(108,0,255,0.95)] hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]"
+                      : "cursor-not-allowed bg-white/15 text-white/45",
+                  ].join(" ")}
+                  onClick={moveNextQuestion}
+                  disabled={!singleAnswered}
+                >
+                  Continue
+                </button>
+              </div>
             </div>
           </>
         )}
@@ -426,7 +441,7 @@ export default function CustomAlignmentBuilder() {
         )}
 
         {step === "preview" && (
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
             <BlurredRecommendationPreview result={recommendation} />
 
             <section
@@ -456,7 +471,7 @@ export default function CustomAlignmentBuilder() {
 
                 <div className="mt-5 grid grid-cols-1 gap-3">
                   <input
-                    className="rounded-xl border border-white/15 bg-white/[0.05] px-3 py-2 text-sm text-white placeholder-white/45 focus:border-white/35 focus:outline-none"
+                    className="rounded-xl border border-white/15 bg-white/[0.05] px-3 py-2.5 text-[15px] text-white placeholder-white/45 focus:border-white/35 focus:outline-none"
                     placeholder="Name"
                     value={lead.name}
                     onChange={(event) => {
@@ -465,7 +480,7 @@ export default function CustomAlignmentBuilder() {
                     }}
                   />
                   <input
-                    className="rounded-xl border border-white/15 bg-white/[0.05] px-3 py-2 text-sm text-white placeholder-white/45 focus:border-white/35 focus:outline-none"
+                    className="rounded-xl border border-white/15 bg-white/[0.05] px-3 py-2.5 text-[15px] text-white placeholder-white/45 focus:border-white/35 focus:outline-none"
                     placeholder="Email"
                     value={lead.email}
                     onChange={(event) => {
@@ -474,7 +489,7 @@ export default function CustomAlignmentBuilder() {
                     }}
                   />
                   <input
-                    className="rounded-xl border border-white/15 bg-white/[0.05] px-3 py-2 text-sm text-white placeholder-white/45 focus:border-white/35 focus:outline-none"
+                    className="rounded-xl border border-white/15 bg-white/[0.05] px-3 py-2.5 text-[15px] text-white placeholder-white/45 focus:border-white/35 focus:outline-none"
                     placeholder="Company / Brand Name"
                     value={lead.company}
                     onChange={(event) => {
@@ -483,7 +498,7 @@ export default function CustomAlignmentBuilder() {
                     }}
                   />
                   <input
-                    className="rounded-xl border border-white/15 bg-white/[0.05] px-3 py-2 text-sm text-white placeholder-white/45 focus:border-white/35 focus:outline-none"
+                    className="rounded-xl border border-white/15 bg-white/[0.05] px-3 py-2.5 text-[15px] text-white placeholder-white/45 focus:border-white/35 focus:outline-none"
                     placeholder="Website (optional)"
                     value={lead.website}
                     onChange={(event) =>
@@ -507,18 +522,18 @@ export default function CustomAlignmentBuilder() {
 
                 {leadError && <p className="mt-3 text-xs text-red-300">{leadError}</p>}
 
-                <div className="mt-5 flex items-center justify-between gap-3">
+                <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <button
                     type="button"
-                    className="rounded-xl border border-white/20 px-4 py-2 text-sm text-white/85 transition hover:border-white/40"
-                    onClick={() => setStep("optional")}
+                    className="w-full sm:w-auto rounded-xl border border-white/20 px-4 py-2.5 text-sm text-white/85 transition hover:border-white/40"
+                    onClick={() => setStep("assessment")}
                   >
                     Back
                   </button>
 
                   <button
                     type="button"
-                    className="rounded-xl px-4 py-2 text-sm font-medium text-white transition-all focus:outline-none focus:ring-2 focus:ring-white/20
+                    className="w-full sm:w-auto rounded-xl px-4 py-2.5 text-sm font-medium text-white transition-all focus:outline-none focus:ring-2 focus:ring-white/20
                                bg-gradient-to-r from-[rgba(0,51,255,0.95)] to-[rgba(108,0,255,0.95)] hover:from-[rgba(0,51,255,1)] hover:to-[rgba(108,0,255,1)]"
                     onClick={unlockResults}
                   >

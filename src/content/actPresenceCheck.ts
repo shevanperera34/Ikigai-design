@@ -274,9 +274,8 @@ export const PRESENCE_QUESTIONS: PresenceQuestion[] = [
   },
   {
     id: "businessCategory",
-    title: "What type of business are you? (Optional)",
+    title: "What type of business are you?",
     helper: "This helps personalize language in your result.",
-    optional: true,
     options: [
       {
         value: "wellness",
@@ -356,7 +355,7 @@ export const PRESENCE_RESULTS: Record<PresenceResultKey, PresenceResultContent> 
     ],
   },
   barely_showing_up: {
-    title: "Barely Showing Up",
+    title: "Low Signal, High Potential",
     diagnosis:
       "Your online presence is too quiet to support discovery and trust. This is less about perfection and more about establishing visible weekly signals.",
     fixes: [
