@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import shevanFigure from "../assets/3d_team /Shevan.png"
 import seniFigure from "../assets/3d_team /Seni.png"
 import sladeFigure from "../assets/3d_team /Slade.png"
@@ -92,6 +93,7 @@ export default function ExceptionalTeamCluster({ initialOpenKey }: ExceptionalTe
   const touchStartXRef = useRef<number | null>(null)
   const touchStartYRef = useRef<number | null>(null)
   const MOBILE_FADE_OUT_MS = 180
+  const canUseDOM = typeof window !== "undefined"
 
   const getMemberAt = (index: number) => {
     const len = ACTION_FIGURE_TEAM.length
@@ -172,6 +174,15 @@ export default function ExceptionalTeamCluster({ initialOpenKey }: ExceptionalTe
       if (fadeTimerRef.current) window.clearTimeout(fadeTimerRef.current)
     }
   }, [])
+
+  useEffect(() => {
+    if (!canUseDOM) return
+    const prev = document.body.style.overflow
+    if (activeMember) document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [activeMember, canUseDOM])
 
   return (
     <section className="mt-16 md:mt-20">
@@ -283,45 +294,48 @@ export default function ExceptionalTeamCluster({ initialOpenKey }: ExceptionalTe
         </div>
       </div>
 
-      {activeMember && (
-        <div className="fixed inset-0 z-[160] md:hidden">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+      {activeMember &&
+        canUseDOM &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] md:hidden">
+            <div className="absolute inset-0 bg-[#050712]/95 backdrop-blur-md" />
 
-          <div className="absolute inset-4 rounded-3xl border border-white/15 bg-[linear-gradient(180deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.04)_100%)] p-4 shadow-[0_30px_100px_rgba(0,0,0,0.55)]">
-            <button
-              type="button"
-              onClick={() => setActiveFigure(null)}
-              className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-xl border border-white/25 bg-[#0b1328]/90 px-3 py-2 text-white/90 transition hover:bg-gradient-to-r hover:from-blue-600/90 hover:to-violet-600/90"
-              aria-label="Back to team view"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
-              </svg>
-              <span className="text-sm font-medium">Back</span>
-            </button>
+            <div className="absolute inset-0 border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.03)_100%)] p-4 shadow-[0_30px_100px_rgba(0,0,0,0.55)]">
+              <button
+                type="button"
+                onClick={() => setActiveFigure(null)}
+                className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-xl border border-white/25 bg-[#0b1328]/90 px-3 py-2 text-white/90 transition hover:bg-gradient-to-r hover:from-blue-600/90 hover:to-violet-600/90"
+                aria-label="Back to team view"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
+                </svg>
+                <span className="text-sm font-medium">Back</span>
+              </button>
 
-            <div className="mt-12 h-[calc(100%-3rem)] overflow-y-auto">
-              <div className="rounded-2xl border border-white/15 bg-black/20 p-2">
-                <img
-                  src={typeof activeMember.profileImageUrl === "string" ? activeMember.profileImageUrl : activeMember.profileImageUrl.src}
-                  alt={`${activeMember.name} portrait`}
-                  className="h-[280px] w-full rounded-xl object-cover object-center"
-                  style={{
-                    filter: "drop-shadow(0 0 10px rgba(88,28,135,0.45)) drop-shadow(0 18px 24px rgba(0,0,0,0.55))",
-                  }}
-                />
-              </div>
+              <div className="mt-12 h-[calc(100%-3rem)] overflow-y-auto">
+                <div className="rounded-2xl border border-white/15 bg-black/20 p-2">
+                  <img
+                    src={typeof activeMember.profileImageUrl === "string" ? activeMember.profileImageUrl : activeMember.profileImageUrl.src}
+                    alt={`${activeMember.name} portrait`}
+                    className="h-[280px] w-full rounded-xl object-cover object-center"
+                    style={{
+                      filter: "drop-shadow(0 0 10px rgba(88,28,135,0.45)) drop-shadow(0 18px 24px rgba(0,0,0,0.55))",
+                    }}
+                  />
+                </div>
 
-              <div className="mt-4">
-                <p className="text-[11px] uppercase tracking-[0.24em] text-white/60">Team Profile</p>
-                <h3 className="mt-2 text-3xl font-bold tracking-[0.08em] uppercase text-white">{activeMember.name}</h3>
-                <p className="mt-1 text-xs uppercase tracking-[0.2em] text-white/65">{activeMember.role}</p>
-                <p className="mt-4 text-base leading-relaxed text-white/86">{activeMember.about}</p>
+                <div className="mt-4">
+                  <p className="text-[11px] uppercase tracking-[0.24em] text-white/60">Team Profile</p>
+                  <h3 className="mt-2 text-3xl font-bold tracking-[0.08em] uppercase text-white">{activeMember.name}</h3>
+                  <p className="mt-1 text-xs uppercase tracking-[0.2em] text-white/65">{activeMember.role}</p>
+                  <p className="mt-4 text-base leading-relaxed text-white/86">{activeMember.about}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
 
       <div className="relative mx-auto max-w-[920px]">
         <div
